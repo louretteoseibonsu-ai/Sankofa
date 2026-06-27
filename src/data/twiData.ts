@@ -361,7 +361,7 @@ export const ADINKRA_SYMBOLS: AdinkraSymbol[] = [
     name: "Sankofa",
     literalTranslation: "Go back and get it",
     coreValue: "Learning from the past to build the future",
-    symbolDescription: "A symbol of the wisdom of learning from the past to build for the future. From the Akan proverb, 'Se wo were fi na wosan kofa a yenkyiri,' meaning 'It is not taboo to go back for what you forgot (or left behind).'"
+    symbolDescription: "Depicted as a bird turning its head backward to retrieve an egg from its back. A symbol of the wisdom of learning from the past to build for the future. From the Akan proverb, 'Se wo were fi na wosan kofa a yenkyiri,' meaning 'It is not taboo to go back for what you forgot (or left behind).'"
   },
   {
     id: "dwennimmen",

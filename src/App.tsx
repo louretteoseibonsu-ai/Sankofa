@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, type Variants } from "motion/react";
 import {
   BookOpen,
   Sparkles,
@@ -81,8 +81,17 @@ const ADINKRA_GLYPHS: Record<string, React.ReactNode> = {
   ),
   sankofa: (
     <>
-      <path d="M50 78 C 18 54, 26 26, 45 33 C 50 35, 50 43, 50 48 C 50 43, 50 35, 55 33 C 74 26, 82 54, 50 78"/>
-      <path d="M50 78 C 50 85, 59 85, 59 77"/>
+      {/* Sankofa bird: slim, standing, neck arched back, head turned to retrieve the egg on its breast */}
+      <ellipse cx="49" cy="62" rx="13" ry="17" fill="currentColor" stroke="none" />
+      <path d="M58 54 L78 38 L60 52 Z" fill="currentColor" stroke="none" />
+      <path d="M56 50 C 70 40, 68 20, 52 20 C 45 20, 43 27, 47 31" fill="none" stroke="currentColor" strokeWidth={8} />
+      <circle cx="50" cy="21" r="5.5" fill="currentColor" stroke="none" />
+      <path d="M48 25 L37 32 L49 30 Z" fill="currentColor" stroke="none" />
+      <ellipse cx="43" cy="46" rx="5.5" ry="6.5" fill="#f3f7f1" stroke="currentColor" strokeWidth={3} />
+      <path d="M46 78 L44 89" />
+      <path d="M53 78 L55 89" />
+      <path d="M39 89 H48" />
+      <path d="M51 89 H60" />
     </>
   ),
   dwennimmen: (
@@ -580,6 +589,27 @@ function AdinkraGlyph({ id, className }: { id: string; className?: string }) {
   );
 }
 
+// ==================== ANIMATION PRESETS (lively but quick — better UX) ====================
+const springPop = { type: "spring", stiffness: 420, damping: 18 } as const;
+
+// Container that reveals its children one-by-one (staggered cascade).
+const staggerGrid: Variants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.06, delayChildren: 0.04 } }
+};
+
+// Each grid/list item pops in, and lifts playfully on hover.
+const popItem: Variants = {
+  hidden: { opacity: 0, y: 22, scale: 0.94 },
+  show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 380, damping: 20 } },
+  hover: { y: -6, scale: 1.03, transition: { type: "spring", stiffness: 420, damping: 16 } }
+};
+
+// The Adinkra glyph reacts when its card is hovered (driven by the parent's "hover" state).
+const glyphHover: Variants = {
+  hover: { scale: 1.2, rotate: [0, -10, 10, 0], transition: { duration: 0.5, ease: "easeInOut" } }
+};
+
 export default function App() {
   // Current tab state: 'lessons' | 'naming' | 'tutor' | 'quizzes' | 'symbols'
   const [activeTab, setActiveTab] = useState<string>("lessons");
@@ -898,7 +928,7 @@ export default function App() {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
               return (
-                <button
+                <motion.button
                   key={tab.id}
                   id={`nav-tab-${tab.id}`}
                   onClick={() => {
@@ -906,15 +936,23 @@ export default function App() {
                     setSelectedCategory(null);
                     playChime(440, "sine");
                   }}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
-                    isActive
-                      ? "bg-emerald-50 text-emerald-900 shadow-sm border border-emerald-200/50"
-                      : "text-stone-600 hover:text-emerald-900 hover:bg-stone-50"
+                  whileHover={{ y: -2, scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={springPop}
+                  className={`relative flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold ${
+                    isActive ? "text-emerald-900" : "text-stone-600 hover:text-emerald-900 hover:bg-stone-50"
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? "text-emerald-700" : "text-stone-400"}`} />
-                  {tab.label}
-                </button>
+                  {isActive && (
+                    <motion.span
+                      layoutId="navIndicator"
+                      className="absolute inset-0 bg-emerald-50 rounded-lg border border-emerald-200/50 shadow-sm"
+                      transition={springPop}
+                    />
+                  )}
+                  <Icon className={`relative z-10 w-4 h-4 ${isActive ? "text-emerald-700" : "text-stone-400"}`} />
+                  <span className="relative z-10">{tab.label}</span>
+                </motion.button>
               );
             })}
           </nav>
@@ -938,7 +976,7 @@ export default function App() {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
             return (
-              <button
+              <motion.button
                 key={tab.id}
                 id={`mobile-nav-${tab.id}`}
                 onClick={() => {
@@ -946,13 +984,21 @@ export default function App() {
                   setSelectedCategory(null);
                   playChime(440, "sine");
                 }}
-                className={`flex flex-col items-center gap-1 py-1.5 px-3 rounded-lg transition-colors ${
+                whileTap={{ scale: 0.88 }}
+                className={`relative flex flex-col items-center gap-1 py-1.5 px-3 rounded-lg ${
                   isActive ? "text-emerald-800" : "text-stone-500"
                 }`}
               >
-                <Icon className={`w-5 h-5 ${isActive ? "text-emerald-700" : "text-stone-400"}`} />
-                <span className="text-[10px] font-bold tracking-wide uppercase">{tab.label}</span>
-              </button>
+                {isActive && (
+                  <motion.span
+                    layoutId="mobileNavIndicator"
+                    className="absolute inset-0 bg-emerald-100/70 rounded-lg"
+                    transition={springPop}
+                  />
+                )}
+                <Icon className={`relative z-10 w-5 h-5 ${isActive ? "text-emerald-700" : "text-stone-400"}`} />
+                <span className="relative z-10 text-[10px] font-bold tracking-wide uppercase">{tab.label}</span>
+              </motion.button>
             );
           })}
         </div>
@@ -983,16 +1029,24 @@ export default function App() {
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <motion.div
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                    variants={staggerGrid}
+                    initial="hidden"
+                    animate="show"
+                  >
                     {VOCABULARY_CATEGORIES.map((category) => (
-                      <button
+                      <motion.button
                         key={category.id}
                         id={`category-btn-${category.id}`}
+                        variants={popItem}
+                        whileHover="hover"
+                        whileTap={{ scale: 0.97 }}
                         onClick={() => {
                           setSelectedCategory(category);
                           playChime(493.88, "sine"); // B-note chime
                         }}
-                        className="group text-left bg-white rounded-2xl p-6 shadow-sm border border-stone-200/60 hover:shadow-md hover:border-emerald-300 transition-all duration-300 cursor-pointer flex flex-col justify-between h-48 relative overflow-hidden"
+                        className="group text-left bg-white rounded-2xl p-6 shadow-sm border border-stone-200/60 hover:shadow-lg hover:border-emerald-300 transition-shadow duration-300 cursor-pointer flex flex-col justify-between h-48 relative overflow-hidden"
                       >
                         {/* Decorative subtle corner circle background */}
                         <div className="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-stone-50 group-hover:bg-emerald-50/50 transition-colors duration-300" />
@@ -1015,9 +1069,9 @@ export default function App() {
                           <span>Start Learning</span>
                           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                         </div>
-                      </button>
+                      </motion.button>
                     ))}
-                  </div>
+                  </motion.div>
 
                   {/* Quick Translation Tool (Aesthetic full-width section) */}
                   <div className="bg-gradient-to-br from-stone-900 to-emerald-950 text-stone-100 rounded-3xl p-6 sm:p-8 shadow-lg border border-amber-500/20 mt-8">
@@ -1697,12 +1751,15 @@ export default function App() {
                       }
 
                       return (
-                        <button
+                        <motion.button
                           key={index}
                           id={`quiz-option-${index}`}
                           onClick={() => handleAnswerQuiz(option)}
                           disabled={selectedAnswer !== null}
-                          className={`w-full text-left p-4 rounded-xl border font-bold text-sm sm:text-base flex items-center justify-between transition-all duration-200 ${optionStyle} ${
+                          whileHover={selectedAnswer === null ? { scale: 1.02, x: 5 } : undefined}
+                          whileTap={selectedAnswer === null ? { scale: 0.98 } : undefined}
+                          transition={springPop}
+                          className={`w-full text-left p-4 rounded-xl border font-bold text-sm sm:text-base flex items-center justify-between transition-colors duration-200 ${optionStyle} ${
                             selectedAnswer === null ? "cursor-pointer" : "cursor-default"
                           }`}
                         >
@@ -1716,7 +1773,7 @@ export default function App() {
                               ) : null}
                             </span>
                           )}
-                        </button>
+                        </motion.button>
                       );
                     })}
                   </div>
@@ -1835,21 +1892,30 @@ export default function App() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <motion.div
+                className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                variants={staggerGrid}
+                initial="hidden"
+                animate="show"
+              >
                 {ADINKRA_SYMBOLS.map((symbol) => (
-                  <div
+                  <motion.div
                     key={symbol.id}
                     id={`symbol-card-${symbol.id}`}
-                    className="bg-white rounded-2xl p-6 border border-stone-200/80 shadow-sm flex flex-col sm:flex-row gap-6 hover:shadow-md hover:border-emerald-200 transition-all duration-300"
+                    variants={popItem}
+                    whileHover="hover"
+                    whileTap={{ scale: 0.99 }}
+                    className="bg-white rounded-2xl p-6 border border-stone-200/80 shadow-sm flex flex-col sm:flex-row gap-6 hover:shadow-lg hover:border-emerald-200 transition-shadow duration-300 cursor-default"
                   >
                     {/* Authentic Adinkra symbol rendered as consistent monochrome SVG */}
-                    <div
+                    <motion.div
+                      variants={glyphHover}
                       className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-emerald-50 to-amber-50 flex items-center justify-center border border-emerald-100 shadow-inner shrink-0 select-none text-emerald-900"
                       role="img"
                       aria-label={`${symbol.name} Adinkra symbol`}
                     >
                       <AdinkraGlyph id={symbol.id} className="w-10 h-10 sm:w-12 sm:h-12" />
-                    </div>
+                    </motion.div>
 
                     <div className="space-y-3 flex-grow">
                       <div>
@@ -1871,7 +1937,7 @@ export default function App() {
                       </p>
 
                       {/* Ask AI more on this symbol */}
-                      <button
+                      <motion.button
                         onClick={() => {
                           setActiveTab("tutor");
                           handleSendChatMessage(
@@ -1879,15 +1945,17 @@ export default function App() {
                             `Can you provide a deep-dive explanation of the Adinkra symbol "${symbol.name}"? Explain its historical background, full philosophical translation, and its relevance in modern Ghanaian architecture or fashion.`
                           );
                         }}
+                        whileHover={{ x: 4 }}
+                        whileTap={{ scale: 0.95 }}
                         className="text-xs font-bold text-emerald-800 hover:text-emerald-950 flex items-center gap-1 cursor-pointer pt-1"
                       >
                         <span>Analyze philosophical depth</span>
                         <ChevronRight className="w-3.5 h-3.5" />
-                      </button>
+                      </motion.button>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
 
               <p className="text-[11px] text-stone-400 pt-2">
                 Symbol meanings adapted from{" "}
