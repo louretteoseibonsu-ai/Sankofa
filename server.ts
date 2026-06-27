@@ -19,6 +19,10 @@ const ai = new GoogleGenAI({
   },
 });
 
+// Khaya (GhanaNLP) — purpose-built translation + Twi TTS for Ghanaian languages.
+const KHAYA_KEY = process.env.KHAYA_API_KEY;
+const KHAYA_BASE = "https://translation-api.ghananlp.org";
+
 app.use(express.json());
 
 // API Endpoints
@@ -69,51 +73,87 @@ app.post("/api/tutor", async (req, res) => {
   }
 });
 
-// Translation & Explainer Endpoint
+// Translation Endpoint — powered by Khaya (GhanaNLP), purpose-built for Ghanaian languages.
 app.post("/api/translate", async (req, res) => {
   try {
     const { text, mode } = req.body; // mode: 'en-to-twi' or 'twi-to-en'
-
     if (!text) {
       return res.status(400).json({ error: "Text is required" });
     }
+    if (!KHAYA_KEY) {
+      return res.status(500).json({ error: "KHAYA_API_KEY is not configured on the server." });
+    }
 
-    const directionPrompt =
-      mode === "twi-to-en"
-        ? `Translate this Twi text into English: "${text}"`
-        : `Translate this English text into Asante Twi: "${text}"`;
+    const lang = mode === "twi-to-en" ? "tw-en" : "en-tw";
 
-    const prompt = `
-      Perform a high-quality translation and grammatical breakdown.
-
-      Task: ${directionPrompt}
-
-      Format the output as a clean JSON object with the following fields:
-      - translation: string (the direct translated text)
-      - pronunciation: string (a phonetic pronunciation guide, e.g., "Ah-kwaa-bah")
-      - literalMeaning: string (the word-by-word literal meaning if different from common translation)
-      - breakdown: array of objects, where each object has:
-        * word: string (the Twi word or root)
-        * meaning: string (the English meaning / grammatical role)
-      - explanation: string (a brief 1-2 sentence explanation of any idioms, cultural contexts, or grammar rules used)
-
-      Only return valid JSON matching this schema. No markdown formatting around the JSON, no backticks, just raw JSON.
-    `;
-
-    const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
+    const khayaRes = await fetch(`${KHAYA_BASE}/v1/translate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Ocp-Apim-Subscription-Key": KHAYA_KEY,
       },
+      body: JSON.stringify({ in: text, lang }),
     });
 
-    const resultText = response.text || "{}";
-    const data = JSON.parse(resultText.trim());
-    res.json(data);
+    if (!khayaRes.ok) {
+      const detail = await khayaRes.text();
+      console.error("Khaya translate error:", khayaRes.status, detail);
+      return res
+        .status(khayaRes.status)
+        .json({ error: `Khaya translation failed (${khayaRes.status})`, detail });
+    }
+
+    // Khaya returns the translated text (a JSON string, or an object).
+    const data: any = await khayaRes.json();
+    const translation =
+      typeof data === "string" ? data : data?.translatedText ?? data?.text ?? String(data);
+    res.json({ translation, lang, source: "khaya" });
   } catch (error: any) {
     console.error("Error in /api/translate:", error);
     res.status(500).json({ error: error.message || "Failed to translate text" });
+  }
+});
+
+// Text-to-Speech Endpoint — Khaya Twi TTS, so Twi text is spoken in Twi (not an English voice).
+app.post("/api/tts", async (req, res) => {
+  try {
+    const { text, lang, speaker } = req.body;
+    if (!text) {
+      return res.status(400).json({ error: "Text is required" });
+    }
+    if (!KHAYA_KEY) {
+      return res.status(500).json({ error: "KHAYA_API_KEY is not configured on the server." });
+    }
+
+    // Khaya TTS expects a Ghanaian-voice speaker_id (e.g. twi_speaker_4..9).
+    const body = {
+      text,
+      language: lang || "tw",
+      speaker_id: speaker || "twi_speaker_4",
+    };
+    console.log("Khaya TTS request:", { ...body, text: text.slice(0, 40) });
+
+    const khayaRes = await fetch(`${KHAYA_BASE}/tts/v1/tts`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Ocp-Apim-Subscription-Key": KHAYA_KEY,
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!khayaRes.ok) {
+      const detail = await khayaRes.text();
+      console.error("Khaya TTS error:", khayaRes.status, detail);
+      return res.status(khayaRes.status).json({ error: `Khaya TTS failed (${khayaRes.status})`, detail });
+    }
+
+    const audio = Buffer.from(await khayaRes.arrayBuffer());
+    res.setHeader("Content-Type", "audio/wav");
+    res.send(audio);
+  } catch (error: any) {
+    console.error("Error in /api/tts:", error);
+    res.status(500).json({ error: error.message || "Failed to synthesize speech" });
   }
 });
 
