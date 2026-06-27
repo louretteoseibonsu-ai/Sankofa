@@ -1,13 +1,13 @@
 import express from "express";
 import path from "path";
-import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+// Hosts (Render, Cloud Run, etc.) inject the port via env; fall back to 3000 locally.
+const PORT = Number(process.env.PORT) || 3000;
 
 // Initialize Gemini SDK with telemetry header
 const ai = new GoogleGenAI({
@@ -120,6 +120,8 @@ app.post("/api/translate", async (req, res) => {
 // Start Vite in dev mode, serve static files in production
 async function start() {
   if (process.env.NODE_ENV !== "production") {
+    // Dynamic import so production never requires "vite" (a devDependency).
+    const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",

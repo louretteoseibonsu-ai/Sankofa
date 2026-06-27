@@ -1,0 +1,17 @@
+# Render blueprint for the Sankofa Twi React prototype (Express + Vite).
+# Deploys the current React app to a public HTTPS URL (openable on Android anywhere).
+# NOTE: NODE_ENV=production is set only on the start command — NOT as a global env var —
+# so the build phase still installs devDependencies (vite, esbuild) it needs.
+services:
+  - type: web
+    name: sankofa-twi
+    runtime: node
+    plan: free
+    branch: main
+    autoDeploy: true
+    buildCommand: npm install && npm run build
+    startCommand: NODE_ENV=production npm start
+    envVars:
+      # Optional — only needed for the AI Tutor / translate tabs. Symbols work without it.
+      - key: GEMINI_API_KEY
+        sync: false
