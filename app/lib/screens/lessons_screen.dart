@@ -173,8 +173,19 @@ class _CategoryBlock extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(category.icon, color: charcoal, size: 22),
-              const SizedBox(width: 10),
+              Container(
+                width: 38,
+                height: 38,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: glyphTile,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: category.emoji.isNotEmpty
+                    ? Text(category.emoji, style: const TextStyle(fontSize: 20))
+                    : Icon(category.icon, color: charcoal, size: 20),
+              ),
+              const SizedBox(width: 12),
               Expanded(
                 child: Text(category.name,
                     style: const TextStyle(
