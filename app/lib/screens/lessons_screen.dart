@@ -1,14 +1,10 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import '../data/lesson_catalog.dart';
+import '../services/progress_service.dart';
 import '../theme.dart';
-import '../services/sound_service.dart';
-import '../widgets/continue_button.dart';
 import '../widgets/floating_card.dart';
-
-// On-brand feedback colours (Kente green / maroon) used only for quiz states.
-const Color _correctGreen = Color(0xFF2E6B3B);
-const Color _wrongRed = Color(0xFF9B2D2A);
+import 'lesson_quiz_screen.dart';
+import 'leaderboard_screen.dart';
 
 class LessonsScreen extends StatefulWidget {
   const LessonsScreen({super.key});
@@ -18,339 +14,293 @@ class LessonsScreen extends StatefulWidget {
 }
 
 class _LessonsScreenState extends State<LessonsScreen> {
-  Map<String, dynamic>? _unit;
-  // challenge index -> chosen option index
-  final Map<int, int> _selected = {};
+  final _service = ProgressService();
+  Progress _p = Progress.empty;
+  bool _loading = true;
 
   @override
   void initState() {
     super.initState();
-    _load();
+    _reload();
   }
 
-  Future<void> _load() async {
-    final raw =
-        await rootBundle.loadString('assets/content/unit_001.example.json');
+  Future<void> _reload() async {
+    final p = await _service.load();
     if (!mounted) return;
-    setState(() => _unit = json.decode(raw) as Map<String, dynamic>);
+    setState(() {
+      _p = p;
+      _loading = false;
+    });
   }
 
-  void _choose(int challengeIndex, int optionIndex, int correctIndex) {
-    if (_selected.containsKey(challengeIndex)) return; // lock after answering
-    setState(() => _selected[challengeIndex] = optionIndex);
-    if (optionIndex == correctIndex) {
-      HapticFeedback.selectionClick();
-      SoundService.instance.correct();
-    } else {
-      HapticFeedback.heavyImpact();
-      SoundService.instance.tap();
-    }
+  Future<void> _openLesson(Lesson l) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => LessonQuizScreen(lesson: l)),
+    );
+    _reload(); // refresh XP / unlocks after returning
   }
 
   @override
   Widget build(BuildContext context) {
-    final u = _unit;
-    if (u == null) return const Center(child: CircularProgressIndicator());
-
-    final vocab = u['vocabulary_spotlight'] as Map<String, dynamic>;
-    final bridge = vocab['phonetic_bridge'] as Map<String, dynamic>;
-    final examples =
-        (vocab['example_sentences'] as List?)?.cast<String>() ?? const [];
-    final grammar = u['grammar_mechanics'] as Map<String, dynamic>?;
-    final challenges =
-        (u['lineage_challenges'] as List).cast<Map<String, dynamic>>();
-
-    final answered = _selected.length;
-    final correct = _selected.entries
-        .where((e) =>
-            e.value == (challenges[e.key]['correct_index'] as int))
-        .length;
-    final allDone = answered == challenges.length;
-
-    return ListView(
-      padding: const EdgeInsets.all(20),
-      children: [
-        Text(u['unit_title'] as String,
-            style: const TextStyle(
-                fontWeight: FontWeight.w800, fontSize: 22, color: ink)),
-        const SizedBox(height: 14),
-
-        // ── Vocabulary spotlight ──────────────────────────────────────────
-        FloatingCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    if (_loading) return const Center(child: CircularProgressIndicator());
+    return RefreshIndicator(
+      onRefresh: _reload,
+      child: ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('VOCABULARY SPOTLIGHT',
+              const Text('Lessons',
                   style: TextStyle(
-                      color: slate,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 11,
-                      letterSpacing: 0.6)),
-              const SizedBox(height: 8),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  Text(vocab['headword'] as String,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 22,
-                          color: ink)),
-                  const SizedBox(width: 10),
-                  Text('/${bridge['pronunciation']}/',
-                      style: const TextStyle(color: slate, fontSize: 15)),
-                ],
+                      fontWeight: FontWeight.w800, fontSize: 26, color: ink)),
+              IconButton(
+                tooltip: 'Leaderboard',
+                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => const LeaderboardScreen())),
+                icon: const Icon(Icons.emoji_events_outlined, color: charcoal),
               ),
-              const SizedBox(height: 6),
-              Text(vocab['gloss'] as String,
-                  style: const TextStyle(height: 1.5, color: ink)),
-              if (examples.isNotEmpty) ...[
-                const SizedBox(height: 12),
-                const Text('In a sentence',
-                    style: TextStyle(
-                        color: slate,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12)),
-                const SizedBox(height: 4),
-                for (final s in examples)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Text('•  $s',
-                        style: const TextStyle(
-                            fontStyle: FontStyle.italic,
-                            height: 1.4,
-                            color: ink)),
-                  ),
-              ],
             ],
           ),
-        ),
-
-        // ── Grammar mechanics ─────────────────────────────────────────────
-        if (grammar != null) ...[
-          const SizedBox(height: 14),
-          FloatingCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('GRAMMAR',
-                    style: TextStyle(
-                        color: slate,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 11,
-                        letterSpacing: 0.6)),
-                const SizedBox(height: 8),
-                Text(grammar['focus'] as String,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w800, fontSize: 16, color: ink)),
-                const SizedBox(height: 6),
-                Text(grammar['explanation'] as String,
-                    style: const TextStyle(height: 1.5, color: ink)),
-                if (grammar['patterns'] is List) ...[
-                  const SizedBox(height: 10),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: (grammar['patterns'] as List)
-                        .cast<String>()
-                        .map((p) => Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 7),
-                              decoration: BoxDecoration(
-                                color: glyphTile,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text(p,
-                                  style: const TextStyle(
-                                      fontSize: 13, color: ink)),
-                            ))
-                        .toList(),
-                  ),
-                ],
-              ],
-            ),
+          const SizedBox(height: 4),
+          _LevelCard(p: _p),
+          const SizedBox(height: 22),
+          const Text('Explore Interactive Twi Lessons',
+              style: TextStyle(
+                  fontWeight: FontWeight.w800, fontSize: 18, color: ink)),
+          const SizedBox(height: 6),
+          const Text(
+            'Akan / Twi uses beautiful semantic roots. Tap any of the curated '
+            'categories below to study the phonetic guides, cultural context, '
+            'and everyday usage patterns.',
+            style: TextStyle(color: slate, fontSize: 13.5, height: 1.5),
           ),
+          const SizedBox(height: 16),
+          for (final c in kCategories) ...[
+            _CategoryBlock(category: c, p: _p, onOpen: _openLesson),
+            const SizedBox(height: 16),
+          ],
+          const SizedBox(height: 12),
         ],
-
-        const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text('Lineage Challenges',
-                style: TextStyle(
-                    fontWeight: FontWeight.w800, fontSize: 16, color: ink)),
-            Text('$answered / ${challenges.length}',
-                style: const TextStyle(
-                    color: slate, fontWeight: FontWeight.w700, fontSize: 13)),
-          ],
-        ),
-        const SizedBox(height: 12),
-
-        // ── Interactive challenges ────────────────────────────────────────
-        for (int i = 0; i < challenges.length; i++)
-          _ChallengeCard(
-            index: i,
-            challenge: challenges[i],
-            selected: _selected[i],
-            onChoose: (opt) => _choose(
-                i, opt, challenges[i]['correct_index'] as int),
-          ),
-
-        const SizedBox(height: 8),
-        if (allDone)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Center(
-              child: Text('You scored $correct / ${challenges.length}',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w800, fontSize: 16, color: ink)),
-            ),
-          ),
-        ContinueButton(onPressed: () {
-          if (allDone) {
-            SoundService.instance.complete();
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-                    'Lesson complete — $correct / ${challenges.length} correct. Akwaaba!')));
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-                    'Answer all ${challenges.length} challenges to finish (${challenges.length - answered} left).')));
-          }
-        }),
-        const SizedBox(height: 24),
-      ],
-    );
-  }
-}
-
-class _ChallengeCard extends StatelessWidget {
-  final int index;
-  final Map<String, dynamic> challenge;
-  final int? selected;
-  final ValueChanged<int> onChoose;
-
-  const _ChallengeCard({
-    required this.index,
-    required this.challenge,
-    required this.selected,
-    required this.onChoose,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final options = (challenge['options'] as List).cast<String>();
-    final correctIndex = challenge['correct_index'] as int;
-    final answered = selected != null;
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: FloatingCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CircleAvatar(
-                  radius: 13,
-                  backgroundColor: charcoal,
-                  child: Text('${index + 1}',
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold)),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(challenge['prompt'] as String,
-                      style: const TextStyle(
-                          height: 1.35,
-                          fontWeight: FontWeight.w600,
-                          color: ink)),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            for (int o = 0; o < options.length; o++)
-              _OptionTile(
-                label: options[o],
-                state: !answered
-                    ? _OptState.idle
-                    : o == correctIndex
-                        ? _OptState.correct
-                        : o == selected
-                            ? _OptState.wrong
-                            : _OptState.dimmed,
-                onTap: answered ? null : () => onChoose(o),
-              ),
-          ],
-        ),
       ),
     );
   }
 }
 
-enum _OptState { idle, correct, wrong, dimmed }
-
-class _OptionTile extends StatelessWidget {
-  final String label;
-  final _OptState state;
-  final VoidCallback? onTap;
-
-  const _OptionTile({required this.label, required this.state, this.onTap});
+class _LevelCard extends StatelessWidget {
+  final Progress p;
+  const _LevelCard({required this.p});
 
   @override
   Widget build(BuildContext context) {
-    Color border = silver;
-    Color bg = Colors.white;
-    Color fg = ink;
-    Widget? trailing;
-    switch (state) {
-      case _OptState.idle:
-        break;
-      case _OptState.correct:
-        border = _correctGreen;
-        bg = const Color(0xFFEAF3EC);
-        fg = _correctGreen;
-        trailing = const Icon(Icons.check_circle, color: _correctGreen, size: 20);
-        break;
-      case _OptState.wrong:
-        border = _wrongRed;
-        bg = const Color(0xFFF7EAE9);
-        fg = _wrongRed;
-        trailing = const Icon(Icons.cancel, color: _wrongRed, size: 20);
-        break;
-      case _OptState.dimmed:
-        border = silverLight;
-        fg = slate;
-        break;
-    }
+    final pct = p.xpIntoLevel / p.xpForNextLevel;
+    return FloatingCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 46,
+                height: 46,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: terracotta,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Text('${p.level}',
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 20)),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Level ${p.level}',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 17,
+                            color: ink)),
+                    Text('${p.totalXp} XP total',
+                        style: const TextStyle(color: slate, fontSize: 13)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: LinearProgressIndicator(
+              value: pct.clamp(0.0, 1.0),
+              minHeight: 8,
+              backgroundColor: silverLight,
+              valueColor: const AlwaysStoppedAnimation(terracotta),
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text('${p.xpIntoLevel} / ${p.xpForNextLevel} XP to level ${p.level + 1}',
+              style: const TextStyle(color: slate, fontSize: 12)),
+        ],
+      ),
+    );
+  }
+}
 
+class _CategoryBlock extends StatelessWidget {
+  final LessonCategory category;
+  final Progress p;
+  final ValueChanged<Lesson> onOpen;
+  const _CategoryBlock(
+      {required this.category, required this.p, required this.onOpen});
+
+  @override
+  Widget build(BuildContext context) {
+    final mastery = p.categoryMastery(category);
+    final masteredAll = mastery >= (kPassScore / 10);
+    // Show every unlocked lesson plus only the next locked one as a preview.
+    final visible = <Lesson>[];
+    for (final l in category.lessons) {
+      visible.add(l);
+      if (!p.unlocked(l.id)) break;
+    }
+    final hidden = category.lessons.length - visible.length;
+    return FloatingCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(category.icon, color: charcoal, size: 22),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(category.name,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 17,
+                        color: ink)),
+              ),
+              Text('${(mastery * 100).round()}%',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 14,
+                      color: masteredAll ? const Color(0xFF2E6B3B) : slate)),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(category.blurb,
+              style: const TextStyle(color: slate, fontSize: 13)),
+          const SizedBox(height: 10),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: LinearProgressIndicator(
+              value: mastery.clamp(0.0, 1.0),
+              minHeight: 6,
+              backgroundColor: silverLight,
+              valueColor: AlwaysStoppedAnimation(
+                  masteredAll ? const Color(0xFF2E6B3B) : charcoal),
+            ),
+          ),
+          const SizedBox(height: 12),
+          for (final l in visible)
+            _LessonRow(
+              lesson: l,
+              unlocked: p.unlocked(l.id),
+              best: p.best[l.id] ?? 0,
+              passed: p.passed(l.id),
+              onOpen: () => onOpen(l),
+            ),
+          if (hidden > 0)
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Row(
+                children: [
+                  const Icon(Icons.lock_outline, size: 15, color: silver),
+                  const SizedBox(width: 6),
+                  Text('$hidden more ${hidden == 1 ? 'lesson' : 'lessons'} to unlock',
+                      style: const TextStyle(
+                          color: slate,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600)),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LessonRow extends StatelessWidget {
+  final Lesson lesson;
+  final bool unlocked;
+  final bool passed;
+  final int best;
+  final VoidCallback onOpen;
+  const _LessonRow({
+    required this.lesson,
+    required this.unlocked,
+    required this.passed,
+    required this.best,
+    required this.onOpen,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final IconData icon;
+    final Color iconColor;
+    if (passed) {
+      icon = Icons.check_circle;
+      iconColor = const Color(0xFF2E6B3B);
+    } else if (unlocked) {
+      icon = Icons.play_circle_fill;
+      iconColor = terracotta;
+    } else {
+      icon = Icons.lock_outline;
+      iconColor = silver;
+    }
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(top: 8),
       child: Material(
-        color: bg,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(14),
         child: InkWell(
-          onTap: onTap,
           borderRadius: BorderRadius.circular(14),
+          onTap: unlocked ? onOpen : null,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: border, width: 1.4),
+              border: Border.all(color: silverLight, width: 1.2),
             ),
             child: Row(
               children: [
+                Icon(icon, color: iconColor, size: 24),
+                const SizedBox(width: 12),
                 Expanded(
-                  child: Text(label,
-                      style: TextStyle(
-                          color: fg,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(lesson.title,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 15,
+                              color: unlocked ? ink : slate)),
+                      Text(
+                          passed
+                              ? '${lesson.subtitle}  ·  best $best/10'
+                              : unlocked
+                                  ? lesson.subtitle
+                                  : 'Locked — finish the previous lesson',
+                          style: const TextStyle(color: slate, fontSize: 12)),
+                    ],
+                  ),
                 ),
-                if (trailing != null) trailing,
+                if (unlocked)
+                  const Icon(Icons.chevron_right, color: Colors.black26),
               ],
             ),
           ),
