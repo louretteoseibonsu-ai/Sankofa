@@ -231,24 +231,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const Text('Gender',
               style: TextStyle(
                   color: slate, fontWeight: FontWeight.w700, fontSize: 12)),
-          const SizedBox(height: 10),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: _genderOptions.map((g) {
-              final sel = _gender == g;
-              return ChoiceChip(
-                label: Text(g),
-                selected: sel,
-                showCheckmark: false,
-                selectedColor: terracotta,
-                labelStyle: TextStyle(
-                  color: sel ? Colors.white : charcoal,
-                  fontWeight: FontWeight.w600,
-                ),
-                onSelected: (_) => setState(() => _gender = g),
-              );
-            }).toList(),
+          const SizedBox(height: 6),
+          DropdownButtonFormField<String>(
+            value: _gender.isEmpty ? null : _gender,
+            isExpanded: true,
+            decoration: const InputDecoration(
+              prefixIcon: Icon(Icons.wc_outlined),
+            ),
+            hint: const Text('Select gender'),
+            items: _genderOptions
+                .map((g) => DropdownMenuItem(value: g, child: Text(g)))
+                .toList(),
+            onChanged: (v) => setState(() => _gender = v ?? ''),
           ),
           if (_gender == 'Prefer to self-describe') ...[
             const SizedBox(height: 10),
