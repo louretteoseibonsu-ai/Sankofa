@@ -89,6 +89,24 @@ class AuthService {
   /// Marks the account as premium. NOTE: placeholder for real billing —
   /// replace the call site with a verified `in_app_purchase` receipt before
   /// shipping. This only flips a Firestore flag.
+  /// True until the user has seen the Free/Premium plan picker after sign-up.
+  Future<bool> needsPlanChoice() async {
+    final uid = _u?.uid;
+    if (uid == null) return false;
+    final doc =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    return !((doc.data()?['planChosen'] as bool?) ?? false);
+  }
+
+  Future<void> markPlanChosen() async {
+    final uid = _u?.uid;
+    if (uid == null) return;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .set({'planChosen': true}, SetOptions(merge: true));
+  }
+
   /// True if the account currently has premium entitlement.
   Future<bool> isPremium() async {
     final uid = _u?.uid;

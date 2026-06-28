@@ -42,6 +42,7 @@ class Stats {
   final bool dailyPerfect;
   final int keys; // wisdom keys earned from combos (3 open a chest)
   final bool premium;
+  final int pedis; // soft currency
   const Stats({
     required this.progress,
     required this.streak,
@@ -51,6 +52,7 @@ class Stats {
     required this.dailyPerfect,
     required this.keys,
     required this.premium,
+    required this.pedis,
   });
 
   static const empty = Stats(
@@ -62,6 +64,7 @@ class Stats {
     dailyPerfect: false,
     keys: 0,
     premium: false,
+    pedis: 0,
   );
 
   int get lessonsCompleted =>
@@ -181,7 +184,33 @@ class ProgressService {
       dailyPerfect: isToday ? (data['dailyPerfect'] as bool?) ?? false : false,
       keys: (data['keys'] as num?)?.toInt() ?? 0,
       premium: (data['premium'] as bool?) ?? false,
+      pedis: (data['pedis'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  /// Cost in pedis to buy one streak freeze.
+  static const int kFreezeCost = 50;
+
+  /// Spends pedis to buy a streak freeze. Returns true on success.
+  Future<bool> buyFreezeWithPedis() async {
+    final uid = _uid;
+    if (uid == null) return false;
+    final doc = await _db.collection('users').doc(uid).get();
+    final pedis = (doc.data()?['pedis'] as num?)?.toInt() ?? 0;
+    if (pedis < kFreezeCost) return false;
+    await _db.collection('users').doc(uid).set({
+      'pedis': FieldValue.increment(-kFreezeCost),
+      'freezes': FieldValue.increment(1),
+    }, SetOptions(merge: true));
+    return true;
+  }
+
+  /// Credits pedis (used by the consumable IAP "buy pedis" flow — stub).
+  Future<void> addPedis(int amount) async {
+    final uid = _uid;
+    if (uid == null || amount <= 0) return;
+    await _db.collection('users').doc(uid).set(
+        {'pedis': FieldValue.increment(amount)}, SetOptions(merge: true));
   }
 
   /// Opens a treasure chest if the user has ≥3 wisdom keys. Spends 3 keys and
@@ -256,6 +285,8 @@ class ProgressService {
       'dailyXp': dailyXp,
       'dailyPerfect': dailyPerfect,
       'keys': FieldValue.increment(keysEarned),
+      // Earn pedis: 5 per lesson + 5 per combo key bonus.
+      'pedis': FieldValue.increment(5 + keysEarned * 5),
       'updatedAt': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
 

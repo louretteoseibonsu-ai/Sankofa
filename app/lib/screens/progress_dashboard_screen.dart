@@ -76,6 +76,9 @@ class _ProgressDashboardScreenState extends State<ProgressDashboardScreen> {
           _TreasureCard(keys: _s.keys, onChanged: _reload),
           const SizedBox(height: 14),
 
+          _WalletCard(pedis: _s.pedis, onChanged: _reload),
+          const SizedBox(height: 14),
+
           // ── Stats grid ──
           Row(children: [
             _Metric(label: 'Day streak', value: '${_s.streak}', icon: '🔥'),
@@ -414,6 +417,85 @@ class _DailyQuests extends StatelessWidget {
             const Text('All done — Ayɛkoo! Come back tomorrow.',
                 style: TextStyle(
                     color: _green, fontWeight: FontWeight.w700, fontSize: 12)),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Pedis wallet ────────────────────────────────────────────────────────────
+class _WalletCard extends StatefulWidget {
+  final int pedis;
+  final Future<void> Function() onChanged;
+  const _WalletCard({required this.pedis, required this.onChanged});
+
+  @override
+  State<_WalletCard> createState() => _WalletCardState();
+}
+
+class _WalletCardState extends State<_WalletCard> {
+  bool _busy = false;
+
+  Future<void> _buyFreeze() async {
+    setState(() => _busy = true);
+    final ok = await ProgressService().buyFreezeWithPedis();
+    if (!mounted) return;
+    setState(() => _busy = false);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(ok
+            ? 'Bought a streak freeze ❄ for ${ProgressService.kFreezeCost} pedis.'
+            : 'Not enough pedis — earn more by finishing lessons.')));
+    if (ok) await widget.onChanged();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final canBuy = widget.pedis >= ProgressService.kFreezeCost;
+    return FloatingCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Text('◈', style: TextStyle(fontSize: 22, color: _gold)),
+              const SizedBox(width: 10),
+              const Text('Pedis wallet',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w800, fontSize: 16, color: ink)),
+              const Spacer(),
+              Text('${widget.pedis}',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 18,
+                      color: charcoal)),
+            ],
+          ),
+          const SizedBox(height: 6),
+          const Text(
+              'Earn pedis as you learn. Spend them on streak freezes, skins, and retries.',
+              style: TextStyle(color: slate, fontSize: 12.5, height: 1.4)),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: (canBuy && !_busy) ? _buyFreeze : null,
+                  icon: const Icon(Icons.ac_unit, size: 16),
+                  label: Text('Freeze · ${ProgressService.kFreezeCost}'),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: FilledButton.icon(
+                  onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Pedis packs launch with payments soon.'))),
+                  icon: const Icon(Icons.add, size: 18),
+                  label: const Text('Get more'),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
