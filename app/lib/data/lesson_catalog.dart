@@ -51,18 +51,74 @@ const List<LessonCategory> kCategories = [
   LessonCategory(
     id: 'everyday',
     name: 'Everyday Twi',
-    blurb: 'Greetings, relationships, and the language of daily life.',
+    blurb: 'Greetings and family you use daily.',
     icon: Icons.waving_hand_outlined,
     lessons: [
       Lesson(id: 'unit_002', title: 'Greetings', subtitle: 'Nkyea', asset: 'assets/content/unit_002.json', categoryId: 'everyday'),
       Lesson(id: 'unit_004', title: 'Family Members', subtitle: 'Abusuafoɔ', asset: 'assets/content/unit_004.json', categoryId: 'everyday'),
-      Lesson(id: 'unit_014', title: 'Dating & Love', subtitle: 'Ɔdɔ', asset: 'assets/content/unit_014.json', categoryId: 'everyday'),
-      Lesson(id: 'unit_015', title: 'Hobbies', subtitle: 'Anigyedeɛ', asset: 'assets/content/unit_015.json', categoryId: 'everyday'),
-      Lesson(id: 'unit_016', title: 'Dining Out', subtitle: 'Adidie', asset: 'assets/content/unit_016.json', categoryId: 'everyday'),
-      Lesson(id: 'unit_017', title: 'Travel', subtitle: 'Akwantuo', asset: 'assets/content/unit_017.json', categoryId: 'everyday'),
-      Lesson(id: 'unit_018', title: 'Cinema', subtitle: 'Sini', asset: 'assets/content/unit_018.json', categoryId: 'everyday'),
-      Lesson(id: 'unit_019', title: 'Books', subtitle: 'Nwoma', asset: 'assets/content/unit_019.json', categoryId: 'everyday'),
-      Lesson(id: 'unit_020', title: 'Music', subtitle: 'Nnwom', asset: 'assets/content/unit_020.json', categoryId: 'everyday'),
+    ],
+  ),
+  LessonCategory(
+    id: 'dating',
+    name: 'Dating & Love',
+    blurb: 'Affection, romance, and relationships.',
+    icon: Icons.favorite_border,
+    lessons: [
+      Lesson(id: 'unit_014', title: 'Dating & Love', subtitle: 'Ɔdɔ', asset: 'assets/content/unit_014.json', categoryId: 'dating'),
+    ],
+  ),
+  LessonCategory(
+    id: 'hobbies',
+    name: 'Hobbies',
+    blurb: 'Play, sport, and things you love to do.',
+    icon: Icons.sports_esports_outlined,
+    lessons: [
+      Lesson(id: 'unit_015', title: 'Hobbies', subtitle: 'Anigyedeɛ', asset: 'assets/content/unit_015.json', categoryId: 'hobbies'),
+    ],
+  ),
+  LessonCategory(
+    id: 'dining',
+    name: 'Dining Out',
+    blurb: 'Food, drink, and eating out.',
+    icon: Icons.restaurant_outlined,
+    lessons: [
+      Lesson(id: 'unit_016', title: 'Dining Out', subtitle: 'Adidie', asset: 'assets/content/unit_016.json', categoryId: 'dining'),
+    ],
+  ),
+  LessonCategory(
+    id: 'travel',
+    name: 'Travel',
+    blurb: 'Getting around and going places.',
+    icon: Icons.flight_takeoff_outlined,
+    lessons: [
+      Lesson(id: 'unit_017', title: 'Travel', subtitle: 'Akwantuo', asset: 'assets/content/unit_017.json', categoryId: 'travel'),
+    ],
+  ),
+  LessonCategory(
+    id: 'cinema',
+    name: 'Cinema',
+    blurb: 'Films, shows, and watching together.',
+    icon: Icons.movie_outlined,
+    lessons: [
+      Lesson(id: 'unit_018', title: 'Cinema', subtitle: 'Sini', asset: 'assets/content/unit_018.json', categoryId: 'cinema'),
+    ],
+  ),
+  LessonCategory(
+    id: 'books',
+    name: 'Books',
+    blurb: 'Reading, writing, and learning.',
+    icon: Icons.menu_book_outlined,
+    lessons: [
+      Lesson(id: 'unit_019', title: 'Books', subtitle: 'Nwoma', asset: 'assets/content/unit_019.json', categoryId: 'books'),
+    ],
+  ),
+  LessonCategory(
+    id: 'music',
+    name: 'Music',
+    blurb: 'Songs, drums, and dancing.',
+    icon: Icons.music_note_outlined,
+    lessons: [
+      Lesson(id: 'unit_020', title: 'Music', subtitle: 'Nnwom', asset: 'assets/content/unit_020.json', categoryId: 'music'),
     ],
   ),
   LessonCategory(
