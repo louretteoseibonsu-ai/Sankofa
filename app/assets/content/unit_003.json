@@ -5,7 +5,9 @@
   "vocabulary_spotlight": {
     "headword": "baako",
     "gloss": "The number one — the first in counting.",
-    "phonetic_bridge": { "pronunciation": "baa-ko" },
+    "phonetic_bridge": {
+      "pronunciation": "baa-ko"
+    },
     "example_sentences": [
       "Baako, mmienu, mmiɛnsa.",
       "Me wɔ nnipa baako."
@@ -21,15 +23,157 @@
     ]
   },
   "lineage_challenges": [
-    { "prompt": "How do you say 'one'?", "type": "recall", "options": ["baako", "mmienu", "edu", "nsia"], "correct_index": 0 },
-    { "prompt": "'mmienu' means:", "type": "concept_match", "options": ["two", "three", "four", "five"], "correct_index": 0 },
-    { "prompt": "Which word means 'three'?", "type": "recall", "options": ["mmiɛnsa", "ɛnan", "baako", "nson"], "correct_index": 0 },
-    { "prompt": "'ɛnan' is which number?", "type": "concept_match", "options": ["four", "five", "six", "seven"], "correct_index": 0 },
-    { "prompt": "How do you say 'five'?", "type": "recall", "options": ["enum", "nsia", "edu", "nson"], "correct_index": 0 },
-    { "prompt": "'nsia' means:", "type": "concept_match", "options": ["six", "seven", "eight", "nine"], "correct_index": 0 },
-    { "prompt": "Which word means 'seven'?", "type": "recall", "options": ["nson", "nwɔtwe", "nkron", "edu"], "correct_index": 0 },
-    { "prompt": "'nwɔtwe' is which number?", "type": "concept_match", "options": ["eight", "nine", "ten", "six"], "correct_index": 0 },
-    { "prompt": "How do you say 'nine'?", "type": "recall", "options": ["nkron", "edu", "enum", "nson"], "correct_index": 0 },
-    { "prompt": "'edu' means:", "type": "concept_match", "options": ["ten", "one", "five", "nine"], "correct_index": 0 }
+    {
+      "prompt": "How do you say 'one'?",
+      "type": "recall",
+      "options": [
+        "baako",
+        "mmienu",
+        "edu",
+        "nsia"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "'mmienu' means:",
+      "type": "concept_match",
+      "options": [
+        "two",
+        "three",
+        "four",
+        "five"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Which word means 'three'?",
+      "type": "recall",
+      "options": [
+        "mmiɛnsa",
+        "ɛnan",
+        "baako",
+        "nson"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "'ɛnan' is which number?",
+      "type": "concept_match",
+      "options": [
+        "four",
+        "five",
+        "six",
+        "seven"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "How do you say 'five'?",
+      "type": "recall",
+      "options": [
+        "enum",
+        "nsia",
+        "edu",
+        "nson"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "'nsia' means:",
+      "type": "concept_match",
+      "options": [
+        "six",
+        "seven",
+        "eight",
+        "nine"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Which word means 'seven'?",
+      "type": "recall",
+      "options": [
+        "nson",
+        "nwɔtwe",
+        "nkron",
+        "edu"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "'nwɔtwe' is which number?",
+      "type": "concept_match",
+      "options": [
+        "eight",
+        "nine",
+        "ten",
+        "six"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "How do you say 'nine'?",
+      "type": "recall",
+      "options": [
+        "nkron",
+        "edu",
+        "enum",
+        "nson"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "'edu' means:",
+      "type": "concept_match",
+      "options": [
+        "ten",
+        "one",
+        "five",
+        "nine"
+      ],
+      "correct_index": 0
+    }
+  ],
+  "glossary": [
+    {
+      "twi": "baako",
+      "en": "1"
+    },
+    {
+      "twi": "mmienu",
+      "en": "2"
+    },
+    {
+      "twi": "mmiɛnsa",
+      "en": "3"
+    },
+    {
+      "twi": "ɛnan",
+      "en": "4"
+    },
+    {
+      "twi": "enum",
+      "en": "5"
+    },
+    {
+      "twi": "nsia",
+      "en": "6"
+    },
+    {
+      "twi": "nson",
+      "en": "7"
+    },
+    {
+      "twi": "nwɔtwe",
+      "en": "8"
+    },
+    {
+      "twi": "nkron",
+      "en": "9"
+    },
+    {
+      "twi": "edu",
+      "en": "10"
+    }
   ]
 }

@@ -132,5 +132,47 @@
       ],
       "correct_index": 0
     }
+  ],
+  "glossary": [
+    {
+      "twi": "ɔdɔ",
+      "en": "love"
+    },
+    {
+      "twi": "Medɔ wo",
+      "en": "I love you"
+    },
+    {
+      "twi": "akoma",
+      "en": "heart"
+    },
+    {
+      "twi": "aware",
+      "en": "marriage"
+    },
+    {
+      "twi": "ware",
+      "en": "to marry"
+    },
+    {
+      "twi": "mpena",
+      "en": "sweetheart / lover"
+    },
+    {
+      "twi": "adamfo",
+      "en": "friend"
+    },
+    {
+      "twi": "fɛ",
+      "en": "beautiful"
+    },
+    {
+      "twi": "anigyeɛ",
+      "en": "joy"
+    },
+    {
+      "twi": "Wobɛware me?",
+      "en": "Will you marry me?"
+    }
   ]
 }

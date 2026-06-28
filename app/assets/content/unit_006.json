@@ -132,5 +132,47 @@
       ],
       "correct_index": 0
     }
+  ],
+  "glossary": [
+    {
+      "twi": "aduonu baako",
+      "en": "21"
+    },
+    {
+      "twi": "aduonu mmienu",
+      "en": "22"
+    },
+    {
+      "twi": "aduonu mmiɛnsa",
+      "en": "23"
+    },
+    {
+      "twi": "aduonu ɛnan",
+      "en": "24"
+    },
+    {
+      "twi": "aduonu enum",
+      "en": "25"
+    },
+    {
+      "twi": "aduonu nsia",
+      "en": "26"
+    },
+    {
+      "twi": "aduonu nson",
+      "en": "27"
+    },
+    {
+      "twi": "aduonu nwɔtwe",
+      "en": "28"
+    },
+    {
+      "twi": "aduonu nkron",
+      "en": "29"
+    },
+    {
+      "twi": "aduasa",
+      "en": "30"
+    }
   ]
 }

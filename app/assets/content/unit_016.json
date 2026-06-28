@@ -132,5 +132,47 @@
       ],
       "correct_index": 0
     }
+  ],
+  "glossary": [
+    {
+      "twi": "aduane",
+      "en": "food"
+    },
+    {
+      "twi": "nsuo",
+      "en": "water"
+    },
+    {
+      "twi": "didi",
+      "en": "to eat"
+    },
+    {
+      "twi": "ɛkɔm de me",
+      "en": "I am hungry"
+    },
+    {
+      "twi": "dɛ",
+      "en": "delicious"
+    },
+    {
+      "twi": "ɛmo",
+      "en": "rice"
+    },
+    {
+      "twi": "nam",
+      "en": "meat"
+    },
+    {
+      "twi": "nsuomnam",
+      "en": "fish"
+    },
+    {
+      "twi": "mepɛ",
+      "en": "I want..."
+    },
+    {
+      "twi": "adidibea",
+      "en": "place to eat"
+    }
   ]
 }

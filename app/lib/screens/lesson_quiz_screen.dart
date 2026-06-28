@@ -128,6 +128,10 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                         fontWeight: FontWeight.w800, fontSize: 22, color: ink)),
                 const SizedBox(height: 14),
                 _VocabCard(u: u),
+                if (u.glossary.isNotEmpty) ...[
+                  const SizedBox(height: 14),
+                  _GlossaryCard(glossary: u.glossary),
+                ],
                 if (u.grammar != null) ...[
                   const SizedBox(height: 14),
                   _GrammarCard(grammar: u.grammar!),
@@ -339,7 +343,7 @@ class _GrammarCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('GRAMMAR',
+          const Text('BASIC GRAMMAR',
               style: TextStyle(
                   color: slate,
                   fontWeight: FontWeight.w700,
@@ -371,6 +375,52 @@ class _GrammarCard extends StatelessWidget {
                                 const TextStyle(fontSize: 13, color: ink)),
                       ))
                   .toList(),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _GlossaryCard extends StatelessWidget {
+  final List<GlossEntry> glossary;
+  const _GlossaryCard({required this.glossary});
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('WORDS & PRONUNCIATION',
+              style: TextStyle(
+                  color: slate,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 11,
+                  letterSpacing: 0.6)),
+          const SizedBox(height: 4),
+          for (int i = 0; i < glossary.length; i++) ...[
+            if (i > 0) const Divider(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(glossary[i].twi,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 16,
+                              color: ink)),
+                      Text(
+                          '${glossary[i].en}  ·  “${twiApproximate(glossary[i].twi)}”',
+                          style: const TextStyle(color: slate, fontSize: 12.5)),
+                    ],
+                  ),
+                ),
+                _SpeakButton(text: glossary[i].twi, size: 22),
+              ],
             ),
           ],
         ],

@@ -132,5 +132,47 @@
       ],
       "correct_index": 0
     }
+  ],
+  "glossary": [
+    {
+      "twi": "dubaako",
+      "en": "11"
+    },
+    {
+      "twi": "dumienu",
+      "en": "12"
+    },
+    {
+      "twi": "dumiɛnsa",
+      "en": "13"
+    },
+    {
+      "twi": "dunan",
+      "en": "14"
+    },
+    {
+      "twi": "dunum",
+      "en": "15"
+    },
+    {
+      "twi": "dunsia",
+      "en": "16"
+    },
+    {
+      "twi": "dunson",
+      "en": "17"
+    },
+    {
+      "twi": "dunwɔtwe",
+      "en": "18"
+    },
+    {
+      "twi": "dunkron",
+      "en": "19"
+    },
+    {
+      "twi": "aduonu",
+      "en": "20"
+    }
   ]
 }

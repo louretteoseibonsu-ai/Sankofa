@@ -132,5 +132,47 @@
       ],
       "correct_index": 0
     }
+  ],
+  "glossary": [
+    {
+      "twi": "akwantuo",
+      "en": "journey / travel"
+    },
+    {
+      "twi": "ɛkwan",
+      "en": "road / way"
+    },
+    {
+      "twi": "kaa",
+      "en": "car"
+    },
+    {
+      "twi": "kɔ",
+      "en": "to go"
+    },
+    {
+      "twi": "bra",
+      "en": "to come"
+    },
+    {
+      "twi": "Worekɔ he?",
+      "en": "Where are you going?"
+    },
+    {
+      "twi": "wimhyɛn",
+      "en": "aeroplane"
+    },
+    {
+      "twi": "dwam",
+      "en": "market"
+    },
+    {
+      "twi": "fie",
+      "en": "home / house"
+    },
+    {
+      "twi": "kuro",
+      "en": "town"
+    }
   ]
 }

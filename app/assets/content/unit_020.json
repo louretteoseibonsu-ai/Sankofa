@@ -132,5 +132,47 @@
       ],
       "correct_index": 0
     }
+  ],
+  "glossary": [
+    {
+      "twi": "dwom",
+      "en": "song / music"
+    },
+    {
+      "twi": "to dwom",
+      "en": "to sing"
+    },
+    {
+      "twi": "twene",
+      "en": "drum"
+    },
+    {
+      "twi": "saw",
+      "en": "to dance"
+    },
+    {
+      "twi": "ɛnne",
+      "en": "voice"
+    },
+    {
+      "twi": "ɔdwontofoɔ",
+      "en": "singer"
+    },
+    {
+      "twi": "tie",
+      "en": "to listen"
+    },
+    {
+      "twi": "atɛntɛbɛn",
+      "en": "flute"
+    },
+    {
+      "twi": "bɔ twene",
+      "en": "to play a drum"
+    },
+    {
+      "twi": "dɛ",
+      "en": "nice / sweet"
+    }
   ]
 }

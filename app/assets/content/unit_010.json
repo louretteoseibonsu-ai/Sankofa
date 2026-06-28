@@ -132,5 +132,47 @@
       ],
       "correct_index": 0
     }
+  ],
+  "glossary": [
+    {
+      "twi": "aduosia baako",
+      "en": "61"
+    },
+    {
+      "twi": "aduosia mmienu",
+      "en": "62"
+    },
+    {
+      "twi": "aduosia mmiɛnsa",
+      "en": "63"
+    },
+    {
+      "twi": "aduosia ɛnan",
+      "en": "64"
+    },
+    {
+      "twi": "aduosia enum",
+      "en": "65"
+    },
+    {
+      "twi": "aduosia nsia",
+      "en": "66"
+    },
+    {
+      "twi": "aduosia nson",
+      "en": "67"
+    },
+    {
+      "twi": "aduosia nwɔtwe",
+      "en": "68"
+    },
+    {
+      "twi": "aduosia nkron",
+      "en": "69"
+    },
+    {
+      "twi": "aduoson",
+      "en": "70"
+    }
   ]
 }

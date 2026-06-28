@@ -132,5 +132,47 @@
       ],
       "correct_index": 0
     }
+  ],
+  "glossary": [
+    {
+      "twi": "aduowɔtwe baako",
+      "en": "81"
+    },
+    {
+      "twi": "aduowɔtwe mmienu",
+      "en": "82"
+    },
+    {
+      "twi": "aduowɔtwe mmiɛnsa",
+      "en": "83"
+    },
+    {
+      "twi": "aduowɔtwe ɛnan",
+      "en": "84"
+    },
+    {
+      "twi": "aduowɔtwe enum",
+      "en": "85"
+    },
+    {
+      "twi": "aduowɔtwe nsia",
+      "en": "86"
+    },
+    {
+      "twi": "aduowɔtwe nson",
+      "en": "87"
+    },
+    {
+      "twi": "aduowɔtwe nwɔtwe",
+      "en": "88"
+    },
+    {
+      "twi": "aduowɔtwe nkron",
+      "en": "89"
+    },
+    {
+      "twi": "aduokron",
+      "en": "90"
+    }
   ]
 }

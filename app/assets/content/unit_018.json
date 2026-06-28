@@ -132,5 +132,47 @@
       ],
       "correct_index": 0
     }
+  ],
+  "glossary": [
+    {
+      "twi": "sini",
+      "en": "film / movie"
+    },
+    {
+      "twi": "mfonin",
+      "en": "picture / image"
+    },
+    {
+      "twi": "hwɛ",
+      "en": "to watch"
+    },
+    {
+      "twi": "serew",
+      "en": "to laugh"
+    },
+    {
+      "twi": "anansesɛm",
+      "en": "story"
+    },
+    {
+      "twi": "Momma yɛnhwɛ",
+      "en": "Let's watch"
+    },
+    {
+      "twi": "anadwo",
+      "en": "night"
+    },
+    {
+      "twi": "anigyeɛ",
+      "en": "enjoyment"
+    },
+    {
+      "twi": "akonnwa",
+      "en": "seat / chair"
+    },
+    {
+      "twi": "bra",
+      "en": "to come"
+    }
   ]
 }

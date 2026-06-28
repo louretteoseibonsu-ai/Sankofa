@@ -132,5 +132,47 @@
       ],
       "correct_index": 0
     }
+  ],
+  "glossary": [
+    {
+      "twi": "nwoma",
+      "en": "book"
+    },
+    {
+      "twi": "kenkan",
+      "en": "to read"
+    },
+    {
+      "twi": "kyerɛw",
+      "en": "to write"
+    },
+    {
+      "twi": "krataa",
+      "en": "paper"
+    },
+    {
+      "twi": "twerɛdua",
+      "en": "pen"
+    },
+    {
+      "twi": "asɛmfua",
+      "en": "word"
+    },
+    {
+      "twi": "anansesɛm",
+      "en": "story"
+    },
+    {
+      "twi": "din",
+      "en": "name"
+    },
+    {
+      "twi": "sua",
+      "en": "to learn"
+    },
+    {
+      "twi": "sukuu",
+      "en": "school"
+    }
   ]
 }

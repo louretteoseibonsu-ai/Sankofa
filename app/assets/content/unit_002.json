@@ -5,7 +5,9 @@
   "vocabulary_spotlight": {
     "headword": "akwaaba",
     "gloss": "A warm welcome offered to a guest or newcomer.",
-    "phonetic_bridge": { "pronunciation": "a-kwaa-ba" },
+    "phonetic_bridge": {
+      "pronunciation": "a-kwaa-ba"
+    },
     "example_sentences": [
       "Akwaaba! Yɛma wo akwaaba.",
       "Akwaaba, bra mu."
@@ -21,15 +23,157 @@
     ]
   },
   "lineage_challenges": [
-    { "prompt": "How do you greet someone in the morning?", "type": "recall", "options": ["Maakye", "Maaha", "Maadwo", "Akwaaba"], "correct_index": 0 },
-    { "prompt": "At what time of day is 'Maaha' used?", "type": "recall", "options": ["Afternoon", "Morning", "Late night", "Dawn"], "correct_index": 0 },
-    { "prompt": "'Maadwo' means:", "type": "concept_match", "options": ["Good evening", "Good morning", "Welcome", "Goodbye"], "correct_index": 0 },
-    { "prompt": "'Akwaaba' means:", "type": "concept_match", "options": ["Welcome", "Thank you", "Sorry", "Goodbye"], "correct_index": 0 },
-    { "prompt": "How do you say 'thank you'?", "type": "recall", "options": ["Medaase", "Akwaaba", "Daabi", "Yoo"], "correct_index": 0 },
-    { "prompt": "'Wo ho te sɛn?' is asking:", "type": "concept_match", "options": ["How are you?", "What is your name?", "Where are you going?", "How old are you?"], "correct_index": 0 },
-    { "prompt": "A common reply to 'Wo ho te sɛn?' is:", "type": "recall", "options": ["Me ho yɛ", "Medaase", "Akwaaba", "Daabi"], "correct_index": 0 },
-    { "prompt": "'Mepa wo kyɛw' means:", "type": "concept_match", "options": ["Please / excuse me", "Good night", "Thank you", "Welcome"], "correct_index": 0 },
-    { "prompt": "How do you say 'yes'?", "type": "recall", "options": ["Aane", "Daabi", "Yoo", "Medaase"], "correct_index": 0 },
-    { "prompt": "How do you say 'no'?", "type": "recall", "options": ["Daabi", "Aane", "Yoo", "Akwaaba"], "correct_index": 0 }
+    {
+      "prompt": "How do you greet someone in the morning?",
+      "type": "recall",
+      "options": [
+        "Maakye",
+        "Maaha",
+        "Maadwo",
+        "Akwaaba"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "At what time of day is 'Maaha' used?",
+      "type": "recall",
+      "options": [
+        "Afternoon",
+        "Morning",
+        "Late night",
+        "Dawn"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "'Maadwo' means:",
+      "type": "concept_match",
+      "options": [
+        "Good evening",
+        "Good morning",
+        "Welcome",
+        "Goodbye"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "'Akwaaba' means:",
+      "type": "concept_match",
+      "options": [
+        "Welcome",
+        "Thank you",
+        "Sorry",
+        "Goodbye"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "How do you say 'thank you'?",
+      "type": "recall",
+      "options": [
+        "Medaase",
+        "Akwaaba",
+        "Daabi",
+        "Yoo"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "'Wo ho te sɛn?' is asking:",
+      "type": "concept_match",
+      "options": [
+        "How are you?",
+        "What is your name?",
+        "Where are you going?",
+        "How old are you?"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "A common reply to 'Wo ho te sɛn?' is:",
+      "type": "recall",
+      "options": [
+        "Me ho yɛ",
+        "Medaase",
+        "Akwaaba",
+        "Daabi"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "'Mepa wo kyɛw' means:",
+      "type": "concept_match",
+      "options": [
+        "Please / excuse me",
+        "Good night",
+        "Thank you",
+        "Welcome"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "How do you say 'yes'?",
+      "type": "recall",
+      "options": [
+        "Aane",
+        "Daabi",
+        "Yoo",
+        "Medaase"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "How do you say 'no'?",
+      "type": "recall",
+      "options": [
+        "Daabi",
+        "Aane",
+        "Yoo",
+        "Akwaaba"
+      ],
+      "correct_index": 0
+    }
+  ],
+  "glossary": [
+    {
+      "twi": "Maakye",
+      "en": "good morning"
+    },
+    {
+      "twi": "Maaha",
+      "en": "good afternoon"
+    },
+    {
+      "twi": "Maadwo",
+      "en": "good evening"
+    },
+    {
+      "twi": "Akwaaba",
+      "en": "welcome"
+    },
+    {
+      "twi": "Medaase",
+      "en": "thank you"
+    },
+    {
+      "twi": "Wo ho te sɛn?",
+      "en": "how are you?"
+    },
+    {
+      "twi": "Me ho yɛ",
+      "en": "I'm fine"
+    },
+    {
+      "twi": "Mepa wo kyɛw",
+      "en": "please / excuse me"
+    },
+    {
+      "twi": "Aane",
+      "en": "yes"
+    },
+    {
+      "twi": "Daabi",
+      "en": "no"
+    }
   ]
 }

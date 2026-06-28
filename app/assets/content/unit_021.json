@@ -1,0 +1,47 @@
+{
+  "unit_id": "unit_021",
+  "unit_title": "Afahyɛ: Special Occasions",
+  "review_required": true,
+  "vocabulary_spotlight": {
+    "headword": "Afehyia pa",
+    "gloss": "A festive greeting for Christmas (Bronya) and the New Year.",
+    "phonetic_bridge": { "pronunciation": "afe-hyia pa" },
+    "example_sentences": [
+      "Afehyia pa!",
+      "Mema wo awoda pa."
+    ]
+  },
+  "grammar_mechanics": {
+    "focus": "Greetings for special occasions",
+    "explanation": "Akan marks celebrations with set greetings: 'Awoda pa!' (happy birthday), 'Afehyia pa!' (season's greetings, used at Christmas/Bronya and the New Year), and 'Ayɛkoo!' (well done / congratulations). The word 'pa' means 'good'.",
+    "patterns": [
+      "Awoda pa! = Happy birthday!",
+      "Afehyia pa! = Season's greetings",
+      "Ayɛkoo! = Well done / congrats"
+    ]
+  },
+  "lineage_challenges": [
+    { "prompt": "How do you say 'birthday'?", "type": "recall", "options": ["awoda", "Bronya", "ayie", "afahyɛ"], "correct_index": 0 },
+    { "prompt": "What does 'Bronya' mean?", "type": "concept_match", "options": ["Christmas", "New Year", "birthday", "wedding"], "correct_index": 0 },
+    { "prompt": "'Afehyia pa!' is a greeting for:", "type": "concept_match", "options": ["Christmas & New Year", "a funeral", "the morning", "hunger"], "correct_index": 0 },
+    { "prompt": "How do you say 'gift'?", "type": "recall", "options": ["akyɛdeɛ", "akoma", "aduane", "nsuo"], "correct_index": 0 },
+    { "prompt": "'afahyɛ' means:", "type": "concept_match", "options": ["festival", "market", "road", "book"], "correct_index": 0 },
+    { "prompt": "How do you wish someone 'Happy birthday'?", "type": "recall", "options": ["Awoda pa!", "Medaase", "Daabi", "Akwaaba"], "correct_index": 0 },
+    { "prompt": "'Ayɛkoo!' means:", "type": "concept_match", "options": ["well done / congrats", "goodbye", "sorry", "please"], "correct_index": 0 },
+    { "prompt": "What does 'ayie' mean?", "type": "concept_match", "options": ["funeral", "wedding", "party", "birthday"], "correct_index": 0 },
+    { "prompt": "How do you say 'joy'?", "type": "recall", "options": ["anigyeɛ", "ɔdɔ", "aware", "ɛkɔm"], "correct_index": 0 },
+    { "prompt": "'apontoɔ' means:", "type": "concept_match", "options": ["party / feast", "school", "car", "fish"], "correct_index": 0 }
+  ],
+  "glossary": [
+    { "twi": "awoda", "en": "birthday" },
+    { "twi": "Awoda pa!", "en": "Happy birthday!" },
+    { "twi": "Bronya", "en": "Christmas" },
+    { "twi": "Afehyia pa!", "en": "Season's greetings / Happy New Year" },
+    { "twi": "afahyɛ", "en": "festival" },
+    { "twi": "akyɛdeɛ", "en": "gift" },
+    { "twi": "anigyeɛ", "en": "joy" },
+    { "twi": "Ayɛkoo!", "en": "well done / congratulations" },
+    { "twi": "ayie", "en": "funeral" },
+    { "twi": "apontoɔ", "en": "party / feast" }
+  ]
+}

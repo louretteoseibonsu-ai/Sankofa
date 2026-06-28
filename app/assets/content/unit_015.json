@@ -132,5 +132,47 @@
       ],
       "correct_index": 0
     }
+  ],
+  "glossary": [
+    {
+      "twi": "di agorɔ",
+      "en": "to play"
+    },
+    {
+      "twi": "agorɔ",
+      "en": "game / play"
+    },
+    {
+      "twi": "to dwom",
+      "en": "to sing"
+    },
+    {
+      "twi": "dwom",
+      "en": "song"
+    },
+    {
+      "twi": "saw",
+      "en": "to dance"
+    },
+    {
+      "twi": "kenkan",
+      "en": "to read"
+    },
+    {
+      "twi": "noa",
+      "en": "to cook"
+    },
+    {
+      "twi": "bɔɔlo",
+      "en": "football"
+    },
+    {
+      "twi": "guare",
+      "en": "to swim"
+    },
+    {
+      "twi": "anigyeɛ",
+      "en": "enjoyment"
+    }
   ]
 }
