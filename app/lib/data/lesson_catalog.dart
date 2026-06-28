@@ -38,7 +38,7 @@ class LessonCategory {
 const List<LessonCategory> kCategories = [
   LessonCategory(
     id: 'greetings',
-    emoji: '👋',
+    emoji: '👋🏾',
     name: 'Foundations · Greetings',
     blurb: 'The first words that open every door.',
     icon: Icons.waving_hand_outlined,
