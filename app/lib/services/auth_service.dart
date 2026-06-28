@@ -74,13 +74,14 @@ class AuthService {
     return doc.data() ?? {};
   }
 
-  /// Merges date-of-birth (ISO yyyy-MM-dd) and gender into users/{uid}.
-  Future<void> saveProfile({String? dob, String? gender}) async {
+  /// Merges profile fields into users/{uid}. Only non-null fields are written.
+  Future<void> saveProfile({String? dob, String? gender, String? dayName}) async {
     final uid = _u?.uid;
     if (uid == null) return;
     await FirebaseFirestore.instance.collection('users').doc(uid).set({
       if (dob != null) 'dob': dob,
       if (gender != null) 'gender': gender,
+      if (dayName != null) 'dayName': dayName,
       'updatedAt': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
   }

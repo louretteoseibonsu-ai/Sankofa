@@ -46,9 +46,17 @@ class _DayNameScreenState extends State<DayNameScreen> {
     }
     try {
       await _auth.updateDisplayName(name);
+      // Persist the day-name selection (and the birth date used) to the profile.
+      final d = _date;
+      final dobIso = d == null
+          ? null
+          : '${d.year.toString().padLeft(4, '0')}-'
+              '${d.month.toString().padLeft(2, '0')}-'
+              '${d.day.toString().padLeft(2, '0')}';
+      await _auth.saveProfile(dayName: name, dob: dobIso);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Display name set to "$name"')),
+          SnackBar(content: Text('Saved — display name set to "$name"')),
         );
       }
     } catch (_) {
