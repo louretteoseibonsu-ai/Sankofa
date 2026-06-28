@@ -86,6 +86,27 @@ class AuthService {
     }, SetOptions(merge: true));
   }
 
+  /// Marks the account as premium. NOTE: placeholder for real billing —
+  /// replace the call site with a verified `in_app_purchase` receipt before
+  /// shipping. This only flips a Firestore flag.
+  /// True if the account currently has premium entitlement.
+  Future<bool> isPremium() async {
+    final uid = _u?.uid;
+    if (uid == null) return false;
+    final doc =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    return (doc.data()?['premium'] as bool?) ?? false;
+  }
+
+  Future<void> setPremium(bool value) async {
+    final uid = _u?.uid;
+    if (uid == null) return;
+    await FirebaseFirestore.instance.collection('users').doc(uid).set({
+      'premium': value,
+      'premiumSince': value ? FieldValue.serverTimestamp() : null,
+    }, SetOptions(merge: true));
+  }
+
   Future<void> signOut() async {
     await GoogleSignIn().signOut();
     await _auth.signOut();

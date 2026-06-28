@@ -1,14 +1,37 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../data/adinkra_symbols.dart';
+import '../services/auth_service.dart';
 import '../services/progress_service.dart';
 import '../theme.dart';
 import '../widgets/adinkra_glyph.dart';
 import '../widgets/floating_card.dart';
 import 'leaderboard_screen.dart';
+import 'upgrade_screen.dart';
 
-class SymbolsScreen extends StatelessWidget {
+/// Symbols free up to this index; the rest require premium.
+const int kFreeSymbols = 10;
+
+class SymbolsScreen extends StatefulWidget {
   const SymbolsScreen({super.key});
+
+  @override
+  State<SymbolsScreen> createState() => _SymbolsScreenState();
+}
+
+class _SymbolsScreenState extends State<SymbolsScreen> {
+  bool _premium = false;
+
+  @override
+  void initState() {
+    super.initState();
+    AuthService().isPremium().then((v) {
+      if (mounted) setState(() => _premium = v);
+    });
+  }
+
+  void _openUpgrade() => Navigator.of(context)
+      .push(MaterialPageRoute(builder: (_) => const UpgradeScreen()));
 
   /// Time-aware Akan greeting.
   String _greeting() {
@@ -67,19 +90,23 @@ class SymbolsScreen extends StatelessWidget {
             separatorBuilder: (_, __) => const SizedBox(height: 14),
             itemBuilder: (context, i) {
               final s = kAdinkraSymbols[i];
+              final locked = !_premium && i >= kFreeSymbols;
               return FloatingCard(
-                onTap: () => _showDetail(context, s),
+                onTap: locked ? _openUpgrade : () => _showDetail(context, s),
                 child: Row(
                   children: [
-                    Container(
-                      width: 64,
-                      height: 64,
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: glyphTile,
-                        borderRadius: BorderRadius.circular(18),
+                    Opacity(
+                      opacity: locked ? 0.45 : 1,
+                      child: Container(
+                        width: 64,
+                        height: 64,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: glyphTile,
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                        child: AdinkraGlyph(svg: s.svg, size: 48),
                       ),
-                      child: AdinkraGlyph(svg: s.svg, size: 48),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
@@ -88,19 +115,22 @@ class SymbolsScreen extends StatelessWidget {
                         children: [
                           Text(
                             s.name,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w800, fontSize: 17, color: ink),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 17,
+                                color: locked ? slate : ink),
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            s.value,
+                            locked ? 'Premium' : s.value,
                             style: const TextStyle(
                                 color: plantainGreen, fontWeight: FontWeight.w600, fontSize: 12),
                           ),
                         ],
                       ),
                     ),
-                    const Icon(Icons.chevron_right, color: Colors.black26),
+                    Icon(locked ? Icons.lock : Icons.chevron_right,
+                        color: locked ? const Color(0xFFE3A92C) : Colors.black26),
                   ],
                 ),
               );

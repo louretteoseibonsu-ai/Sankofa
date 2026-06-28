@@ -6,6 +6,7 @@ import '../services/progress_service.dart';
 import '../theme.dart';
 import '../widgets/animations.dart';
 import '../widgets/floating_card.dart';
+import 'upgrade_screen.dart';
 
 const Color _gold = Color(0xFFE3A92C);
 const Color _green = Color(0xFF2E6B3B);
@@ -58,6 +59,11 @@ class _ProgressDashboardScreenState extends State<ProgressDashboardScreen> {
               style: TextStyle(color: slate, fontSize: 13.5)),
           const SizedBox(height: 16),
 
+          if (!_s.premium) ...[
+            _GoPremiumBanner(),
+            const SizedBox(height: 14),
+          ],
+
           _LevelHero(p: p),
           const SizedBox(height: 14),
 
@@ -97,6 +103,49 @@ class _ProgressDashboardScreenState extends State<ProgressDashboardScreen> {
           _BadgeGrid(s: _s),
           const SizedBox(height: 28),
         ],
+      ),
+    );
+  }
+}
+
+class _GoPremiumBanner extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: charcoal,
+      borderRadius: BorderRadius.circular(18),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(18),
+        onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const UpgradeScreen())),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: _gold, width: 1.5),
+          ),
+          child: Row(
+            children: [
+              const Text('✦', style: TextStyle(color: _gold, fontSize: 22)),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Go Premium',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 16)),
+                    Text('All lessons, AI Translate, no ads — 7-day free trial',
+                        style: TextStyle(color: Color(0xFFC9CCD1), fontSize: 12)),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right, color: _gold),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -41,6 +41,7 @@ class Stats {
   final int dailyXp;
   final bool dailyPerfect;
   final int keys; // wisdom keys earned from combos (3 open a chest)
+  final bool premium;
   const Stats({
     required this.progress,
     required this.streak,
@@ -49,6 +50,7 @@ class Stats {
     required this.dailyXp,
     required this.dailyPerfect,
     required this.keys,
+    required this.premium,
   });
 
   static const empty = Stats(
@@ -59,6 +61,7 @@ class Stats {
     dailyXp: 0,
     dailyPerfect: false,
     keys: 0,
+    premium: false,
   );
 
   int get lessonsCompleted =>
@@ -177,6 +180,7 @@ class ProgressService {
       dailyXp: isToday ? (data['dailyXp'] as num?)?.toInt() ?? 0 : 0,
       dailyPerfect: isToday ? (data['dailyPerfect'] as bool?) ?? false : false,
       keys: (data['keys'] as num?)?.toInt() ?? 0,
+      premium: (data['premium'] as bool?) ?? false,
     );
   }
 

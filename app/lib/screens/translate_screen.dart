@@ -3,8 +3,10 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../config.dart';
+import '../services/auth_service.dart';
 import '../theme.dart';
 import '../widgets/floating_card.dart';
+import '../widgets/premium_lock.dart';
 
 class TranslateScreen extends StatefulWidget {
   const TranslateScreen({super.key});
@@ -20,6 +22,15 @@ class _TranslateScreenState extends State<TranslateScreen> {
   bool _loading = false;
   String? _translation;
   String? _error;
+  bool? _premium; // null = checking
+
+  @override
+  void initState() {
+    super.initState();
+    AuthService().isPremium().then((v) {
+      if (mounted) setState(() => _premium = v);
+    });
+  }
 
   @override
   void dispose() {
@@ -75,6 +86,18 @@ class _TranslateScreenState extends State<TranslateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_premium == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (_premium == false) {
+      return const PremiumLock(
+        title: 'AI Translate is a Premium tool',
+        message:
+            'Unlock unlimited English ⇆ Twi translation with native Twi audio, '
+            'plus every lesson, symbol, and more.',
+        icon: Icons.translate,
+      );
+    }
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
