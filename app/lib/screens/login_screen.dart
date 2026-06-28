@@ -156,7 +156,30 @@ class _LoginScreenState extends State<LoginScreen> {
                     textAlign: TextAlign.center,
                     style: const TextStyle(color: Colors.black54),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 18),
+                  SizedBox(
+                    width: double.infinity,
+                    child: SegmentedButton<bool>(
+                      segments: const [
+                        ButtonSegment(
+                            value: false,
+                            label: Text('Sign in'),
+                            icon: Icon(Icons.login, size: 16)),
+                        ButtonSegment(
+                            value: true,
+                            label: Text('Create account'),
+                            icon: Icon(Icons.person_add_alt, size: 16)),
+                      ],
+                      selected: {_isRegister},
+                      onSelectionChanged: _loading
+                          ? null
+                          : (s) => setState(() {
+                                _isRegister = s.first;
+                                _error = null;
+                              }),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                   TextField(
                     controller: _email,
                     keyboardType: TextInputType.emailAddress,
