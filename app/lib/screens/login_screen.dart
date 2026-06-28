@@ -5,7 +5,6 @@ import '../data/adinkra_symbols.dart';
 import '../services/auth_service.dart';
 import '../theme.dart';
 import '../widgets/adinkra_glyph.dart';
-import '../widgets/kente_pattern.dart';
 
 /// Official multi-color Google "G" logo.
 const String _googleGLogo = r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
@@ -126,7 +125,6 @@ class _LoginScreenState extends State<LoginScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        flexibleSpace: const KenteHeaderBackground(),
       ),
       body: SafeArea(
         top: false,
