@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../data/akan_day_names.dart';
+import '../services/auth_service.dart';
 import '../theme.dart';
 import '../widgets/adinkra_glyph.dart';
 import '../data/adinkra_symbols.dart';
@@ -13,6 +15,7 @@ class DayNameScreen extends StatefulWidget {
 }
 
 class _DayNameScreenState extends State<DayNameScreen> {
+  final _auth = AuthService();
   DateTime? _date;
   bool _male = true;
 
@@ -32,6 +35,29 @@ class _DayNameScreenState extends State<DayNameScreen> {
       lastDate: now,
     );
     if (picked != null) setState(() => _date = picked);
+  }
+
+  Future<void> _useAsDisplayName(String name) async {
+    if (FirebaseAuth.instance.currentUser == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Sign in to set your display name.')),
+      );
+      return;
+    }
+    try {
+      await _auth.updateDisplayName(name);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Display name set to "$name"')),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not update display name.')),
+        );
+      }
+    }
   }
 
   @override
@@ -106,6 +132,17 @@ class _DayNameScreenState extends State<DayNameScreen> {
                         color: plantainGreen, fontWeight: FontWeight.w700, fontSize: 12)),
                 const SizedBox(height: 6),
                 Text(day.meaning, style: const TextStyle(height: 1.5, color: ink)),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: () =>
+                        _useAsDisplayName(_male ? day.maleName : day.femaleName),
+                    icon: const Icon(Icons.badge_outlined, size: 18),
+                    label: Text(
+                        'Use "${_male ? day.maleName : day.femaleName}" as my display name'),
+                  ),
+                ),
               ],
             ),
           ),
