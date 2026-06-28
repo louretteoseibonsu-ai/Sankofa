@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -61,6 +62,27 @@ class AuthService {
     final url = await ref.getDownloadURL();
     await _u?.updatePhotoURL(url);
     await _u?.reload();
+  }
+
+  // ── Extended profile (Firestore: users/{uid}) ───────────────────────────
+  /// Reads the user's extended profile doc. Returns {} if none / signed out.
+  Future<Map<String, dynamic>> loadProfile() async {
+    final uid = _u?.uid;
+    if (uid == null) return {};
+    final doc =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    return doc.data() ?? {};
+  }
+
+  /// Merges date-of-birth (ISO yyyy-MM-dd) and gender into users/{uid}.
+  Future<void> saveProfile({String? dob, String? gender}) async {
+    final uid = _u?.uid;
+    if (uid == null) return;
+    await FirebaseFirestore.instance.collection('users').doc(uid).set({
+      if (dob != null) 'dob': dob,
+      if (gender != null) 'gender': gender,
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
   }
 
   Future<void> signOut() async {
