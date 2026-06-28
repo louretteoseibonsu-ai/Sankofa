@@ -1,4 +1,4 @@
-// GENERATED — 62 Adinkra symbols. Charcoal (#2B2B2D) for the Kente-Modernist look.
+// GENERATED — 62 Adinkra symbols, bold charcoal stamp-style (stroke 8).
 
 class AdinkraSymbol {
   final String id;
@@ -18,7 +18,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Except God",
     value: "Omnipotence & Supremacy of God",
     description: "Probably the most popular Adinkra symbol, expressing the omnipotence and supremacy of God over all creation. It conveys that nothing happens without divine authorization. It is featured on Ghana's largest-denomination banknote, the 200 cedi note.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M34 68 C 16 56, 22 30, 44 32 C 60 33, 58 51, 45 49 C 37 48, 39 39, 47 41"/><path d="M66 32 C 84 44, 78 70, 56 68 C 40 67, 42 49, 55 51 C 63 52, 61 61, 53 59"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="#2B2B2D" fill-rule="evenodd" d="M32.5 2.5 L31.0 3.2 L29.8 4.2 L29.1 5.0 L28.6 6.5 L28.6 9.5 L29.0 10.8 L29.5 12.0 L30.8 13.9 L31.8 14.9 L32.0 15.4 L28.3 17.2 L28.0 17.5 L25.6 18.5 L22.5 20.5 L20.8 21.9 L16.8 25.9 L14.6 28.9 L13.3 31.2 L10.9 37.1 L9.8 42.1 L9.4 45.6 L9.3 45.7 L9.3 47.9 L9.1 48.1 L9.3 57.1 L9.4 57.3 L9.6 60.1 L9.8 60.3 L9.9 62.6 L10.1 62.8 L10.9 68.6 L11.9 72.6 L11.9 73.3 L12.9 76.6 L13.3 76.5 L13.3 67.8 L13.4 67.6 L13.4 64.1 L13.8 62.9 L13.8 61.8 L14.8 58.6 L14.9 57.4 L16.9 52.3 L20.3 46.1 L23.0 42.2 L23.3 42.1 L26.5 38.2 L31.8 33.1 L34.8 30.5 L38.1 28.2 L41.2 26.7 L43.5 26.2 L45.2 26.5 L46.0 27.0 L46.7 28.0 L46.7 29.2 L46.3 30.2 L45.5 31.6 L43.2 33.9 L41.3 35.2 L38.3 36.9 L36.8 37.4 L33.0 39.2 L31.1 40.4 L29.1 42.2 L28.3 43.7 L28.3 45.6 L28.6 46.4 L29.5 47.2 L30.6 47.7 L33.5 47.9 L33.6 47.7 L35.8 47.6 L40.7 46.2 L43.2 46.2 L44.3 46.7 L45.2 47.6 L45.5 48.2 L45.5 49.4 L45.0 50.4 L44.0 51.6 L41.7 53.3 L38.3 54.9 L34.5 56.3 L31.5 57.9 L28.8 60.6 L27.5 62.9 L27.1 63.9 L27.1 66.1 L27.8 67.4 L29.0 68.3 L31.5 68.3 L32.8 67.9 L36.3 66.4 L40.7 65.3 L43.2 65.3 L43.8 65.6 L44.7 66.6 L44.5 67.8 L43.2 69.8 L40.0 73.0 L33.5 77.6 L31.1 80.0 L30.3 81.1 L29.0 83.8 L28.1 87.0 L28.1 89.7 L28.5 91.0 L29.3 92.8 L31.3 94.8 L33.1 95.7 L36.6 96.0 L36.8 95.8 L38.8 95.7 L41.5 94.5 L43.3 93.2 L47.8 88.7 L48.8 88.1 L49.7 88.1 L49.8 88.0 L51.3 88.1 L52.7 88.8 L53.3 89.7 L53.7 90.5 L53.7 92.3 L54.2 94.3 L55.0 95.8 L56.2 97.0 L58.7 98.0 L61.9 98.0 L65.4 97.0 L66.7 96.2 L67.5 95.2 L67.9 94.3 L68.0 92.5 L68.2 92.3 L68.0 89.7 L66.7 85.8 L73.5 81.8 L76.7 79.5 L80.7 75.8 L82.9 73.3 L85.7 69.3 L88.7 63.1 L89.6 60.6 L90.6 55.9 L90.9 50.4 L90.7 50.3 L90.7 47.6 L90.6 47.4 L90.6 46.2 L90.4 46.1 L89.9 42.2 L88.6 37.1 L87.1 32.6 L83.2 23.9 L80.6 19.2 L79.4 17.5 L78.5 16.9 L78.5 19.7 L78.7 19.9 L78.7 21.2 L78.9 21.4 L79.2 25.5 L79.4 25.7 L79.4 27.2 L79.6 27.4 L79.6 28.9 L79.7 29.0 L79.7 31.6 L79.9 31.7 L79.9 33.6 L80.1 33.7 L80.1 49.9 L79.7 51.3 L79.7 52.9 L79.6 53.1 L79.4 55.3 L78.2 59.3 L77.2 61.8 L75.0 65.6 L73.2 68.1 L70.4 71.0 L67.2 73.3 L62.9 75.6 L62.4 75.6 L60.2 76.5 L57.8 76.5 L57.2 76.1 L56.5 75.5 L56.2 74.6 L56.2 72.8 L57.0 71.0 L58.0 69.8 L59.9 68.3 L62.9 66.4 L63.2 66.4 L63.5 66.1 L63.9 66.1 L65.7 65.1 L68.0 63.4 L69.0 62.4 L70.0 60.8 L70.2 58.3 L69.7 57.1 L69.2 56.6 L67.9 56.1 L65.0 56.3 L61.0 57.3 L59.7 57.3 L59.5 57.4 L56.3 57.3 L55.8 56.9 L54.5 56.6 L52.7 55.1 L52.2 54.1 L52.2 52.9 L52.7 51.9 L53.2 51.4 L56.2 49.4 L56.5 49.4 L56.8 49.1 L57.2 49.1 L57.5 48.7 L63.5 46.4 L66.0 44.7 L68.7 42.1 L69.5 40.9 L70.2 39.4 L70.4 37.9 L70.0 37.1 L69.5 36.6 L68.5 36.1 L67.0 35.7 L63.2 36.1 L59.5 37.2 L57.0 37.7 L54.5 37.7 L53.3 36.9 L53.2 35.4 L53.7 33.9 L54.5 32.4 L58.0 27.5 L58.3 27.4 L59.7 25.5 L60.7 24.7 L62.5 22.5 L67.4 18.0 L68.9 16.0 L69.7 14.5 L70.4 12.0 L70.4 10.3 L69.9 8.5 L69.0 7.2 L67.7 5.8 L65.4 4.5 L62.5 3.8 L59.3 4.0 L57.2 4.7 L55.2 5.8 L53.2 7.8 L51.2 11.0 L49.7 12.5 L47.3 13.9 L46.0 13.9 L44.5 12.7 L43.8 11.5 L43.2 9.2 L43.2 8.0 L42.7 6.0 L42.0 4.5 L40.7 3.0 L38.3 2.0 L34.6 2.0 Z"/></svg>''',
   ),
   AdinkraSymbol(
     id: "sankofa",
@@ -26,7 +26,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Go back and get it",
     value: "Learning from the past to build the future",
     description: "A symbol of the wisdom of learning from the past to build for the future. From the Akan proverb, 'Se wo were fi na wosan kofa a yenkyiri,' meaning 'It is not taboo to go back for what you forgot (or left behind).'",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="49" cy="62" rx="13" ry="17" fill="#2B2B2D" stroke="none"/><path d="M58 54 L78 38 L60 52 Z" fill="#2B2B2D" stroke="none"/><path d="M56 50 C 70 40, 68 20, 52 20 C 45 20, 43 27, 47 31" fill="none" stroke="#2B2B2D" stroke-width="8"/><circle cx="50" cy="21" r="5.5" fill="#2B2B2D" stroke="none"/><path d="M48 25 L37 32 L49 30 Z" fill="#2B2B2D" stroke="none"/><ellipse cx="43" cy="46" rx="5.5" ry="6.5" fill="#FFFFFF" stroke="#2B2B2D" stroke-width="3"/><path d="M46 78 L44 89"/><path d="M53 78 L55 89"/><path d="M39 89 H48"/><path d="M51 89 H60"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="#2B2B2D" fill-rule="evenodd" d="M72.1 2.6 L71.7 2.6 L71.6 2.5 L69.8 2.2 L69.7 2.1 L69.1 2.1 L69.0 2.0 L62.4 2.0 L62.3 2.1 L61.8 2.1 L61.7 2.2 L60.2 2.4 L56.9 3.4 L56.6 3.6 L55.9 3.8 L55.5 4.1 L55.3 4.1 L54.5 4.5 L54.3 4.7 L54.1 4.7 L52.1 6.0 L50.8 7.1 L50.0 8.0 L49.9 8.0 L48.8 6.8 L46.5 5.1 L44.0 3.8 L40.5 2.6 L39.7 2.5 L39.2 2.3 L37.5 2.1 L37.4 2.0 L31.2 2.0 L30.5 2.2 L29.8 2.2 L29.3 2.4 L27.6 2.7 L27.2 2.9 L26.9 2.9 L25.9 3.3 L25.0 3.5 L24.5 3.8 L24.2 3.8 L21.7 5.0 L20.2 5.9 L18.3 7.4 L17.0 8.9 L15.5 11.1 L15.5 11.3 L15.2 11.8 L15.2 12.0 L14.7 13.1 L14.7 13.4 L14.4 14.3 L14.4 14.7 L14.2 15.2 L14.1 16.8 L14.0 16.9 L14.0 19.7 L14.1 19.8 L14.1 20.8 L14.2 20.9 L14.3 22.1 L14.4 22.2 L14.8 24.1 L15.6 26.3 L16.5 28.2 L16.7 28.9 L17.0 29.3 L17.0 29.5 L17.6 30.6 L17.6 30.8 L17.8 31.0 L17.9 31.4 L18.0 31.6 L19.6 34.7 L21.9 38.2 L24.6 41.5 L27.1 44.2 L27.3 44.3 L31.0 48.6 L31.7 49.6 L31.9 49.7 L32.2 50.2 L35.8 54.7 L38.8 58.7 L41.3 62.8 L43.6 67.2 L43.6 67.4 L44.1 68.3 L44.1 68.5 L44.7 69.8 L45.6 72.9 L45.6 73.5 L45.7 73.6 L45.7 75.3 L45.5 76.0 L45.2 76.6 L43.6 78.1 L41.0 79.5 L40.5 79.6 L39.6 80.0 L39.3 80.0 L39.0 80.2 L38.6 80.2 L38.5 80.3 L36.7 80.3 L35.8 80.0 L34.8 79.5 L33.7 78.7 L32.4 77.4 L31.9 76.5 L31.9 76.2 L31.7 75.7 L31.7 74.8 L31.8 74.7 L31.9 74.0 L32.5 72.9 L33.6 71.8 L34.9 71.1 L35.2 71.1 L35.3 71.0 L36.1 71.0 L37.4 72.2 L37.9 72.5 L38.6 72.6 L39.0 72.8 L40.8 72.8 L41.4 72.5 L41.6 72.5 L42.4 71.8 L42.6 71.4 L42.6 70.4 L42.0 69.4 L40.8 68.3 L40.0 67.7 L38.5 67.0 L37.8 66.8 L37.3 66.8 L37.2 66.7 L36.6 66.7 L36.5 66.6 L34.9 66.6 L34.8 66.7 L34.3 66.7 L34.2 66.8 L33.8 66.8 L33.7 66.9 L33.0 67.0 L32.7 67.2 L32.4 67.2 L31.6 67.6 L31.4 67.6 L29.2 68.9 L28.2 69.8 L27.1 71.2 L26.5 72.3 L26.4 72.8 L26.2 73.1 L26.2 73.4 L26.0 73.9 L26.0 74.4 L25.9 74.5 L25.9 76.1 L26.0 76.2 L26.0 76.7 L26.4 78.0 L27.4 79.7 L28.0 80.4 L29.2 81.5 L31.2 82.9 L33.0 83.8 L34.7 84.4 L36.0 84.6 L36.1 84.7 L38.9 84.7 L39.0 84.6 L40.6 84.4 L41.1 84.2 L41.3 84.4 L41.1 84.7 L40.9 84.8 L40.7 85.2 L39.4 86.6 L38.4 87.9 L38.2 88.0 L37.9 88.5 L37.1 89.3 L36.3 90.3 L36.1 90.4 L35.4 91.2 L35.4 91.5 L35.5 91.6 L39.0 91.6 L39.1 91.5 L41.6 91.5 L41.7 91.4 L43.0 91.4 L43.2 91.5 L44.2 92.9 L44.8 93.5 L45.7 94.8 L47.7 97.2 L48.2 98.0 L48.8 98.0 L49.4 97.1 L49.6 97.0 L49.8 96.6 L50.4 95.8 L50.4 95.6 L50.6 95.5 L51.2 94.6 L51.4 94.5 L51.7 93.9 L53.7 91.3 L55.9 91.4 L56.0 91.5 L57.0 91.5 L57.1 91.6 L59.1 91.6 L59.2 91.7 L61.5 91.8 L61.6 91.9 L62.0 91.8 L62.0 91.4 L61.5 90.7 L61.1 90.3 L60.7 89.7 L59.9 88.8 L59.2 87.7 L58.8 87.3 L58.6 86.9 L56.2 83.8 L56.3 83.5 L58.7 84.3 L59.5 84.4 L60.0 84.6 L61.0 84.6 L61.1 84.7 L63.0 84.7 L63.1 84.6 L64.2 84.5 L64.3 84.4 L64.7 84.4 L65.1 84.2 L65.7 84.1 L68.2 82.9 L70.4 81.4 L72.3 79.4 L72.8 78.4 L73.0 78.2 L73.4 77.1 L73.5 76.3 L73.6 76.2 L73.6 74.3 L73.5 74.2 L73.5 73.8 L72.8 71.8 L71.8 70.3 L70.6 69.1 L68.6 67.8 L66.6 67.0 L66.3 67.0 L65.5 66.7 L64.8 66.7 L64.7 66.6 L62.6 66.6 L62.5 66.7 L62.1 66.7 L62.0 66.8 L61.6 66.8 L59.7 67.6 L58.1 68.8 L57.2 69.8 L56.9 70.5 L56.9 71.2 L57.1 71.5 L57.1 71.7 L57.6 72.2 L58.1 72.5 L59.0 72.8 L60.2 72.8 L60.3 72.7 L60.7 72.7 L61.1 72.5 L61.7 72.4 L62.1 72.2 L62.8 71.4 L63.7 70.9 L64.7 71.1 L66.1 71.9 L67.0 72.8 L67.5 73.7 L67.8 74.6 L67.8 75.6 L67.7 75.7 L67.6 76.5 L67.1 77.4 L66.0 78.5 L64.6 79.5 L63.8 79.9 L62.6 80.3 L61.2 80.3 L61.1 80.2 L60.0 80.0 L59.1 79.6 L58.6 79.5 L58.1 79.2 L57.9 79.2 L55.7 77.9 L55.1 77.4 L54.3 76.5 L53.9 75.6 L53.9 75.0 L53.8 74.9 L53.8 73.8 L53.9 73.7 L54.0 72.5 L54.7 70.4 L54.7 70.1 L55.7 67.9 L55.7 67.7 L55.9 67.5 L56.9 65.3 L57.1 65.1 L57.7 63.8 L58.2 63.1 L59.1 61.4 L61.3 58.0 L63.9 54.6 L65.9 52.3 L66.0 51.9 L67.0 50.8 L67.8 49.7 L68.5 49.0 L69.4 47.8 L75.2 41.5 L78.2 37.8 L78.3 37.5 L78.6 37.2 L80.0 35.1 L81.0 33.2 L81.3 32.9 L81.3 32.7 L81.6 32.3 L83.8 27.5 L83.8 27.3 L84.5 25.9 L85.0 24.2 L85.2 23.9 L85.3 23.1 L85.6 22.2 L85.6 21.7 L85.8 21.0 L85.8 20.2 L85.9 20.1 L85.9 18.6 L86.0 18.5 L86.0 18.1 L85.9 18.0 L85.9 16.2 L85.8 16.1 L85.8 15.5 L85.7 15.4 L85.7 15.0 L85.6 14.9 L85.6 14.5 L85.5 14.4 L85.2 12.9 L85.0 12.6 L84.6 11.4 L83.6 9.7 L82.0 7.7 L80.6 6.5 L80.2 6.3 L79.8 5.9 L79.3 5.7 L79.0 5.4 L76.5 4.1 L75.5 3.8 L74.7 3.4 Z M72.5 7.5 L74.9 8.6 L76.9 10.0 L77.9 10.9 L78.8 12.2 L79.7 14.3 L79.7 14.6 L79.9 15.1 L79.9 15.6 L80.0 15.7 L80.0 16.2 L80.1 16.3 L80.1 17.1 L80.2 17.2 L80.1 20.4 L80.0 20.5 L80.0 20.9 L79.9 21.0 L79.6 22.7 L78.8 25.1 L78.4 25.8 L78.4 26.0 L77.7 27.3 L77.7 27.5 L76.7 29.4 L76.7 29.6 L76.5 29.8 L75.7 31.5 L73.4 35.2 L70.1 39.3 L69.9 39.4 L69.2 40.3 L67.1 42.4 L66.3 43.4 L66.1 43.5 L65.0 45.0 L64.8 45.1 L64.5 45.6 L62.4 48.0 L60.3 50.7 L58.9 52.3 L58.3 53.2 L57.8 53.7 L57.4 54.4 L57.0 54.8 L56.0 56.2 L53.4 60.2 L53.1 60.9 L52.2 62.3 L51.9 62.9 L51.9 63.1 L51.3 64.0 L51.1 64.6 L50.9 64.8 L50.0 67.0 L49.8 67.2 L49.6 67.0 L49.5 66.6 L49.1 65.9 L49.1 65.7 L48.9 65.5 L48.9 65.3 L48.3 64.1 L48.1 63.9 L47.9 63.3 L47.3 62.4 L46.7 61.1 L46.2 60.4 L44.8 58.0 L42.7 54.9 L41.7 53.7 L40.8 52.4 L38.4 49.5 L38.1 49.0 L34.4 44.5 L30.4 40.1 L27.6 36.8 L26.5 35.3 L25.8 34.1 L25.5 33.8 L24.6 32.1 L24.4 31.9 L22.8 28.8 L22.8 28.6 L22.6 28.4 L22.6 28.2 L21.7 26.4 L21.5 25.8 L21.3 25.6 L20.9 24.3 L20.6 23.7 L20.6 23.4 L20.4 23.0 L20.4 22.7 L20.1 21.8 L20.1 21.4 L19.9 20.8 L19.9 20.1 L19.8 20.0 L19.8 16.7 L19.9 16.6 L20.0 15.5 L20.1 15.4 L20.1 15.0 L20.2 14.9 L20.2 14.5 L21.0 12.5 L21.7 11.4 L23.1 10.0 L24.4 9.0 L25.1 8.7 L25.3 8.5 L27.0 7.7 L29.0 7.0 L29.3 7.0 L30.6 6.6 L32.6 6.4 L32.7 6.3 L35.8 6.3 L35.9 6.4 L36.7 6.4 L36.8 6.5 L37.8 6.6 L40.5 7.4 L42.2 8.2 L44.1 9.5 L45.5 10.9 L46.5 12.9 L46.5 13.2 L46.8 14.1 L46.8 14.6 L46.9 14.7 L47.0 17.2 L46.9 17.3 L46.9 18.2 L46.8 18.3 L46.8 18.9 L46.7 19.0 L46.5 20.2 L45.6 22.3 L45.3 22.7 L43.9 24.0 L43.6 24.1 L43.3 24.4 L41.8 25.2 L41.6 25.4 L39.9 26.1 L38.6 26.5 L37.0 26.5 L35.6 26.0 L34.9 25.6 L34.0 24.7 L33.2 23.3 L32.9 22.6 L32.8 21.7 L32.7 21.6 L32.8 20.5 L33.1 19.9 L34.0 19.1 L34.3 19.1 L35.1 19.6 L36.1 19.8 L36.2 19.9 L37.2 19.9 L38.5 19.5 L38.8 19.3 L39.6 18.4 L39.7 18.1 L39.7 17.2 L39.3 16.5 L38.6 15.9 L36.3 14.9 L35.5 14.8 L35.4 14.7 L34.7 14.7 L34.6 14.6 L33.4 14.6 L33.3 14.7 L32.8 14.7 L32.7 14.8 L32.3 14.8 L31.9 15.0 L31.6 15.0 L30.1 15.7 L28.6 16.9 L27.8 17.9 L27.1 19.3 L27.1 19.6 L26.9 20.1 L26.8 22.1 L26.9 22.2 L27.0 23.1 L27.4 24.3 L27.9 25.3 L28.1 25.5 L28.1 25.7 L29.1 27.0 L30.5 28.3 L30.6 28.5 L31.4 29.1 L33.3 30.1 L34.3 30.5 L36.0 30.8 L36.1 30.9 L38.4 31.0 L38.5 30.9 L39.3 30.9 L39.4 30.8 L40.0 30.8 L40.9 30.5 L41.3 30.5 L42.5 30.0 L43.0 29.9 L45.6 28.6 L47.1 27.7 L48.8 26.5 L50.0 25.4 L50.1 25.6 L51.2 26.5 L53.2 27.9 L54.9 28.8 L55.1 29.0 L56.8 29.8 L58.1 30.2 L58.4 30.4 L58.7 30.4 L59.6 30.7 L60.8 30.8 L60.9 30.9 L63.4 30.9 L63.5 30.8 L64.1 30.8 L64.2 30.7 L64.7 30.7 L64.8 30.6 L65.5 30.5 L66.0 30.2 L67.0 29.9 L68.1 29.3 L69.7 28.1 L69.7 28.0 L70.6 27.2 L71.9 25.5 L72.6 24.1 L73.0 22.8 L73.0 22.3 L73.1 22.2 L73.1 20.4 L73.0 20.3 L73.0 19.9 L72.7 19.0 L72.2 18.0 L71.6 17.2 L70.3 16.0 L68.9 15.2 L67.3 14.7 L66.8 14.7 L66.7 14.6 L64.4 14.7 L64.3 14.8 L63.2 15.0 L61.2 16.0 L60.8 16.3 L60.4 16.8 L60.2 17.3 L60.2 18.0 L60.5 18.6 L61.2 19.3 L62.4 19.8 L64.1 19.8 L64.7 19.6 L65.6 19.1 L66.0 19.1 L66.6 19.6 L67.0 20.2 L67.2 20.8 L67.2 21.9 L66.8 23.1 L66.4 23.8 L65.6 25.0 L64.7 25.8 L63.8 26.2 L63.2 26.4 L62.7 26.4 L62.6 26.5 L61.6 26.5 L61.5 26.4 L60.7 26.3 L59.8 26.0 L58.0 25.2 L56.7 24.3 L56.4 24.2 L55.8 23.8 L54.3 22.2 L53.5 20.4 L53.5 20.1 L53.2 19.2 L53.1 18.0 L53.0 17.9 L53.0 15.3 L53.1 15.2 L53.1 14.4 L53.6 12.6 L54.4 11.0 L55.1 10.1 L56.2 9.2 L58.7 7.7 L61.2 6.8 L63.0 6.5 L63.1 6.4 L63.8 6.4 L63.9 6.3 L66.4 6.2 L66.5 6.3 L67.5 6.3 L67.6 6.4 L69.4 6.6 Z"/></svg>''',
   ),
   AdinkraSymbol(
     id: "dwennimmen",
@@ -34,7 +34,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Ram's horns",
     value: "Strength tempered with Humility",
     description: "Represents a ram's horns. A symbol of strength (in mind, body, and soul), humility, wisdom, and learning. It teaches that even the strong should remain humble. It features prominently in the logo of the University of Ghana.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 34 V66"/><path d="M50 34 C 34 30, 26 40, 34 48 C 40 53, 48 49, 45 43"/><path d="M50 34 C 66 30, 74 40, 66 48 C 60 53, 52 49, 55 43"/><path d="M50 66 C 34 70, 26 60, 34 52 C 40 47, 48 51, 45 57"/><path d="M50 66 C 66 70, 74 60, 66 52 C 60 47, 52 51, 55 57"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 34 V66"/><path d="M50 34 C 34 30, 26 40, 34 48 C 40 53, 48 49, 45 43"/><path d="M50 34 C 66 30, 74 40, 66 48 C 60 53, 52 49, 55 43"/><path d="M50 66 C 34 70, 26 60, 34 52 C 40 47, 48 51, 45 57"/><path d="M50 66 C 66 70, 74 60, 66 52 C 60 47, 52 51, 55 57"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "akoma",
@@ -42,7 +42,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "The heart",
     value: "Love, Patience & Endurance",
     description: "A symbol of love, goodwill, patience, faithfulness, fondness, endurance, and consistency. The heart reminds one to 'take heart' and be tolerant and patient with others.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 78 C 18 54, 26 26, 45 33 C 50 35, 50 43, 50 48 C 50 43, 50 35, 55 33 C 74 26, 82 54, 50 78 Z" fill="#2B2B2D" stroke="none"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 78 C 18 54, 26 26, 45 33 C 50 35, 50 43, 50 48 C 50 43, 50 35, 55 33 C 74 26, 82 54, 50 78 Z" fill="#2B2B2D" stroke="none"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "nkyinkyim",
@@ -50,7 +50,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Twisting",
     value: "Adaptability & Resourcefulness",
     description: "A symbol representing the tortuous, twisting nature of life's journey. It speaks to the dynamism, adaptability, and resourcefulness required to navigate life's many turns.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 68 L36 68 L36 40 L52 40 L52 68 L68 68 L68 40 L80 40"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 68 L36 68 L36 40 L52 40 L52 68 L68 68 L68 40 L80 40"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "adinkrahene",
@@ -58,7 +58,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "King of the Adinkra symbols",
     value: "Authority, Leadership & Charisma",
     description: "Three concentric circles forming a symbol of authority, leadership, and charisma, and the qualities associated with kings. Adinkrahene is reportedly the inspiration for the design of the other Adinkra symbols.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="50" cy="50" r="32"/><circle cx="50" cy="50" r="20"/><circle cx="50" cy="50" r="8" fill="#2B2B2D" stroke="none"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="50" cy="50" r="32"/><circle cx="50" cy="50" r="20"/><circle cx="50" cy="50" r="8" fill="#2B2B2D" stroke="none"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "mate_masie",
@@ -66,7 +66,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "I have heard and kept it",
     value: "Wisdom, Knowledge & Prudence",
     description: "Also known as Ntesie. A symbol of wisdom, knowledge, and prudence. It signifies listening deeply, reflecting, and storing wisdom — the hallmark of a wise and discerning person.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M60 24 A 30 30 0 1 0 60 76"/><path d="M57 38 A 15 15 0 1 0 57 62"/><circle cx="53" cy="50" r="5" fill="#2B2B2D" stroke="none"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M60 24 A 30 30 0 1 0 60 76"/><path d="M57 38 A 15 15 0 1 0 57 62"/><circle cx="53" cy="50" r="5" fill="#2B2B2D" stroke="none"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "fihankra",
@@ -74,7 +74,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Enclosed, secured compound",
     value: "Brotherhood, Safety & Solidarity",
     description: "An enclosed or secured compound house. A symbol of brotherhood, safety, security, completeness, and solidarity — representing the ideal of a unified, protected community.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M64 74 H26 V26 H74 V64 H44 V46"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M64 74 H26 V26 H74 V64 H44 V46"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "aya",
@@ -82,7 +82,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Fern",
     value: "Endurance & Defiance Against Difficulties",
     description: "The fern, a hardy plant that can grow in difficult places. A symbol of endurance, independence, defiance against difficulties, hardiness, perseverance, and resourcefulness.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 84 V20"/><path d="M50 36 C 40 34, 35 27, 35 22"/><path d="M50 36 C 60 34, 65 27, 65 22"/><path d="M50 50 C 39 48, 33 41, 33 35"/><path d="M50 50 C 61 48, 67 41, 67 35"/><path d="M50 64 C 40 62, 35 55, 35 49"/><path d="M50 64 C 60 62, 65 55, 65 49"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 84 V20"/><path d="M50 36 C 40 34, 35 27, 35 22"/><path d="M50 36 C 60 34, 65 27, 65 22"/><path d="M50 50 C 39 48, 33 41, 33 35"/><path d="M50 50 C 61 48, 67 41, 67 35"/><path d="M50 64 C 40 62, 35 55, 35 49"/><path d="M50 64 C 60 62, 65 55, 65 49"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "funtumfunefu",
@@ -90,7 +90,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Conjoined crocodiles",
     value: "Unity in Diversity",
     description: "Two crocodiles sharing a single stomach. A symbol of unity in diversity and a common destiny — reminding us that though individuals may compete, the community shares one fate and thrives through cooperation.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 50 C 40 38, 36 26, 28 20"/><path d="M50 50 C 60 38, 64 26, 72 20"/><path d="M50 50 C 40 62, 36 74, 28 80"/><path d="M50 50 C 60 62, 64 74, 72 80"/><circle cx="50" cy="50" r="8" fill="#2B2B2D" stroke="none"/><circle cx="28" cy="20" r="3.5" fill="#2B2B2D" stroke="none"/><circle cx="72" cy="20" r="3.5" fill="#2B2B2D" stroke="none"/><circle cx="28" cy="80" r="3.5" fill="#2B2B2D" stroke="none"/><circle cx="72" cy="80" r="3.5" fill="#2B2B2D" stroke="none"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 50 C 40 38, 36 26, 28 20"/><path d="M50 50 C 60 38, 64 26, 72 20"/><path d="M50 50 C 40 62, 36 74, 28 80"/><path d="M50 50 C 60 62, 64 74, 72 80"/><circle cx="50" cy="50" r="8" fill="#2B2B2D" stroke="none"/><circle cx="28" cy="20" r="3.5" fill="#2B2B2D" stroke="none"/><circle cx="72" cy="20" r="3.5" fill="#2B2B2D" stroke="none"/><circle cx="28" cy="80" r="3.5" fill="#2B2B2D" stroke="none"/><circle cx="72" cy="80" r="3.5" fill="#2B2B2D" stroke="none"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "nyame_dua",
@@ -98,7 +98,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "God's tree (altar)",
     value: "God's Presence & Protection",
     description: "A sacred altar or 'tree of God,' traditionally a three- or four-pronged stump. A symbol of God's presence and protection, marking a place of worship and spiritual purification.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 50 V24"/><path d="M50 24 L44 32"/><path d="M50 24 L56 32"/><path d="M50 50 V76"/><path d="M50 76 L44 68"/><path d="M50 76 L56 68"/><path d="M50 50 H24"/><path d="M24 50 L32 44"/><path d="M24 50 L32 56"/><path d="M50 50 H76"/><path d="M76 50 L68 44"/><path d="M76 50 L68 56"/><circle cx="50" cy="50" r="6" fill="#2B2B2D" stroke="none"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 16 V84"/><path d="M16 50 H84"/><path d="M50 38 L62 50 L50 62 L38 50 Z" fill="#2B2B2D" stroke="none"/><circle cx="50" cy="16" r="4.5" fill="#2B2B2D" stroke="none"/><circle cx="50" cy="84" r="4.5" fill="#2B2B2D" stroke="none"/><circle cx="16" cy="50" r="4.5" fill="#2B2B2D" stroke="none"/><circle cx="84" cy="50" r="4.5" fill="#2B2B2D" stroke="none"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "epa",
@@ -106,7 +106,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Handcuffs",
     value: "Law, Justice & Accountability",
     description: "The handcuff or shackle. A symbol of law, justice, slavery, and captivity. It carries the proverb that whatever binds another also binds the one who holds the chain — a reminder of mutual accountability.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="36" cy="50" r="16"/><circle cx="64" cy="50" r="16"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="36" cy="50" r="16"/><circle cx="64" cy="50" r="16"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "akofena",
@@ -114,7 +114,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Sword of war",
     value: "Courage, Valor & State Authority",
     description: "Crossed ceremonial swords. A symbol of courage, valor, and heroism, and of the legitimized authority of a ruler. A pair of these state swords appears in Ghana's coat of arms.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M30 74 L68 28"/><path d="M70 74 L32 28"/><path d="M22 66 L40 78"/><path d="M60 78 L78 66"/><circle cx="29" cy="77" r="4" fill="#2B2B2D" stroke="none"/><circle cx="71" cy="77" r="4" fill="#2B2B2D" stroke="none"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M30 74 L68 28"/><path d="M70 74 L32 28"/><path d="M22 66 L40 78"/><path d="M60 78 L78 66"/><circle cx="29" cy="77" r="4" fill="#2B2B2D" stroke="none"/><circle cx="71" cy="77" r="4" fill="#2B2B2D" stroke="none"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "akoben",
@@ -122,7 +122,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "War horn",
     value: "Vigilance & Readiness",
     description: "A war horn sounded to call warriors to battle. A symbol of vigilance, wariness, and readiness — a call to action and a readiness to serve voluntarily.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M28 34 C 30 22, 48 22, 58 30 C 74 42, 78 64, 70 78 C 70 64, 62 54, 48 52 C 36 50, 30 46, 28 34 Z"/><circle cx="29" cy="32" r="4" fill="#2B2B2D" stroke="none"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M28 34 C 30 22, 48 22, 58 30 C 74 42, 78 64, 70 78 C 70 64, 62 54, 48 52 C 36 50, 30 46, 28 34 Z"/><circle cx="29" cy="32" r="4" fill="#2B2B2D" stroke="none"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "osram_ne_nsoromma",
@@ -130,7 +130,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "The moon and the star",
     value: "Love, Faithfulness & Harmony",
     description: "The moon and the evening star. A symbol of love, faithfulness, fondness, harmony, and benevolence — depicting the bond between two devoted souls, as the star awaits the rising of the moon.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M58 22 C 30 26, 30 74, 58 78 C 44 60, 44 40, 58 22 Z" fill="#2B2B2D" stroke="none"/><path d="M70.0 19.0 L72.6 26.4 L80.5 26.6 L74.3 31.4 L76.5 38.9 L70.0 34.5 L63.5 38.9 L65.7 31.4 L59.5 26.6 L67.4 26.4 Z" fill="#2B2B2D" stroke="none"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M58 22 C 30 26, 30 74, 58 78 C 44 60, 44 40, 58 22 Z" fill="#2B2B2D" stroke="none"/><path d="M70.0 19.0 L72.6 26.4 L80.5 26.6 L74.3 31.4 L76.5 38.9 L70.0 34.5 L63.5 38.9 L65.7 31.4 L59.5 26.6 L67.4 26.4 Z" fill="#2B2B2D" stroke="none"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "nkonsonkonson",
@@ -138,7 +138,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Chain link",
     value: "Unity & Human Relations",
     description: "A chain of links. A symbol of unity, brotherhood, and cooperation, reminding us that we are linked in both life and death. 'We are linked together like a chain; in unity lies our strength.'",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="30" cy="50" rx="14" ry="9"/><ellipse cx="50" cy="50" rx="14" ry="9"/><ellipse cx="70" cy="50" rx="14" ry="9"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="30" cy="50" rx="14" ry="9"/><ellipse cx="50" cy="50" rx="14" ry="9"/><ellipse cx="70" cy="50" rx="14" ry="9"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "hye_wo_nhye",
@@ -146,7 +146,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "That which does not burn",
     value: "Imperishability & Endurance",
     description: "Literally 'burn you do not burn.' A symbol of imperishability, endurance, and permanence — inspired by priests who walked on fire unharmed. It encourages steadfastness in the face of hardship.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="37" cy="50" r="18"/><circle cx="37" cy="50" r="7"/><circle cx="63" cy="50" r="18"/><circle cx="63" cy="50" r="7"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="37" cy="50" r="18"/><circle cx="37" cy="50" r="7"/><circle cx="63" cy="50" r="18"/><circle cx="63" cy="50" r="7"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "mpatapo",
@@ -154,7 +154,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Knot of reconciliation",
     value: "Peace & Reconciliation",
     description: "The 'pacification' or reconciliation knot. A symbol of peacemaking after strife, binding parties together in renewed bonds of harmony, forgiveness, and reconciliation.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M40 28 C 22 28, 22 50, 40 50 C 58 50, 58 72, 40 72"/><path d="M60 28 C 78 28, 78 50, 60 50 C 42 50, 42 72, 60 72"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 22 L74 46 L50 70 L26 46 Z"/><path d="M50 38 L62 50 L50 62 L38 50 Z"/><path d="M38 34 L50 46 M62 34 L50 46 M38 58 L50 46 M62 58 L50 46"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "owuo_atwedee",
@@ -162,7 +162,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "The ladder of death",
     value: "Mortality & The Human Condition",
     description: "The ladder of death, which all must climb. A symbol of mortality, reminding everyone that death is the common destiny of all: 'Owuo atwedee baako mforo,' meaning all people will climb the ladder of death.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M37 22 L33 80"/><path d="M63 22 L67 80"/><path d="M35 34 L65 34"/><path d="M35 46 L65 46"/><path d="M35 58 L65 58"/><path d="M34 70 L66 70"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M37 22 L33 80"/><path d="M63 22 L67 80"/><path d="M35 34 L65 34"/><path d="M35 46 L65 46"/><path d="M35 58 L65 58"/><path d="M34 70 L66 70"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "aban",
@@ -170,7 +170,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Fortress / castle",
     value: "Strength, Authority & Security",
     description: "A fortress or castle. A symbol of strength, safety, and the seat of power, authority, and magnificence. It represents the security and permanence of a well-protected society.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="22" y="22" width="56" height="56"/><rect x="34" y="34" width="32" height="32"/><rect x="45" y="45" width="10" height="10" fill="#2B2B2D" stroke="none"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="22" y="22" width="56" height="56"/><rect x="34" y="34" width="32" height="32"/><rect x="45" y="45" width="10" height="10" fill="#2B2B2D" stroke="none"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "mframadan",
@@ -178,7 +178,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Wind-resistant house",
     value: "Resilience & Preparedness",
     description: "A well-ventilated, sturdily built house. A symbol of resilience and readiness to withstand the storms and vicissitudes of life — preparedness against forces one cannot control.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="24" y="24" width="52" height="52"/><path d="M41 24 V76"/><path d="M59 24 V76"/><path d="M24 41 H76"/><path d="M24 59 H76"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="24" y="24" width="52" height="52"/><path d="M41 24 V76"/><path d="M59 24 V76"/><path d="M24 41 H76"/><path d="M24 59 H76"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "duafe",
@@ -186,7 +186,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Wooden comb",
     value: "Feminine Virtue & Care",
     description: "A wooden comb used to groom and beautify the hair. A symbol of good feminine qualities such as patience, prudence, fondness, love, and care, and of feminine consideration and tenderness.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M28 40 H72"/><path d="M50 40 C 50 30, 46 26, 50 22 C 54 26, 50 30, 50 40"/><path d="M32 40 V68"/><path d="M41 40 V72"/><path d="M50 40 V74"/><path d="M59 40 V72"/><path d="M68 40 V68"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M28 40 H72"/><path d="M50 40 C 50 30, 46 26, 50 22 C 54 26, 50 30, 50 40"/><path d="M32 40 V68"/><path d="M41 40 V72"/><path d="M50 40 V74"/><path d="M59 40 V72"/><path d="M68 40 V68"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "denkyem",
@@ -194,7 +194,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Crocodile",
     value: "Adaptability & Cleverness",
     description: "The crocodile, which lives in water yet breathes air. A symbol of adaptability and cleverness — the wisdom to thrive in changing and challenging environments by adjusting one's approach.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 56 C 32 50, 48 50, 60 50 L74 44 L82 50 L74 55 L62 56 C 48 60, 30 60, 18 60 Z" fill="#2B2B2D" stroke="none"/><path d="M30 50 L34 42 L40 50"/><path d="M44 50 L48 42 L54 50"/><path d="M30 60 L28 70"/><path d="M52 60 L54 70"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 56 C 32 50, 48 50, 60 50 L74 44 L82 50 L74 55 L62 56 C 48 60, 30 60, 18 60 Z" fill="#2B2B2D" stroke="none"/><path d="M30 50 L34 42 L40 50"/><path d="M44 50 L48 42 L54 50"/><path d="M30 60 L28 70"/><path d="M52 60 L54 70"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "akoma_ntoaso",
@@ -202,7 +202,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Linked hearts",
     value: "Agreement, Unity & Charter",
     description: "Joined or linked hearts, an extension of the Akoma symbol. A symbol of understanding, agreement, togetherness, and unity — a charter binding people to a common purpose and shared commitment.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M38 64 C 22 52, 26 36, 38 40 C 41 41, 41 46, 41 49 C 41 46, 41 41, 44 40 C 50 38, 52 46, 48 52"/><path d="M62 64 C 78 52, 74 36, 62 40 C 59 41, 59 46, 59 49 C 59 46, 59 41, 56 40 C 50 38, 48 46, 52 52"/><path d="M41 49 C 45 56, 55 56, 59 49"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M36 62 C 20 50, 26 34, 37 40 C 40 42, 40 47, 40 50 C 40 47, 40 42, 43 40 C 50 36, 54 47, 44 55 Z" fill="#2B2B2D" stroke="none"/><path d="M64 62 C 80 50, 74 34, 63 40 C 60 42, 60 47, 60 50 C 60 47, 60 42, 57 40 C 50 36, 46 47, 56 55 Z" fill="#2B2B2D" stroke="none"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "odo_nnyew_fie_kwan",
@@ -210,7 +210,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Love never loses its way home",
     value: "Power of Love",
     description: "Love does not lose its way home. A symbol of the enduring power of love and devotion — those led by love always find their way to the right place.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 74 C 22 54, 28 30, 44 34 C 50 36, 50 44, 50 48 C 50 44, 50 36, 56 34 C 72 30, 78 54, 50 74"/><circle cx="50" cy="50" r="7"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 74 C 22 54, 28 30, 44 34 C 50 36, 50 44, 50 48 C 50 44, 50 36, 56 34 C 72 30, 78 54, 50 74"/><circle cx="50" cy="50" r="7"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "nea_onnim",
@@ -218,7 +218,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "He who does not know can know",
     value: "Knowledge & Lifelong Learning",
     description: "From the proverb, 'He who does not know can come to know from learning.' A symbol of knowledge, lifelong education, and the continued quest for understanding.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="50" cy="33" r="13"/><circle cx="67" cy="50" r="13"/><circle cx="50" cy="67" r="13"/><circle cx="33" cy="50" r="13"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="50" cy="33" r="13"/><circle cx="67" cy="50" r="13"/><circle cx="50" cy="67" r="13"/><circle cx="33" cy="50" r="13"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "nsoromma",
@@ -226,7 +226,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Star, child of the heavens",
     value: "Faith & Reliance on God",
     description: "The star, literally 'child of the heavens.' A symbol of faith and the belief in the patronage, guardianship, and benevolence of a supreme being.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50.0 22.0 L57.1 40.3 L76.6 41.3 L61.4 53.7 L66.5 72.7 L50.0 62.0 L33.5 72.7 L38.6 53.7 L23.4 41.3 L42.9 40.3 Z" fill="#2B2B2D" stroke="none"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50.0 22.0 L57.1 40.3 L76.6 41.3 L61.4 53.7 L66.5 72.7 L50.0 62.0 L33.5 72.7 L38.6 53.7 L23.4 41.3 L42.9 40.3 Z" fill="#2B2B2D" stroke="none"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "abe_dua",
@@ -234,7 +234,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Palm tree",
     value: "Wealth & Self-Sufficiency",
     description: "The palm tree, which provides many resources. A symbol of wealth, resourcefulness, self-sufficiency, and vitality.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 84 V44"/><path d="M50 46 C 38 38, 28 36, 22 38"/><path d="M50 46 C 62 38, 72 36, 78 38"/><path d="M50 44 C 42 30, 38 24, 36 18"/><path d="M50 44 C 58 30, 62 24, 64 18"/><path d="M50 42 C 50 28, 50 22, 50 16"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 84 V44"/><path d="M50 46 C 38 38, 28 36, 22 38"/><path d="M50 46 C 62 38, 72 36, 78 38"/><path d="M50 44 C 42 30, 38 24, 36 18"/><path d="M50 44 C 58 30, 62 24, 64 18"/><path d="M50 42 C 50 28, 50 22, 50 16"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "adwo",
@@ -242,7 +242,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Calmness",
     value: "Peace & Tranquility",
     description: "A symbol for calmness, peace, tranquility, and quiet — the serenity that comes from a settled and harmonious spirit.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 20 L74 50 L50 80 L26 50 Z"/><path d="M50 34 L62 50 L50 66 L38 50 Z"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 20 L74 50 L50 80 L26 50 Z"/><path d="M50 34 L62 50 L50 66 L38 50 Z"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "agyin_dawuru",
@@ -250,7 +250,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Agyin's gong",
     value: "Faithfulness & Dutifulness",
     description: "Agyin's gong. A symbol of faithfulness, alertness, and dutifulness, designed to commemorate the loyalty of Agyin, a dutiful servant and gong-beater of the Asantehene.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M34 64 C 34 38, 66 38, 66 64 Z"/><path d="M30 64 H70"/><path d="M50 38 V30"/><circle cx="50" cy="72" r="4" fill="#2B2B2D" stroke="none"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M34 64 C 34 38, 66 38, 66 64 Z"/><path d="M30 64 H70"/><path d="M50 38 V30"/><circle cx="50" cy="72" r="4" fill="#2B2B2D" stroke="none"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "akoko_nan",
@@ -258,7 +258,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "The foot of a hen",
     value: "Discipline with Mercy",
     description: "The foot of a hen. A symbol of discipline coupled with care and nurturing, from the proverb 'the hen treads on her chicks but does not kill them' — firm yet loving guidance.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="50" cy="26" r="6"/><path d="M50 32 V60"/><path d="M50 60 L36 78"/><path d="M50 60 L50 80"/><path d="M50 60 L64 78"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="50" cy="26" r="6"/><path d="M50 32 V60"/><path d="M50 60 L36 78"/><path d="M50 60 L50 80"/><path d="M50 60 L64 78"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "ananse_ntentan",
@@ -266,7 +266,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Spider's web",
     value: "Wisdom & Creativity",
     description: "The web of Ananse, the crafty spider of African folklore. A symbol of wisdom, craftiness, creativity, and the complexities of life.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 18 V82"/><path d="M18 50 H82"/><path d="M27 27 L73 73"/><path d="M73 27 L27 73"/><circle cx="50" cy="50" r="12"/><circle cx="50" cy="50" r="24"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 18 V82"/><path d="M18 50 H82"/><path d="M27 27 L73 73"/><path d="M73 27 L27 73"/><circle cx="50" cy="50" r="12"/><circle cx="50" cy="50" r="24"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "ani_bere_a_enso_gya",
@@ -274,7 +274,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Serious eyes do not spark fire",
     value: "Patience & Self-Control",
     description: "No matter how serious (red-eyed) one becomes, the eyes do not spark flames. A symbol of patience, self-containment, self-discipline, and self-control.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 50 C 35 34, 65 34, 78 50 C 65 66, 35 66, 22 50 Z"/><circle cx="50" cy="50" r="9" fill="#2B2B2D" stroke="none"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 50 C 35 34, 65 34, 78 50 C 65 66, 35 66, 22 50 Z"/><circle cx="50" cy="50" r="9" fill="#2B2B2D" stroke="none"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "asase_ye_duru",
@@ -282,7 +282,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "The earth has weight",
     value: "Providence & Divinity of Earth",
     description: "The earth has weight. A symbol of providence and the divinity of Mother Earth, honoring the importance of the land in sustaining life.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="50" cy="50" rx="30" ry="22"/><path d="M20 50 H80"/><path d="M50 28 C 40 40, 40 60, 50 72"/><path d="M50 28 C 60 40, 60 60, 50 72"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="50" cy="50" rx="30" ry="22"/><path d="M20 50 H80"/><path d="M50 28 C 40 40, 40 60, 50 72"/><path d="M50 28 C 60 40, 60 60, 50 72"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "bese_saka",
@@ -290,7 +290,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Bunch of cola nuts",
     value: "Affluence, Abundance & Unity",
     description: "A bunch of cola nuts, an important cash crop. A symbol of affluence, power, abundance, plenty, and togetherness.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="40" cy="40" rx="11" ry="14"/><ellipse cx="60" cy="40" rx="11" ry="14"/><ellipse cx="40" cy="62" rx="11" ry="14"/><ellipse cx="60" cy="62" rx="11" ry="14"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="40" cy="40" rx="11" ry="14"/><ellipse cx="60" cy="40" rx="11" ry="14"/><ellipse cx="40" cy="62" rx="11" ry="14"/><ellipse cx="60" cy="62" rx="11" ry="14"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "bi_nka_bi",
@@ -298,7 +298,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Bite not one another",
     value: "Peace & Harmony",
     description: "No one should bite another. A symbol of peace, harmony, and the avoidance of strife, conflict, and provocation within the community.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M48 26 C 26 30, 26 54, 46 52 C 34 52, 30 40, 44 38"/><path d="M52 74 C 74 70, 74 46, 54 48 C 66 48, 70 60, 56 62"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M48 26 C 26 30, 26 54, 46 52 C 34 52, 30 40, 44 38"/><path d="M52 74 C 74 70, 74 46, 54 48 C 66 48, 70 60, 56 62"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "dame_dame",
@@ -306,7 +306,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Checkers / draughts",
     value: "Intelligence & Strategy",
     description: "The board game of checkers (draughts). A symbol of craftiness, intelligence, and strategy.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="26" y="26" width="16" height="16" fill="#2B2B2D" stroke="none"/><rect x="26" y="58" width="16" height="16" fill="#2B2B2D" stroke="none"/><rect x="42" y="42" width="16" height="16" fill="#2B2B2D" stroke="none"/><rect x="58" y="26" width="16" height="16" fill="#2B2B2D" stroke="none"/><rect x="58" y="58" width="16" height="16" fill="#2B2B2D" stroke="none"/><rect x="26" y="26" width="48" height="48"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="26" y="26" width="16" height="16" fill="#2B2B2D" stroke="none"/><rect x="26" y="58" width="16" height="16" fill="#2B2B2D" stroke="none"/><rect x="42" y="42" width="16" height="16" fill="#2B2B2D" stroke="none"/><rect x="58" y="26" width="16" height="16" fill="#2B2B2D" stroke="none"/><rect x="58" y="58" width="16" height="16" fill="#2B2B2D" stroke="none"/><rect x="26" y="26" width="48" height="48"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "dono_ntoaso",
@@ -314,7 +314,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Double talking drum",
     value: "United Action & Goodwill",
     description: "The joined double dono (talking drum). A symbol of united action, alertness, goodwill, praise, and rejoicing.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 32 H46 M22 68 H46 M22 32 L46 68 M46 32 L22 68"/><path d="M54 32 H78 M54 68 H78 M54 32 L78 68 M78 32 L54 68"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 32 H46 M22 68 H46 M22 32 L46 68 M46 32 L22 68"/><path d="M54 32 H78 M54 68 H78 M54 32 L78 68 M78 32 L54 68"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "dono",
@@ -322,7 +322,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Talking drum",
     value: "Praise, Goodwill & Rhythm",
     description: "The tension talking drum used to send messages and praise. A symbol of appellation, praise, goodwill, and rhythm.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M38 32 H62 M38 68 H62 M38 32 L62 68 M62 32 L38 68"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M38 32 H62 M38 68 H62 M38 32 L62 68 M62 32 L38 68"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "eban",
@@ -330,7 +330,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Fence",
     value: "Safety, Security & Love",
     description: "A fence. A symbol of safety, security, and love — the protective enclosure of a loving home that shields and nurtures those within.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="24" y="30" width="52" height="40" rx="4"/><path d="M50 62 C 40 54, 42 44, 50 48 C 58 44, 60 54, 50 62"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="24" y="30" width="52" height="40" rx="4"/><path d="M50 62 C 40 54, 42 44, 50 48 C 58 44, 60 54, 50 62"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "ese_ne_tekrema",
@@ -338,7 +338,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Teeth and tongue",
     value: "Friendship & Interdependence",
     description: "The teeth and the tongue, which play interdependent roles in the mouth. A symbol of friendship, interdependence, growth, and the need to resolve conflict.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M24 42 H76"/><path d="M30 42 V52"/><path d="M40 42 V52"/><path d="M50 42 V52"/><path d="M60 42 V52"/><path d="M70 42 V52"/><path d="M42 58 C 42 72, 58 72, 58 58 Z"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M24 42 H76"/><path d="M30 42 V52"/><path d="M40 42 V52"/><path d="M50 42 V52"/><path d="M60 42 V52"/><path d="M70 42 V52"/><path d="M42 58 C 42 72, 58 72, 58 58 Z"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "fafanto",
@@ -346,7 +346,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Butterfly",
     value: "Tenderness & Gentleness",
     description: "The butterfly. A symbol of tenderness, gentleness, honesty, and fragility — and of transformation and new life.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 34 V66"/><path d="M50 42 C 30 26, 18 42, 30 50 C 18 58, 30 74, 50 58"/><path d="M50 42 C 70 26, 82 42, 70 50 C 82 58, 70 74, 50 58"/><circle cx="50" cy="34" r="4" fill="#2B2B2D" stroke="none"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 34 V66"/><path d="M50 42 C 30 26, 18 42, 30 50 C 18 58, 30 74, 50 58"/><path d="M50 42 C 70 26, 82 42, 70 50 C 82 58, 70 74, 50 58"/><circle cx="50" cy="34" r="4" fill="#2B2B2D" stroke="none"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "fofo",
@@ -354,7 +354,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Yellow-flowered plant",
     value: "Warning Against Jealousy",
     description: "The fofo, a plant whose seeds scatter in the wind. A symbol of warning against jealousy, envy, and covetousness.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 82 V46"/><path d="M50 46 C 40 40, 36 30, 40 22"/><path d="M50 46 C 60 40, 64 30, 60 22"/><path d="M50 46 C 50 34, 50 26, 50 18"/><circle cx="50" cy="16" r="4" fill="#2B2B2D" stroke="none"/><circle cx="40" cy="20" r="3" fill="#2B2B2D" stroke="none"/><circle cx="60" cy="20" r="3" fill="#2B2B2D" stroke="none"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 82 V46"/><path d="M50 46 C 40 40, 36 30, 40 22"/><path d="M50 46 C 60 40, 64 30, 60 22"/><path d="M50 46 C 50 34, 50 26, 50 18"/><circle cx="50" cy="16" r="4" fill="#2B2B2D" stroke="none"/><circle cx="40" cy="20" r="3" fill="#2B2B2D" stroke="none"/><circle cx="60" cy="20" r="3" fill="#2B2B2D" stroke="none"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "gyawu_atiko",
@@ -362,7 +362,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Back of Gyawu's head",
     value: "Valor & Bravery",
     description: "The shaved hairstyle worn at the back of war-captain Gyawu's head. A symbol of valor and bravery.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 50 C 50 30, 34 30, 38 46"/><path d="M50 50 C 70 50, 70 34, 54 38"/><path d="M50 50 C 50 70, 66 70, 62 54"/><path d="M50 50 C 30 50, 30 66, 46 62"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 50 C 50 30, 34 30, 38 46"/><path d="M50 50 C 70 50, 70 34, 54 38"/><path d="M50 50 C 50 70, 66 70, 62 54"/><path d="M50 50 C 30 50, 30 66, 46 62"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "hwehwemudua",
@@ -370,7 +370,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Measuring rod",
     value: "Excellence & Quality Control",
     description: "The measuring rod or rule. A symbol of excellence, superior quality, perfection, knowledge, and critical examination.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="44" y="20" width="12" height="60"/><path d="M44 32 H56"/><path d="M44 44 H56"/><path d="M44 56 H56"/><path d="M44 68 H56"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="44" y="20" width="12" height="60"/><path d="M44 32 H56"/><path d="M44 44 H56"/><path d="M44 56 H56"/><path d="M44 68 H56"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "kramo_bone",
@@ -378,7 +378,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "The bad makes the good unseen",
     value: "Warning Against Hypocrisy",
     description: "The bad one makes it hard to recognize the good. A symbol warning against deception and hypocrisy, since the dishonest obscure the honest.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="22" y="34" width="26" height="32"/><rect x="52" y="34" width="26" height="32" fill="#2B2B2D" stroke="none"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="22" y="34" width="26" height="32"/><rect x="52" y="34" width="26" height="32" fill="#2B2B2D" stroke="none"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "kuronti_ne_akwamu",
@@ -386,7 +386,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Two state councils",
     value: "Democracy & Shared Counsel",
     description: "The Kuronti and Akwamu chiefs who share governance. A symbol of democracy, the sharing of ideas, and taking counsel together.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M44 24 C 24 24, 24 76, 44 76"/><path d="M56 24 C 76 24, 76 76, 56 76"/><circle cx="50" cy="50" r="5" fill="#2B2B2D" stroke="none"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M44 24 C 24 24, 24 76, 44 76"/><path d="M56 24 C 76 24, 76 76, 56 76"/><circle cx="50" cy="50" r="5" fill="#2B2B2D" stroke="none"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "kwatakye_atiko",
@@ -394,7 +394,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Back of Kwatakye's head",
     value: "Valor & Bravery",
     description: "The hairstyle of Kwatakye, a war captain of old Asante. A symbol of valor, bravery, and fearlessness.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M28 72 V28 H72 V72"/><path d="M40 72 V44 H60 V72"/><path d="M50 44 V30"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M28 72 V28 H72 V72"/><path d="M40 72 V44 H60 V72"/><path d="M50 44 V30"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "mako",
@@ -402,7 +402,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Peppers",
     value: "Equality & Patience",
     description: "From the proverb 'all peppers on the same plant do not ripen at once.' A symbol of inequality, uneven development, and the patience that uneven progress requires.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M40 36 C 32 44, 32 64, 44 64 C 54 64, 54 48, 44 40 Z"/><path d="M44 36 V28"/><path d="M60 36 C 52 44, 52 64, 64 64 C 74 64, 74 48, 64 40 Z"/><path d="M64 36 V28"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M40 36 C 32 44, 32 64, 44 64 C 54 64, 54 48, 44 40 Z"/><path d="M44 36 V28"/><path d="M60 36 C 52 44, 52 64, 64 64 C 74 64, 74 48, 64 40 Z"/><path d="M64 36 V28"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "menso_wo_kenten",
@@ -410,7 +410,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "I carry not your basket",
     value: "Self-Reliance",
     description: "I am not carrying your basket. A symbol of industry, self-reliance, and economic self-determination.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M30 38 H70 L64 74 H36 Z"/><path d="M30 38 C 40 30, 60 30, 70 38"/><path d="M38 50 H62"/><path d="M37 62 H63"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M30 38 H70 L64 74 H36 Z"/><path d="M30 38 C 40 30, 60 30, 70 38"/><path d="M38 50 H62"/><path d="M37 62 H63"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "mmere_dane",
@@ -418,7 +418,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Time changes",
     value: "Change & Impermanence",
     description: "Times change. A symbol of the dynamism of life and the temporariness of good (and bad) times — fortunes turn, so remain humble and hopeful.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 50 C 50 38, 64 38, 64 50 C 64 66, 44 66, 44 50 C 44 30, 70 30, 70 50 C 70 72, 38 72, 38 50"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 50 C 50 38, 64 38, 64 50 C 64 66, 44 66, 44 50 C 44 30, 70 30, 70 50 C 70 72, 38 72, 38 50"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "mpuannum",
@@ -426,7 +426,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Five tufts of hair",
     value: "Loyalty & Priestly Office",
     description: "Five tufts of hair, a traditional hairstyle. A symbol of loyalty, adroitness, and priestly office.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 22 V40"/><path d="M50 60 V78"/><path d="M22 50 H40"/><path d="M60 50 H78"/><circle cx="50" cy="50" r="9"/><circle cx="50" cy="22" r="4" fill="#2B2B2D" stroke="none"/><circle cx="50" cy="78" r="4" fill="#2B2B2D" stroke="none"/><circle cx="22" cy="50" r="4" fill="#2B2B2D" stroke="none"/><circle cx="78" cy="50" r="4" fill="#2B2B2D" stroke="none"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 22 V40"/><path d="M50 60 V78"/><path d="M22 50 H40"/><path d="M60 50 H78"/><circle cx="50" cy="50" r="9"/><circle cx="50" cy="22" r="4" fill="#2B2B2D" stroke="none"/><circle cx="50" cy="78" r="4" fill="#2B2B2D" stroke="none"/><circle cx="22" cy="50" r="4" fill="#2B2B2D" stroke="none"/><circle cx="78" cy="50" r="4" fill="#2B2B2D" stroke="none"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "nsaa",
@@ -434,7 +434,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Hand-woven blanket",
     value: "Excellence & Authenticity",
     description: "A type of finely woven cloth renowned for its quality. A symbol of excellence, genuineness, and authenticity — discerning the real from the counterfeit.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="26" y="26" width="48" height="48"/><path d="M26 50 L50 26 L74 50 L50 74 Z"/><path d="M38 38 L62 62"/><path d="M62 38 L38 62"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="26" y="26" width="48" height="48"/><path d="M26 50 L50 26 L74 50 L50 74 Z"/><path d="M38 38 L62 62"/><path d="M62 38 L38 62"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "nteasee",
@@ -442,7 +442,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Understanding",
     value: "Understanding & Cooperation",
     description: "Understanding. A symbol of understanding, agreement, and cooperation between people who reach common ground.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="42" cy="50" rx="20" ry="14"/><ellipse cx="58" cy="50" rx="20" ry="14"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="42" cy="50" rx="20" ry="14"/><ellipse cx="58" cy="50" rx="20" ry="14"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "nyame_biribi_wo_soro",
@@ -450,7 +450,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "God is in the heavens",
     value: "Hope & Inspiration",
     description: "From the saying 'God, there is something in the heavens; let it reach me.' A symbol of hope, aspiration, and inspiration.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M24 64 C 24 40, 76 40, 76 64"/><path d="M50 40 V62"/><circle cx="50" cy="32" r="6" fill="#2B2B2D" stroke="none"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M24 64 C 24 40, 76 40, 76 64"/><path d="M50 40 V62"/><circle cx="50" cy="32" r="6" fill="#2B2B2D" stroke="none"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "nyame_nwu_na_mawu",
@@ -458,7 +458,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "God never dies",
     value: "Immortality of the Soul",
     description: "God will not die for me to die. A symbol expressing the immortality of the human soul and the eternal nature of God.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="30" y="30" width="40" height="40"/><rect x="30" y="30" width="40" height="40" transform="rotate(45 50 50)"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="30" y="30" width="40" height="40"/><rect x="30" y="30" width="40" height="40" transform="rotate(45 50 50)"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "okuafo_pa",
@@ -466,7 +466,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "The good farmer",
     value: "Diligence & Hard Work",
     description: "The good farmer. A symbol of diligence, hard work, and entrepreneurship — the industrious cultivator who reaps a bountiful harvest.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M34 24 H46"/><path d="M40 24 V58"/><path d="M40 58 C 40 74, 62 74, 66 58 H72"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M34 24 H46"/><path d="M40 24 V58"/><path d="M40 58 C 40 74, 62 74, 66 58 H72"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "sepow",
@@ -474,7 +474,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Executioner's knife",
     value: "Justice",
     description: "The knife once used by the executioner. A symbol of justice and the gravity of judicial authority.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 20 L58 60 L50 72 L42 60 Z" fill="#2B2B2D" stroke="none"/><path d="M40 60 H60"/><path d="M50 72 V82"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 20 L58 60 L50 72 L42 60 Z" fill="#2B2B2D" stroke="none"/><path d="M40 60 H60"/><path d="M50 72 V82"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "tamfo_bebre",
@@ -482,7 +482,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "The enemy will stew",
     value: "Resilience Against Envy",
     description: "The enemy will stew in his own juice. A symbol concerning ill-will, jealousy, and envy — and the resilience to rise above the spite of others.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 24 L60 34 L50 44 L40 34 Z"/><path d="M50 44 L66 60 L50 76 L34 60 Z"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 24 L60 34 L50 44 L40 34 Z"/><path d="M50 44 L66 60 L50 76 L34 60 Z"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "uac_nkanea",
@@ -490,7 +490,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "UAC lights",
     value: "Technological Advancement",
     description: "The street lights once installed by the United Africa Company. A symbol of technological advancement, modernity, and progress.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 30 V80"/><path d="M30 30 H70"/><path d="M40 80 H60"/><circle cx="30" cy="30" r="6"/><circle cx="50" cy="30" r="6"/><circle cx="70" cy="30" r="6"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M50 30 V80"/><path d="M30 30 H70"/><path d="M40 80 H60"/><circle cx="30" cy="30" r="6"/><circle cx="50" cy="30" r="6"/><circle cx="70" cy="30" r="6"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "wawa_aba",
@@ -498,7 +498,7 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "Seed of the wawa tree",
     value: "Hardiness & Perseverance",
     description: "The seed of the wawa tree, which is extremely hard. A symbol of hardiness, toughness, perseverance, and resilience in the face of adversity.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="50" cy="50" rx="20" ry="28"/><path d="M50 30 C 40 40, 40 60, 50 70"/><path d="M50 30 C 60 40, 60 60, 50 70"/><circle cx="50" cy="50" r="5" fill="#2B2B2D" stroke="none"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="50" cy="50" rx="20" ry="28"/><path d="M50 30 C 40 40, 40 60, 50 70"/><path d="M50 30 C 60 40, 60 60, 50 70"/><circle cx="50" cy="50" r="5" fill="#2B2B2D" stroke="none"/></g></svg>''',
   ),
   AdinkraSymbol(
     id: "woforo_dua_pa",
@@ -506,6 +506,6 @@ const List<AdinkraSymbol> kAdinkraSymbols = [
     literal: "When you climb a good tree",
     value: "Support for Good Causes",
     description: "When you climb a good tree, you are given a push. A symbol of support, cooperation, and encouragement for those who pursue worthy goals.",
-    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M40 82 V26"/><path d="M60 82 V26"/><path d="M40 70 H60"/><path d="M40 58 H60"/><path d="M40 46 H60"/><path d="M40 34 H60"/><path d="M38 26 C 50 16, 50 16, 62 26"/></g></svg>''',
+    svg: r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g stroke="#2B2B2D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M40 82 V26"/><path d="M60 82 V26"/><path d="M40 70 H60"/><path d="M40 58 H60"/><path d="M40 46 H60"/><path d="M40 34 H60"/><path d="M38 26 C 50 16, 50 16, 62 26"/></g></svg>''',
   ),
 ];
