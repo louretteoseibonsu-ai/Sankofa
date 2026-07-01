@@ -237,6 +237,8 @@ app.get("/privacy", (_req, res) =>
   res.sendFile(path.join(WEB_DIR, "privacy.html"))
 );
 app.get("/terms", (_req, res) => res.sendFile(path.join(WEB_DIR, "terms.html")));
+// Serve static assets from /web (favicon, images, etc.).
+app.use(express.static(WEB_DIR));
 
 // Start Vite in dev mode, serve static files in production
 async function start() {
