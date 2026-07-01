@@ -120,7 +120,9 @@ email,"* tap **Sign in with this email** to log in instead.
 - Tap **Listen (Twi)** to hear the Twi audio.
 
 **Notes:**
-- AI Translate is a **Premium** feature.
+- AI Translate is **free to use** — everyone gets a monthly allowance of AI
+  credits (Free 15, Premium 400). When they run out, top up with pedis or
+  upgrade to Premium for a bigger allowance.
 - Each translation and each audio play uses **1 AI credit** (see Section 8).
 - Replaying audio you've already heard this session is **free** (it's cached).
 
