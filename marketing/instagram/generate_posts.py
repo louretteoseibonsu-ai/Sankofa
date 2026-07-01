@@ -135,6 +135,47 @@ paths.append(culture("Greet like a local",
     [("Maakye","good morning"),("Maaha","good afternoon"),("Maadwo","good evening")],
     "One greeting a day. You've got this.",bg=CHAR,fname="08_culture_greetings"))
 
+# ── WORLD CUP CAROUSEL — "Match-Day Starter Pack" (1080 cards) ────────────────
+os.makedirs("carousel",exist_ok=True)
+def tricolour_line(d,cx,y):
+    for i,col in enumerate([RED,GOLD,GREEN]): d.rectangle([cx-60,y+i*7,cx+60,y+4+i*7],fill=col)
+def wc_phrase(kicker,twi,meaning,fname):
+    img,d,fg,mut=frame(CHAR);cx=S/2
+    tracked(d,(0,150),kicker,F(LATO_B,30),GOLD,8,cx);tricolour_line(d,cx,205)
+    fs=150
+    while fs>70 and d.textlength(twi,font=F(LATO_BLK,fs))>S-140: fs-=6
+    center(d,cx,400,twi,F(LATO_BLK,fs),CREAM)
+    center(d,cx,400+fs+40,meaning,F(LATO,54),GOLD)
+    img.convert("RGB").save(f"carousel/{fname}.png")
+def wc_cover(fname):
+    img,d,fg,mut=frame(CHAR);cx=S/2
+    for i,col in enumerate([RED,GOLD,GREEN]): d.rectangle([0,150+i*20,S,170+i*20],fill=col)
+    tracked(d,(0,250),"MATCH-DAY STARTER PACK",F(LATO_B,34),GOLD,6,cx)
+    center(d,cx,330,"Ghana vs Colombia",F(POP_B,82),CREAM)
+    paste_fit(img,recolor(f"{GLYPH_DIR}/gyenyame.png",GOLD),cx,600,250)
+    center(d,cx,780,"Swipe for 3 phrases to talk",F(LATO_L,44),CREAM)
+    center(d,cx,838,"noise in Twi  →",F(LATO_B,48),GOLD)
+    img.convert("RGB").save(f"carousel/{fname}.png")
+def wc_cta(fname):
+    img,d,fg,mut=frame(CHAR);cx=S/2
+    paste_fit(img,brand_glyph(GOLD),cx,330,240)
+    center(d,cx,520,"Say it like you mean it.",F(POP_B,64),CREAM)
+    center(d,cx,620,"Learn match-day Twi — free,",F(LATO_L,44),CREAM)
+    center(d,cx,674,"with real audio, before kickoff.",F(LATO_L,44),CREAM)
+    label="JOIN THE BETA  ·  sankofaapp.io";f=F(LATO_B,34);tw=d.textlength(label,font=f)
+    d.rounded_rectangle([cx-tw/2-44,780,cx+tw/2+44,856],radius=38,fill=TERRA)
+    d.text((cx-tw/2,798),label,font=f,fill=(255,255,255))
+    img.convert("RGB").save(f"carousel/{fname}.png")
+wc_cover("1_cover")
+wc_phrase("MATCH-DAY TWI · 1 of 3","Ghana bɛdi nkonim!","Ghana will win!","2_phrase")
+wc_phrase("MATCH-DAY TWI · 2 of 3","Hwɛ ɛha!","Watch this!","3_phrase")
+wc_phrase("MATCH-DAY TWI · 3 of 3","Yɛn ara asaase ni","This is our land.","4_phrase")
+wc_cta("5_cta")
+wcs=Image.new("RGB",(360*5+30,375),(255,255,255))
+for i,fn in enumerate(["1_cover","2_phrase","3_phrase","4_phrase","5_cta"]):
+    wcs.paste(Image.open(f"carousel/{fn}.png").resize((350,350)),(5+i*360,12))
+wcs.save("carousel_sheet.png");print("carousel: 5 cards")
+
 cell=360;sheet=Image.new("RGB",(cell*3+40,cell*3+40),(255,255,255))
 for i,p in enumerate(paths):
     im=Image.open(p).resize((cell-8,cell-8));r,c=divmod(i,3);sheet.paste(im,(10+c*cell+4,10+r*cell+4))

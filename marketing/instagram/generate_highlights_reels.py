@@ -155,6 +155,55 @@ cta_pill(d,cx,1150,"JOIN THE BETA  ·  sankofaapp.io",F(LATO_B,42))
 center(d,cx,1330,"Free travel Twi · Android",F(LATO_L,42),CREAM)
 im.convert("RGB").save("campaign/detty_endcard.png")
 
+# ── DETTY DECEMBER "OBRONI PRICE" REEL — storyboard + ready frames ────────────
+os.makedirs("campaign/obroni",exist_ok=True)
+# Hook cover
+im,d=base(CHAR)
+d.rectangle([0,150,W,158],fill=TERRACOTTA)
+tracked(d,cx,250,"DETTY DECEMBER · ACCRA",F(LATO_B,32),GOLD,6)
+for i,ln in enumerate(["The fastest way to","stop paying","obroni price"]):
+    center(d,cx,430+i*150,ln,fitfont(d,ln,POP_B,118,W-120),CREAM)
+center(d,cx,930,"Two phrases. Real Accra market energy.",F(LATO_L,44),CREAM)
+fit(im,recolor(f"{G}/nkyinkyim.png",GOLD),cx,1230,280)
+fit(im,brand_glyph(GOLD),cx-190,1600,70);d.text((cx-120,1572),"Sankofa Twi",font=F(POP_B,44),fill=CREAM)
+im.convert("RGB").save("campaign/obroni/1_hook.png")
+# Reusable market label overlays (transparent) — twi + english
+def obroni_label(twi,eng,fname):
+    card=Image.new("RGBA",(W,H),(0,0,0,0));d=ImageDraw.Draw(card);y0=1330
+    d.rounded_rectangle([90,y0,W-90,y0+320],radius=44,fill=CHAR+(235,))
+    d.rounded_rectangle([90,y0,124,y0+320],radius=0,fill=TERRACOTTA+(255,))
+    tracked(d,W/2+16,y0+40,"SAY THIS IN THE MARKET",F(LATO_B,24),GOLD,4)
+    center(d,W/2+16,y0+92,twi,fitfont(d,twi,LATO_BLK,92,W-260),CREAM)
+    center(d,W/2+16,y0+230,eng,F(LATO,42),(210,205,192))
+    card.save(f"campaign/obroni/{fname}.png")
+obroni_label("Ɛyɛ sɛn?","How much is it?","2_label_price")
+obroni_label("Te so kakra.","Reduce it a little.","3_label_reduce")
+obroni_label("Medaase!","Thank you!","4_label_thanks")
+# End card (Detty)
+im,d=base(CHAR);fit(im,brand_glyph(GOLD),cx,520,300)
+center(d,cx,760,"Land speaking.",fitfont(d,"Land speaking.",POP_B,120,W-140),CREAM)
+center(d,cx,910,"Detty December hits different",F(LATO_L,46),CREAM)
+center(d,cx,968,"when you can actually talk.",F(LATO_L,46),CREAM)
+cta_pill(d,cx,1150,"JOIN THE BETA  ·  sankofaapp.io",F(LATO_B,42))
+center(d,cx,1330,"Free travel Twi · Android",F(LATO_L,42),CREAM)
+im.convert("RGB").save("campaign/obroni/5_endcard.png")
+# Storyboard sheet (shots + notes)
+shots=[("1_hook","0–2s  HOOK","Text on screen. Quick market b-roll."),
+       ("2_label_price","2–6s  ASK","You ask in English → vendor quotes HIGH."),
+       ("3_label_reduce","6–10s REWIND","Same ask in Twi → vendor smiles, quotes LOWER."),
+       ("4_label_thanks","10–13s WIN","Banter + laugh. Overlay pops."),
+       ("5_endcard","13–15s CTA","Hold end card ≥2s.")]
+SB=Image.new("RGB",(1180,720),(255,255,255));sd=ImageDraw.Draw(SB)
+sd.text((30,24),"OBRONI PRICE — Reel storyboard (≈15s, 9:16)",font=F(POP_B,34),fill=(43,43,45))
+for i,(fn,t,note) in enumerate(shots):
+    src=f"campaign/obroni/{fn}.png";th=Image.open(src).convert("RGBA")
+    if "label" in fn:
+        bgi=Image.new("RGBA",(W,H),(96,102,90,255));bgi.alpha_composite(th);th=bgi
+    th=th.resize((196,348));x=30+i*228;SB.paste(th,(x,90))
+    sd.text((x,450),t,font=F(LATO_B,24),fill=(190,82,53))
+    for j,ln in enumerate(__import__("textwrap").wrap(note,26)): sd.text((x,486+j*26),ln,font=F(LATO,22),fill=(90,94,99))
+SB.save("obroni_storyboard.png");print("obroni: hook + 3 overlays + endcard + storyboard")
+
 cp=Image.new("RGBA",(760,1360),(241,242,244,255))
 for i,fn in enumerate(["worldcup_cover","worldcup_endcard","detty_cover","detty_endcard"]):
     th=Image.open(f"campaign/{fn}.png").convert("RGBA").resize((338,600));r,c=divmod(i,2);cp.alpha_composite(th,(30+c*360,40+r*660))
