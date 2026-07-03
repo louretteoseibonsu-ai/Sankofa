@@ -331,7 +331,10 @@ app.get("/privacy", (_req, res) =>
   res.sendFile(path.join(WEB_DIR, "privacy.html"))
 );
 app.get("/terms", (_req, res) => res.sendFile(path.join(WEB_DIR, "terms.html")));
-app.get("/raffle", (_req, res) => res.sendFile(path.join(WEB_DIR, "raffle.html")));
+app.get("/raffle", (_req, res) => {
+  res.set("Cache-Control", "no-store"); // always serve the latest funnel
+  res.sendFile(path.join(WEB_DIR, "raffle.html"));
+});
 // Serve static assets from /web (favicon, images, etc.).
 app.use(express.static(WEB_DIR));
 
