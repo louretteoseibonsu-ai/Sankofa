@@ -1,3 +1,4 @@
+import 'dart:ui' as ui;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,7 +8,9 @@ import '../services/sound_service.dart';
 import '../theme.dart';
 import '../widgets/composable_trotro.dart';
 import '../widgets/greeting.dart';
+import '../widgets/tappable_scale.dart';
 import '../widgets/trotro_mascot.dart';
+import 'customization_shop_screen.dart';
 import 'dialogue_boss_screen.dart';
 import 'lesson_quiz_screen.dart';
 import 'time_attack_screen.dart';
@@ -30,8 +33,12 @@ class JourneyScreen extends StatefulWidget {
   State<JourneyScreen> createState() => _JourneyScreenState();
 }
 
-class _JourneyScreenState extends State<JourneyScreen> {
+class _JourneyScreenState extends State<JourneyScreen>
+    with TickerProviderStateMixin {
   final _service = ProgressService();
+  final GlobalKey _troKey = GlobalKey(); // the parked map bus
+  final GlobalKey _garageKey = GlobalKey(); // the garage button (flight target)
+  bool _flying = false; // hide the map bus while its clone is in flight
   Progress _p = Progress.empty;
   Stats _stats = Stats.empty;
   bool _loading = true;
@@ -163,6 +170,74 @@ class _JourneyScreenState extends State<JourneyScreen> {
     _reload();
   }
 
+  /// Bus-fly "Overlay Snapshot": capture the parked tro tro's screen rect, fly
+  /// a clone of it along an arc to the garage button, then open the Garage.
+  Future<void> _openGarage() async {
+    final troCtx = _troKey.currentContext;
+    final garageCtx = _garageKey.currentContext;
+    // If anything isn't laid out (or a flight is running), just open normally.
+    if (_flying || troCtx == null || garageCtx == null) {
+      _pushGarage();
+      return;
+    }
+    final overlay = Overlay.of(context);
+    final troBox = troCtx.findRenderObject() as RenderBox;
+    final garageBox = garageCtx.findRenderObject() as RenderBox;
+    final startCenter = troBox.localToGlobal(troBox.size.center(Offset.zero));
+    final startW = troBox.size.width;
+    final startH = troBox.size.height;
+    final endCenter =
+        garageBox.localToGlobal(garageBox.size.center(Offset.zero));
+
+    final controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 640));
+    final curved =
+        CurvedAnimation(parent: controller, curve: Curves.easeInOutCubic);
+
+    setState(() => _flying = true); // hide the real bus — its clone is flying
+
+    final entry = OverlayEntry(builder: (context) {
+      return AnimatedBuilder(
+        animation: curved,
+        builder: (context, _) {
+          final t = curved.value;
+          final dx = ui.lerpDouble(startCenter.dx, endCenter.dx, t)!;
+          final dyBase = ui.lerpDouble(startCenter.dy, endCenter.dy, t)!;
+          final arc = -90.0 * 4 * t * (1 - t); // upward lift, peaks mid-flight
+          final scale = ui.lerpDouble(1.0, 0.28, t)!; // shrink into the garage
+          final w = startW * scale;
+          final h = startH * scale;
+          return Positioned(
+            left: dx - w / 2,
+            top: dyBase + arc - h / 2,
+            width: w,
+            height: h,
+            child: IgnorePointer(
+                child: ComposableTroTro(skin: _skin, width: w)),
+          );
+        },
+      );
+    });
+
+    overlay.insert(entry);
+    HapticFeedback.selectionClick();
+    await controller.forward();
+    entry.remove();
+    controller.dispose();
+    if (!mounted) return;
+    _pushGarage();
+  }
+
+  void _pushGarage() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(
+            builder: (_) => CustomizationShopScreen(initialSkin: _skin)))
+        .then((_) {
+      if (mounted) setState(() => _flying = false);
+      _reload();
+    });
+  }
+
   static int _currentIndexFor(Progress p) {
     final i =
         kLessonsFlat.indexWhere((l) => p.unlocked(l.id) && !p.passed(l.id));
@@ -198,20 +273,47 @@ class _JourneyScreenState extends State<JourneyScreen> {
                 iconColor: _roadActive,
                 label: '${_stats.streak}',
               ),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-                decoration: BoxDecoration(
-                    color: charcoal, borderRadius: BorderRadius.circular(20)),
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  const Icon(Icons.place_rounded, color: _roadGold, size: 15),
-                  const SizedBox(width: 5),
-                  Text(regionName,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700)),
-                ]),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Flexible(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 7),
+                        decoration: BoxDecoration(
+                            color: charcoal,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Row(mainAxisSize: MainAxisSize.min, children: [
+                          const Icon(Icons.place_rounded,
+                              color: _roadGold, size: 15),
+                          const SizedBox(width: 5),
+                          Flexible(
+                            child: Text(regionName,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: false,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700)),
+                          ),
+                        ]),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    IconButton(
+                      key: _garageKey,
+                      visualDensity: VisualDensity.compact,
+                      padding: const EdgeInsets.all(6),
+                      constraints: const BoxConstraints(),
+                      onPressed: _openGarage,
+                      icon: const Icon(Icons.garage_rounded),
+                      color: charcoal,
+                      tooltip: 'Garage',
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -317,8 +419,13 @@ class _JourneyScreenState extends State<JourneyScreen> {
                             // drive/arrive use the animated PNG frames.
                             child: _troState == TroTroState.idle
                                 ? Center(
-                                    child: ComposableTroTro(
-                                        skin: _skin, width: 104))
+                                    child: Opacity(
+                                      opacity: _flying ? 0.0 : 1.0,
+                                      child: ComposableTroTro(
+                                          key: _troKey,
+                                          skin: _skin,
+                                          width: 104),
+                                    ))
                                 : TroTroMascot(state: _troState, width: 108),
                           ),
                         ),
@@ -384,19 +491,20 @@ class _JourneyScreenState extends State<JourneyScreen> {
                       tooltip: 'Time-Attack',
                     ),
                   const SizedBox(width: 6),
-                  ElevatedButton(
-                    onPressed: () => _open(lessons[current]),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: terracottaDeep,
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
+                  TappableScale(
+                    onTap: () => _open(lessons[current]),
+                    child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 12),
+                          horizontal: 22, vertical: 13),
+                      decoration: BoxDecoration(
+                          color: terracottaDeep,
+                          borderRadius: BorderRadius.circular(20)),
+                      child: const Text('Play',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 15)),
                     ),
-                    child: const Text('Play',
-                        style: TextStyle(fontWeight: FontWeight.w800)),
                   ),
                 ],
               ),

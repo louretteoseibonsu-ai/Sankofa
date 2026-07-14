@@ -9,7 +9,10 @@ const Color _terra = Color(0xFFBE5235);
 
 /// "The Garage" — spend Golden Kente shards to customise the tro tro.
 class CustomizationShopScreen extends StatefulWidget {
-  const CustomizationShopScreen({super.key});
+  /// The skin to show instantly (from the map) so the Hero flight has a
+  /// destination before the async cosmetics load finishes.
+  final TroTroSkin? initialSkin;
+  const CustomizationShopScreen({super.key, this.initialSkin});
 
   @override
   State<CustomizationShopScreen> createState() =>
@@ -60,7 +63,9 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final skin = TroTroSkin.fromEquipped(_cos.equipped);
+    final skin = _loading
+        ? (widget.initialSkin ?? const TroTroSkin())
+        : TroTroSkin.fromEquipped(_cos.equipped);
     return Scaffold(
       appBar: AppBar(
         title: const Text('The Garage'),
@@ -77,12 +82,11 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
           ),
         ],
       ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView(
+      body: ListView(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 28),
               children: [
-                // Live preview
+                // Live preview — always rendered so the Hero flight from the
+                // map has a destination during the push transition.
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 18),
                   decoration: BoxDecoration(
@@ -99,9 +103,15 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                       style: TextStyle(color: slate, fontSize: 12.5)),
                 ),
                 const SizedBox(height: 12),
-                for (final cat in kCosmeticCategories) ...[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(2, 12, 0, 8),
+                if (_loading)
+                  const Padding(
+                    padding: EdgeInsets.only(top: 30),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                if (!_loading)
+                  for (final cat in kCosmeticCategories) ...[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(2, 12, 0, 8),
                     child: Text(kCategoryLabel[cat] ?? cat,
                         style: const TextStyle(
                             fontWeight: FontWeight.w800,

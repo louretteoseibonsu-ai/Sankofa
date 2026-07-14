@@ -7,6 +7,7 @@ import '../theme.dart';
 import '../widgets/animations.dart';
 import '../widgets/floating_card.dart';
 import '../widgets/pedis_store.dart';
+import '../widgets/tappable_scale.dart';
 import '../widgets/trotro_dashboard.dart';
 import 'customization_shop_screen.dart';
 import 'leaderboard_screen.dart';
@@ -44,6 +45,25 @@ class _ProgressDashboardScreenState extends State<ProgressDashboardScreen> {
       _loading = false;
     });
   }
+
+  Widget _dashPill(IconData icon, String label) => Container(
+        height: 46,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          border: Border.all(color: silverLight, width: 1.5),
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 18, color: charcoal),
+            const SizedBox(width: 6),
+            Text(label,
+                style: const TextStyle(
+                    color: charcoal, fontWeight: FontWeight.w700)),
+          ],
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -85,37 +105,21 @@ class _ProgressDashboardScreenState extends State<ProgressDashboardScreen> {
           Row(
             children: [
               Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                child: TappableScale(
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
                       builder: (_) => const LeaderboardScreen())),
-                  icon: const Icon(Icons.emoji_events_rounded, size: 18),
-                  label: const Text('League'),
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(46),
-                    foregroundColor: charcoal,
-                    side: const BorderSide(color: silverLight, width: 1.5),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14)),
-                  ),
+                  child: _dashPill(Icons.emoji_events_rounded, 'League'),
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () async {
+                child: TappableScale(
+                  onTap: () async {
                     await Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => const CustomizationShopScreen()));
                     _reload();
                   },
-                  icon: const Icon(Icons.directions_bus_rounded, size: 18),
-                  label: const Text('Garage'),
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(46),
-                    foregroundColor: charcoal,
-                    side: const BorderSide(color: silverLight, width: 1.5),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14)),
-                  ),
+                  child: _dashPill(Icons.directions_bus_rounded, 'Garage'),
                 ),
               ),
             ],
