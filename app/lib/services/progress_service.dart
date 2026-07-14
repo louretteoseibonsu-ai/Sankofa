@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../data/lesson_catalog.dart';
+import '../data/trotro_cosmetics.dart';
 
 /// Score (out of 10) needed to pass a lesson and unlock the next.
 const int kPassScore = 6;
@@ -258,6 +259,54 @@ class ProgressService {
       'pedis': FieldValue.increment(5),
     }, SetOptions(merge: true));
     return true;
+  }
+
+  // ── Tro tro cosmetics (the Garage) ──────────────────────────────────────
+
+  /// Loads the user's owned + equipped cosmetics (defaults always owned).
+  Future<CosmeticState> loadCosmetics() async {
+    final uid = _uid;
+    if (uid == null) return CosmeticState({...kDefaultOwned}, {});
+    final doc = await _db.collection('users').doc(uid).get();
+    final data = doc.data() ?? {};
+    final owned = {
+      ...kDefaultOwned,
+      ...((data['cosmeticsOwned'] as List?)?.cast<String>() ?? const [])
+    };
+    final eqRaw =
+        (data['cosmeticEquipped'] as Map?)?.cast<String, dynamic>() ?? {};
+    final equipped = eqRaw.map((k, v) => MapEntry(k, v.toString()));
+    return CosmeticState(owned, equipped);
+  }
+
+  /// Spends shards to buy [item], then auto-equips it. Returns false if the
+  /// user can't afford it. Defaults (cost 0) never need buying.
+  Future<bool> buyCosmetic(ShopItem item) async {
+    final uid = _uid;
+    if (uid == null) return false;
+    if (item.isDefault) {
+      await equipCosmetic(item.category, item.id);
+      return true;
+    }
+    final ref = _db.collection('users').doc(uid);
+    final doc = await ref.get();
+    final shards = (doc.data()?['shards'] as num?)?.toInt() ?? 0;
+    if (shards < item.costShards) return false;
+    await ref.set({
+      'shards': FieldValue.increment(-item.costShards),
+      'cosmeticsOwned': FieldValue.arrayUnion([item.id]),
+      'cosmeticEquipped': {item.category: item.id}, // deep-merged
+    }, SetOptions(merge: true));
+    return true;
+  }
+
+  /// Equips an already-owned cosmetic in its category.
+  Future<void> equipCosmetic(String category, String id) async {
+    final uid = _uid;
+    if (uid == null) return;
+    await _db.collection('users').doc(uid).set({
+      'cosmeticEquipped': {category: id},
+    }, SetOptions(merge: true));
   }
 
   /// Credits pedis (used by the consumable IAP "buy pedis" flow — stub).
