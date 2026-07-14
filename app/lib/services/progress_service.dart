@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../data/lesson_catalog.dart';
 import '../data/trotro_cosmetics.dart';
+import 'stats_notifier.dart';
 
 /// Score (out of 10) needed to pass a lesson and unlock the next.
 const int kPassScore = 6;
@@ -235,6 +236,7 @@ class ProgressService {
     final lastActive = data['lastActive'] as String?;
     var streak = (data['streak'] as num?)?.toInt() ?? 0;
     if (lastActive != today && lastActive != yesterday) streak = 0; // lapsed
+    streakNotifier.value = streak; // keep the live fuel gauge in sync
 
     final isToday = (data['dailyDate'] as String?) == today;
     return Stats(
@@ -431,6 +433,7 @@ class ProgressService {
     } else {
       streak = 1;
     }
+    streakNotifier.value = streak; // fuel gauge refills instantly
 
     // ── Daily quests ──
     final sameDay = (data['dailyDate'] as String?) == today;

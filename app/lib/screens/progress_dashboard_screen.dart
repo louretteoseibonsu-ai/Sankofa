@@ -10,6 +10,7 @@ import '../widgets/pedis_store.dart';
 import '../widgets/trotro_dashboard.dart';
 import 'customization_shop_screen.dart';
 import 'leaderboard_screen.dart';
+import 'lesson_quiz_screen.dart';
 import 'upgrade_screen.dart';
 
 const Color _gold = Color(0xFFE3A92C);
@@ -68,6 +69,17 @@ class _ProgressDashboardScreenState extends State<ProgressDashboardScreen> {
             tokens: _s.pedis,
             shards: _s.shards,
             atRisk: _s.streakAtRisk,
+            onRefuel: () {
+              if (kLessonsFlat.isEmpty) return;
+              final l = kLessonsFlat.firstWhere(
+                (x) => p.unlocked(x.id) && !p.passed(x.id),
+                orElse: () => kLessonsFlat.first,
+              );
+              Navigator.of(context)
+                  .push(MaterialPageRoute(
+                      builder: (_) => LessonQuizScreen(lesson: l)))
+                  .then((_) => _reload());
+            },
           ),
           const SizedBox(height: 10),
           Row(

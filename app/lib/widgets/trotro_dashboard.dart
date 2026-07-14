@@ -1,11 +1,10 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../theme.dart';
+import 'fuel_gauge.dart';
 
 const Color _gold = Color(0xFFE3A92C);
 const Color _terra = Color(0xFFBE5235);
-const Color _fuelGreen = Color(0xFF2E6B3B);
-const Color _fuelLow = Color(0xFFC0492E);
 const Color _track = Color(0xFFE7E9EC);
 
 /// The tro tro "dashboard" HUD: a speedometer for the current lesson's progress
@@ -29,6 +28,9 @@ class TroTroDashboard extends StatelessWidget {
   /// Streak exists but today isn't done yet — show a gentle "top up" prompt.
   final bool atRisk;
 
+  /// Tapped when the tank is empty ("broken down") — a positive nudge to learn.
+  final VoidCallback? onRefuel;
+
   const TroTroDashboard({
     super.key,
     required this.progress,
@@ -37,18 +39,11 @@ class TroTroDashboard extends StatelessWidget {
     this.shards = 0,
     this.fullTankDays = 7,
     this.atRisk = false,
+    this.onRefuel,
   });
 
   @override
   Widget build(BuildContext context) {
-    final fuel = (streak / fullTankDays).clamp(0.0, 1.0);
-    final lowFuel = fuel < 0.3;
-    final fuelColor = (atRisk || lowFuel) ? _fuelLow : _fuelGreen;
-    final fuelLabel = atRisk
-        ? 'top up today'
-        : lowFuel
-            ? 'fuel · low'
-            : 'fuel · day streak';
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
       decoration: BoxDecoration(
@@ -68,14 +63,7 @@ class TroTroDashboard extends StatelessWidget {
                   label: 'lesson progress',
                 ),
               ),
-              Expanded(
-                child: _Gauge(
-                  value: fuel,
-                  color: fuelColor,
-                  big: '$streak',
-                  label: fuelLabel,
-                ),
-              ),
+              Expanded(child: FuelGauge(onRefuel: onRefuel)),
             ],
           ),
           const SizedBox(height: 12),
