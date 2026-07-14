@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'auth_gate.dart';
 import 'config.dart';
@@ -27,6 +28,13 @@ Future<void> main() async {
     // On Android, Firebase reads android/app/google-services.json via the
     // google-services Gradle plugin. Timeout so a hung call can't freeze launch.
     await Firebase.initializeApp().timeout(const Duration(seconds: 10));
+    // Offline-first: cache the user doc + progress so the HUD renders instantly
+    // from disk and syncs in the background (keeps streaks/leagues snappy and
+    // usable with no connection).
+    FirebaseFirestore.instance.settings = const Settings(
+      persistenceEnabled: true,
+      cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+    );
   } catch (e, s) {
     gStartupError = e.toString();
     debugPrint('Firebase init failed (continuing anyway): $e\n$s');

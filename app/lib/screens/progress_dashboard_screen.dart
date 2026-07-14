@@ -9,6 +9,7 @@ import '../widgets/floating_card.dart';
 import '../widgets/pedis_store.dart';
 import '../widgets/trotro_dashboard.dart';
 import 'customization_shop_screen.dart';
+import 'leaderboard_screen.dart';
 import 'upgrade_screen.dart';
 
 const Color _gold = Color(0xFFE3A92C);
@@ -69,23 +70,46 @@ class _ProgressDashboardScreenState extends State<ProgressDashboardScreen> {
             streak: _s.streak,
             tokens: _s.pedis,
             shards: _s.shards,
+            atRisk: _s.streakAtRisk,
           ),
           const SizedBox(height: 10),
-          OutlinedButton.icon(
-            onPressed: () async {
-              await Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => const CustomizationShopScreen()));
-              _reload();
-            },
-            icon: const Icon(Icons.directions_bus_rounded, size: 18),
-            label: const Text('Customise your tro tro'),
-            style: OutlinedButton.styleFrom(
-              minimumSize: const Size.fromHeight(46),
-              foregroundColor: charcoal,
-              side: const BorderSide(color: silverLight, width: 1.5),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14)),
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => const LeaderboardScreen())),
+                  icon: const Icon(Icons.emoji_events_rounded, size: 18),
+                  label: const Text('League'),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(46),
+                    foregroundColor: charcoal,
+                    side: const BorderSide(color: silverLight, width: 1.5),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14)),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () async {
+                    await Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => const CustomizationShopScreen()));
+                    _reload();
+                  },
+                  icon: const Icon(Icons.directions_bus_rounded, size: 18),
+                  label: const Text('Garage'),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(46),
+                    foregroundColor: charcoal,
+                    side: const BorderSide(color: silverLight, width: 1.5),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14)),
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 14),
 

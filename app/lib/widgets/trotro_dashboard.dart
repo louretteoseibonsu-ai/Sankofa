@@ -26,6 +26,9 @@ class TroTroDashboard extends StatelessWidget {
 
   final int fullTankDays;
 
+  /// Streak exists but today isn't done yet — show a gentle "top up" prompt.
+  final bool atRisk;
+
   const TroTroDashboard({
     super.key,
     required this.progress,
@@ -33,12 +36,19 @@ class TroTroDashboard extends StatelessWidget {
     required this.tokens,
     this.shards = 0,
     this.fullTankDays = 7,
+    this.atRisk = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final fuel = (streak / fullTankDays).clamp(0.0, 1.0);
     final lowFuel = fuel < 0.3;
+    final fuelColor = (atRisk || lowFuel) ? _fuelLow : _fuelGreen;
+    final fuelLabel = atRisk
+        ? 'top up today'
+        : lowFuel
+            ? 'fuel · low'
+            : 'fuel · day streak';
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
       decoration: BoxDecoration(
@@ -61,9 +71,9 @@ class TroTroDashboard extends StatelessWidget {
               Expanded(
                 child: _Gauge(
                   value: fuel,
-                  color: lowFuel ? _fuelLow : _fuelGreen,
+                  color: fuelColor,
                   big: '$streak',
-                  label: lowFuel ? 'fuel · low' : 'fuel · day streak',
+                  label: fuelLabel,
                 ),
               ),
             ],

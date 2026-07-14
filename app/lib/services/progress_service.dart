@@ -72,6 +72,7 @@ class Stats {
   final bool premium;
   final int pedis; // soft currency
   final int shards; // Golden Kente shards — mastery currency for cosmetics
+  final bool practicedToday; // has the user studied today? (fuel topped up)
   const Stats({
     required this.progress,
     required this.streak,
@@ -83,7 +84,12 @@ class Stats {
     required this.premium,
     required this.pedis,
     this.shards = 0,
+    this.practicedToday = false,
   });
+
+  /// The streak exists but today's fuel hasn't been topped up yet — a gentle
+  /// "come back today" signal (never a hard block).
+  bool get streakAtRisk => streak > 0 && !practicedToday;
 
   static const empty = Stats(
     progress: Progress.empty,
@@ -216,6 +222,7 @@ class ProgressService {
       premium: (data['premium'] as bool?) ?? false,
       pedis: (data['pedis'] as num?)?.toInt() ?? 0,
       shards: (data['shards'] as num?)?.toInt() ?? 0,
+      practicedToday: lastActive == today,
     );
   }
 
