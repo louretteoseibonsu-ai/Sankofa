@@ -10,8 +10,8 @@ import '../widgets/pedis_store.dart';
 import '../widgets/tappable_scale.dart';
 import '../widgets/trotro_dashboard.dart';
 import 'customization_shop_screen.dart';
-import 'leaderboard_screen.dart';
 import 'lesson_quiz_screen.dart';
+import 'trotro_rally_screen.dart';
 import 'upgrade_screen.dart';
 
 const Color _gold = Color(0xFFE3A92C);
@@ -107,8 +107,8 @@ class _ProgressDashboardScreenState extends State<ProgressDashboardScreen> {
               Expanded(
                 child: TappableScale(
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => const LeaderboardScreen())),
-                  child: _dashPill(Icons.emoji_events_rounded, 'League'),
+                      builder: (_) => const TroTroRallyScreen())),
+                  child: _dashPill(Icons.emoji_events_rounded, 'Rally'),
                 ),
               ),
               const SizedBox(width: 10),

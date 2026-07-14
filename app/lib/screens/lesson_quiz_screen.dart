@@ -13,6 +13,7 @@ import '../widgets/animations.dart';
 import '../widgets/celebration.dart';
 import '../widgets/continue_button.dart';
 import '../widgets/floating_card.dart';
+import '../widgets/tappable_scale.dart';
 
 const Color _correctGreen = Color(0xFF2E6B3B);
 const Color _wrongRed = Color(0xFF9B2D2A);
@@ -802,31 +803,25 @@ class _OptionTile extends StatelessWidget {
     }
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
-      child: Material(
-        color: bg,
-        borderRadius: BorderRadius.circular(14),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(14),
-          child: Container(
-            constraints: const BoxConstraints(minHeight: 48),
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: border, width: 1.4),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(label,
-                      style: TextStyle(
-                          color: fg,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15)),
-                ),
-                if (trailing != null) trailing,
-              ],
-            ),
+      child: TappableScale(
+        onTap: onTap,
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 48),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+          decoration: BoxDecoration(
+            color: bg,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: border, width: 1.4),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(label,
+                    style: TextStyle(
+                        color: fg, fontWeight: FontWeight.w600, fontSize: 15)),
+              ),
+              if (trailing != null) trailing,
+            ],
           ),
         ),
       ),

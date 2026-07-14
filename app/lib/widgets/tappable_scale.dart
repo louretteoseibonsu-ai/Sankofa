@@ -41,6 +41,8 @@ class _TappableScaleState extends State<TappableScale> {
 
   @override
   Widget build(BuildContext context) {
+    // Disabled (no tap) → no press-scale, so it reads as inactive.
+    if (widget.onTap == null) return widget.child;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTapDown: (_) => _press(),

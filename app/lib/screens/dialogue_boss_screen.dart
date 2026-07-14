@@ -9,6 +9,7 @@ import '../services/sound_service.dart';
 import '../theme.dart';
 import '../widgets/celebration.dart';
 import '../widgets/composable_trotro.dart';
+import '../widgets/tappable_scale.dart';
 
 const Color _green = Color(0xFF2E6B3B);
 const Color _red = Color(0xFF9B2D2A);
@@ -436,16 +437,13 @@ class _Response extends StatelessWidget {
     }
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
-      child: Material(
-        color: bg,
-        borderRadius: BorderRadius.circular(14),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(14),
-          child: Container(
+      child: TappableScale(
+        onTap: onTap,
+        child: Container(
             constraints: const BoxConstraints(minHeight: 52),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             decoration: BoxDecoration(
+              color: bg,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: border, width: 1.4),
             ),
@@ -463,7 +461,6 @@ class _Response extends StatelessWidget {
             ),
           ),
         ),
-      ),
     );
   }
 }

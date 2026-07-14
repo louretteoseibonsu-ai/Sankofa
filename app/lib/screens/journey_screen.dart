@@ -336,6 +336,9 @@ class _JourneyScreenState extends State<JourneyScreen>
 
               return SingleChildScrollView(
                 reverse: true, // start scrolled to the bottom (stop 0)
+                // Bouncy, physical feel — the road has "give" (suspension).
+                physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics()),
                 child: SizedBox(
                   width: w,
                   height: height,
