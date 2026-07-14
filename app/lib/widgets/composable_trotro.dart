@@ -31,12 +31,14 @@ class TroTroSkin {
   final KenteStyle kente;
   final bool roofRack;
   final String horn;
+  final Color body; // paintwork colour of the bus
 
   const TroTroSkin({
     this.rim = _silver,
     this.kente = KenteStyle.classic,
     this.roofRack = false,
     this.horn = 'horn_vroom',
+    this.body = _cream,
   });
 
   /// Resolve a skin from the user's equipped cosmetic ids.
@@ -143,7 +145,7 @@ class _TroTroPainter extends CustomPainter {
     }
 
     // Body
-    canvas.drawRRect(rr(46, 70, 350, 188, 26), fill(_cream));
+    canvas.drawRRect(rr(46, 70, 350, 188, 26), fill(skin.body));
     canvas.drawRRect(rr(46, 70, 350, 188, 26), stroke(_char, 5));
 
     // Windows

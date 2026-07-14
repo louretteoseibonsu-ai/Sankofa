@@ -8,6 +8,21 @@ import '../widgets/composable_trotro.dart';
 const Color _terra = Color(0xFFBE5235);
 const Color _gold = Color(0xFFE3A92C);
 
+// Distinct bus paintwork per racer (stable per uid, so it doesn't change weekly).
+const List<Color> _busPalette = [
+  Color(0xFFF3ECDD), // cream
+  Color(0xFFE3A92C), // gold
+  Color(0xFF7FB77E), // green
+  Color(0xFF6FA8DC), // blue
+  Color(0xFFD98CA6), // pink
+  Color(0xFFC9A0DC), // lavender
+  Color(0xFFE2725B), // terracotta
+  Color(0xFFB6BAC0), // grey
+];
+
+Color _busColorFor(String uid) =>
+    _busPalette[uid.hashCode.abs() % _busPalette.length];
+
 /// "Tro Tro Rally" — the weekly leaderboard as a race track. Each learner is a
 /// tro tro positioned by their weekly XP; yours is highlighted. Built on the
 /// existing weekly board, so no new backend.
@@ -150,8 +165,9 @@ class _Lane extends StatelessWidget {
                       curve: Curves.easeOutCubic,
                       left: travel * progress,
                       top: 2,
-                      child: const ComposableTroTro(
-                          skin: TroTroSkin(), width: busW),
+                      child: ComposableTroTro(
+                          skin: TroTroSkin(body: _busColorFor(entry.uid)),
+                          width: busW),
                     ),
                   ],
                 ),
