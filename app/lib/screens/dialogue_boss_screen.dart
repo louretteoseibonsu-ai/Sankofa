@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../data/lesson_catalog.dart';
 import '../data/lesson_content.dart';
+import '../data/quiz_master.dart';
 import '../services/progress_service.dart';
 import '../services/sound_service.dart';
 import '../theme.dart';
@@ -40,6 +41,7 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
   int _keysEarned = 0;
   bool _done = false;
   bool _recorded = false;
+  String? _feedback; // punchy per-answer line from the Quiz Master
 
   @override
   void initState() {
@@ -69,6 +71,7 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
     final correct = opt == _challenges[_i].correctIndex;
     setState(() {
       _picked = opt;
+      _feedback = correct ? quizCheer() : quizNudge();
       if (correct) {
         _correct += 1;
         _combo += 1;
@@ -97,6 +100,7 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
       setState(() {
         _i += 1;
         _picked = null;
+        _feedback = null;
       });
     }
   }
@@ -125,6 +129,7 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
       _keysEarned = 0;
       _done = false;
       _recorded = false;
+      _feedback = null;
       if (_unit != null) {
         _challenges = [for (final c in _unit!.challenges) c.shuffledOptions(r)]
           ..shuffle(r);
@@ -268,6 +273,18 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
             ],
           ),
         ),
+        if (answered && _feedback != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Text(
+              _feedback!,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 15,
+                  color: _picked == ch.correctIndex ? _green : _terra),
+            ),
+          ),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
@@ -330,6 +347,30 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
             textAlign: TextAlign.center,
             style: const TextStyle(color: slate, fontSize: 14, height: 1.4),
           ),
+          const SizedBox(height: 14),
+          const Text('MASTERY REPORT',
+              style: TextStyle(
+                  color: slate,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1)),
+          const SizedBox(height: 6),
+          Builder(builder: (_) {
+            final m = masteryTitleFor(
+                _challenges.isEmpty ? 0 : _correct / _challenges.length);
+            return Column(children: [
+              Text(m.title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 18,
+                      color: terracottaDeep)),
+              const SizedBox(height: 2),
+              Text(m.blurb,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: slate, fontSize: 13)),
+            ]);
+          }),
           const SizedBox(height: 24),
           SizedBox(
             width: double.infinity,

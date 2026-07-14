@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../data/lesson_catalog.dart';
 import '../data/lesson_content.dart';
+import '../data/quiz_master.dart';
 import '../data/twi_phonetics.dart';
 import '../services/progress_service.dart';
 import '../services/sound_service.dart';
@@ -29,6 +30,7 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
   UnitContent? _unit;
   List<Challenge> _challenges = [];
   final Map<int, int> _selected = {};
+  final Map<int, String> _feedback = {}; // punchy Quiz Master line per question
   bool _recorded = false;
 
   int _combo = 0; // consecutive correct answers
@@ -36,6 +38,8 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
   int _keysEarned = 0; // 1 wisdom key per 3-in-a-row
   String? _flash; // transient combo banner text
   bool _showLearn = true; // collapse the teach cards to focus on practice
+  int _i = 0; // current question — one at a time, boss-battle style
+  bool _done = false; // finished the run — show the summary + Mastery Report
 
   @override
   void initState() {
@@ -70,6 +74,7 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
     final correct = opt == _challenges[i].correctIndex;
     setState(() {
       _selected[i] = opt;
+      _feedback[i] = correct ? quizCheer() : quizNudge();
       if (correct) {
         _combo += 1;
         if (_combo > _bestCombo) _bestCombo = _combo;
@@ -99,9 +104,19 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
         if (mounted) setState(() => _flash = null);
       });
     }
-    if (_allDone && !_recorded) {
-      _recorded = true;
-      _recordAndCelebrate();
+  }
+
+  /// Advance to the next question, or finish the run (record + summary).
+  void _next() {
+    if (_i >= _challenges.length - 1) {
+      if (!_recorded) {
+        _recorded = true;
+        _recordAndCelebrate();
+      }
+      setState(() => _done = true);
+    } else {
+      HapticFeedback.selectionClick();
+      setState(() => _i += 1);
     }
   }
 
@@ -127,6 +142,9 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
       _bestCombo = 0;
       _keysEarned = 0;
       _flash = null;
+      _feedback.clear();
+      _i = 0;
+      _done = false;
       if (_unit != null) _challenges = _shuffle(_unit!.challenges);
     });
   }
@@ -160,21 +178,34 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
   /// The sticky bottom action adapts to state: a failed-but-finished quiz shows
   /// a primary "Try again" (no more dead-end Continue that just shows a toast).
   Widget _bottomCta() {
-    if (_allDone && _correct < kPassScore) {
-      return SizedBox(
-        width: double.infinity,
-        child: FilledButton.icon(
-          onPressed: () {
-            HapticFeedback.lightImpact();
-            SoundService.instance.tap();
-            _restart();
-          },
-          icon: const Icon(Icons.refresh, size: 18),
-          label: const Text('Try again'),
-        ),
-      );
+    // Finished the run — continue to the next lesson, or retry if under pass.
+    if (_done) {
+      if (_correct < kPassScore) {
+        return SizedBox(
+          width: double.infinity,
+          child: FilledButton.icon(
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              SoundService.instance.tap();
+              _restart();
+            },
+            icon: const Icon(Icons.refresh, size: 18),
+            label: const Text('Try again'),
+          ),
+        );
+      }
+      return ContinueButton(onPressed: _onContinue);
     }
-    return ContinueButton(onPressed: _onContinue);
+    // Mid-run — advance once the current question is answered.
+    final answered = _selected.containsKey(_i);
+    final last = _i >= _challenges.length - 1;
+    return SizedBox(
+      width: double.infinity,
+      child: FilledButton(
+        onPressed: answered ? _next : null,
+        child: Text(last ? 'Finish the lesson' : 'Drive on  →'),
+      ),
+    );
   }
 
   @override
@@ -279,7 +310,7 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                                 fontSize: 13)),
                       ),
                     const Spacer(),
-                    Text('${_selected.length} / ${_challenges.length}',
+                    Text('${_done ? total : _i + 1} / ${_challenges.length}',
                         style: const TextStyle(
                             color: slate,
                             fontWeight: FontWeight.w700,
@@ -304,15 +335,16 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                   ),
                 ],
                 const SizedBox(height: 12),
-                for (int i = 0; i < _challenges.length; i++)
+                if (!_done && _challenges.isNotEmpty)
                   _ChallengeCard(
-                    index: i,
-                    challenge: _challenges[i],
-                    selected: _selected[i],
-                    onChoose: (opt) => _choose(i, opt),
+                    index: _i,
+                    challenge: _challenges[_i],
+                    selected: _selected[_i],
+                    feedback: _feedback[_i],
+                    onChoose: (opt) => _choose(_i, opt),
                   ),
                 const SizedBox(height: 8),
-                if (_allDone) ...[
+                if (_done) ...[
                   Center(
                     child: Text(
                         'You scored $_correct / ${_challenges.length}'
@@ -321,6 +353,27 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                             fontWeight: FontWeight.w800,
                             fontSize: 16,
                             color: ink)),
+                  ),
+                  const SizedBox(height: 10),
+                  Center(
+                    child: Builder(builder: (_) {
+                      final m = masteryTitleFor(_challenges.isEmpty
+                          ? 0
+                          : _correct / _challenges.length);
+                      return Column(children: [
+                        Text(m.title,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 17,
+                                color: terracottaDeep)),
+                        const SizedBox(height: 2),
+                        Text(m.blurb,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                color: slate, fontSize: 12.5)),
+                      ]);
+                    }),
                   ),
                   if (_correct < kPassScore) ...[
                     const SizedBox(height: 6),
@@ -595,11 +648,13 @@ class _ChallengeCard extends StatelessWidget {
   final int index;
   final Challenge challenge;
   final int? selected;
+  final String? feedback;
   final ValueChanged<int> onChoose;
   const _ChallengeCard({
     required this.index,
     required this.challenge,
     required this.selected,
+    required this.feedback,
     required this.onChoose,
   });
 
@@ -649,6 +704,15 @@ class _ChallengeCard extends StatelessWidget {
                             : _OptState.dimmed,
                 onTap: answered ? null : () => onChoose(o),
               ),
+            if (answered && feedback != null) ...[
+              const SizedBox(height: 8),
+              Text(feedback!,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 14,
+                      color:
+                          selected == correctIndex ? _correctGreen : terracotta)),
+            ],
             if (answered &&
                 challenge.slangHint != null &&
                 challenge.slangHint!.isNotEmpty) ...[

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../data/lesson_catalog.dart';
 import '../data/lesson_content.dart';
+import '../data/quiz_master.dart';
 import '../services/progress_service.dart';
 import '../services/sound_service.dart';
 import '../theme.dart';
@@ -47,6 +48,7 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
   bool _recorded = false;
   int _masteryAward = 0;
   bool _masteryPerfect = false;
+  String? _feedback; // punchy per-line Quiz Master voice
 
   @override
   void initState() {
@@ -80,6 +82,7 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
   void _startQuestion() {
     _resolved = false;
     _picked = null;
+    _feedback = null;
     _timer.forward(from: 0);
     if (mounted) setState(() {});
   }
@@ -90,6 +93,7 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
     setState(() {
       _picked = -1;
       _combo = 0;
+      _feedback = "Time's up — next stop!";
     });
     SoundService.instance.tap();
     HapticFeedback.heavyImpact();
@@ -103,6 +107,7 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
     final correct = opt == _challenges[_i].correctIndex;
     setState(() {
       _picked = opt;
+      _feedback = correct ? quizCheer() : quizNudge();
       if (correct) {
         _correct += 1;
         _combo += 1;
@@ -266,6 +271,18 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
             ],
           ),
         ),
+        if (answered && _feedback != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: Text(
+              _feedback!,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 15,
+                  color: _picked == ch.correctIndex ? _green : _terra),
+            ),
+          ),
       ],
     );
   }
@@ -325,6 +342,30 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
           const SizedBox(height: 10),
           Text('Best combo: ${_bestCombo}x',
               style: const TextStyle(color: slate, fontSize: 14)),
+          const SizedBox(height: 12),
+          const Text('MASTERY REPORT',
+              style: TextStyle(
+                  color: slate,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1)),
+          const SizedBox(height: 6),
+          Builder(builder: (_) {
+            final m = masteryTitleFor(
+                _challenges.isEmpty ? 0 : _correct / _challenges.length);
+            return Column(mainAxisSize: MainAxisSize.min, children: [
+              Text(m.title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 18,
+                      color: terracottaDeep)),
+              const SizedBox(height: 2),
+              Text(m.blurb,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: slate, fontSize: 13)),
+            ]);
+          }),
           const SizedBox(height: 24),
           Row(
             children: [
