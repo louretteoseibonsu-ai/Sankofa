@@ -61,22 +61,24 @@ class _AppShellState extends State<AppShell> {
         titleSpacing: 16,
         flexibleSpace: const KenteHeaderBackground(),
         // Home (Journey) greets the user by name; other tabs show their label.
-        title: _index == 0
-            ? const GreetingTitle()
-            : Text(
-                _dest[_index].label,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 20,
-                  color: Colors.white,
-                  shadows: [
-                    Shadow(
-                        color: Color(0x99000000),
-                        blurRadius: 4,
-                        offset: Offset(0, 1)),
-                  ],
+        // Dark scrim behind the title so white text stays legible over any
+        // colour in the kente banner.
+        title: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: const Color(0xCC1A1A1A),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: _index == 0
+              ? const GreetingTitle()
+              : Text(
+                  _dest[_index].label,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 20,
+                      color: Colors.white),
                 ),
-              ),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16),
