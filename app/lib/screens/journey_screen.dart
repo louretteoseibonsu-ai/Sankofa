@@ -84,6 +84,7 @@ class _JourneyScreenState extends State<JourneyScreen>
   final _service = ProgressService();
   final GlobalKey _troKey = GlobalKey(); // the parked map bus
   final GlobalKey _garageKey = GlobalKey(); // the garage button (flight target)
+  final GlobalKey _anansesemKey = GlobalKey(); // campfire button (flight target)
   final GlobalKey _warpNodeKey = GlobalKey(); // the stop we're warping into
   bool _flying = false; // hide the map bus while its clone is in flight
   int? _warpTarget; // stop index carrying _warpNodeKey during a region warp
@@ -278,11 +279,37 @@ class _JourneyScreenState extends State<JourneyScreen>
     _reload();
   }
 
-  /// Opens the Anansesɛm folktale list (the campfire Story Stops).
-  void _openAnansesem() {
-    HapticFeedback.selectionClick();
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (_) => const ReadingListScreen(folkloreOnly: true)));
+  /// Bus-fly to the campfire, then open the Anansesɛm folktale list.
+  Future<void> _openAnansesem() async {
+    if (_flying || _troKey.currentContext == null) {
+      _pushAnansesem();
+      return;
+    }
+    await OverlayFlight.run(
+      context: context,
+      vsync: this,
+      fromKey: _troKey,
+      toKey: _anansesemKey,
+      endScale: 0.3,
+      arcHeight: 80,
+      builder: (w) =>
+          TintableTroTro(bodyColor: _bodyColor, equipped: _equipped, width: w),
+      onStart: () {
+        HapticFeedback.selectionClick();
+        setState(() => _flying = true);
+      },
+    );
+    if (!mounted) return;
+    _pushAnansesem();
+  }
+
+  void _pushAnansesem() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(
+            builder: (_) => const ReadingListScreen(folkloreOnly: true)))
+        .then((_) {
+      if (mounted) setState(() => _flying = false);
+    });
   }
 
   /// Bus-fly into the Garage — powered by the reusable [OverlayFlight] helper.
@@ -383,6 +410,7 @@ class _JourneyScreenState extends State<JourneyScreen>
                       ),
                     ),
                     IconButton(
+                      key: _anansesemKey,
                       visualDensity: VisualDensity.compact,
                       padding: const EdgeInsets.all(6),
                       constraints: const BoxConstraints(),
