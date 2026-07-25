@@ -7,6 +7,7 @@ import '../data/quiz_master.dart';
 import '../services/progress_service.dart';
 import '../services/sound_service.dart';
 import '../theme.dart';
+import '../widgets/kente_shard.dart';
 import '../widgets/tappable_scale.dart';
 
 const Color _green = Color(0xFF2E6B3B);
@@ -314,14 +315,23 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
                     fontSize: 22,
                     color: _masteryPerfect ? _green : ink)),
             const SizedBox(height: 4),
-            Text(
-                _masteryPerfect
-                    ? (_masteryAward > 0
-                        ? '+$_masteryAward kente shards'
-                        : 'You already mastered this stop.')
-                    : 'A perfect run (${_challenges.length}/${_challenges.length}) masters this stop.',
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: slate, fontSize: 13)),
+            if (_masteryPerfect && _masteryAward > 0)
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const KenteShard(size: 15),
+                  const SizedBox(width: 5),
+                  Text('+$_masteryAward kente shards',
+                      style: const TextStyle(color: slate, fontSize: 13)),
+                ],
+              )
+            else
+              Text(
+                  _masteryPerfect
+                      ? 'You already mastered this stop.'
+                      : 'A perfect run (${_challenges.length}/${_challenges.length}) masters this stop.',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: slate, fontSize: 13)),
             const SizedBox(height: 12),
           ],
           Text('$_correct / ${_challenges.length}',
