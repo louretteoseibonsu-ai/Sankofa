@@ -6,9 +6,9 @@ import '../theme.dart';
 /// keeping the Kente-Modernist identity (terracotta accent, Space Grotesk) but
 /// on deep espresso rather than white. Additive — screens opt in.
 
-// Surfaces: a near-black → warm-espresso vertical mesh.
-const Color kVelvetTop = Color(0xFF17130F); // near-black espresso (top)
-const Color kVelvetBottom = Color(0xFF2C221B); // warm espresso (base)
+// Surfaces: a deep-charcoal → dark-espresso vertical mesh (restrained / moody).
+const Color kVelvetTop = Color(0xFF131211); // deep charcoal (top)
+const Color kVelvetBottom = Color(0xFF1E1A17); // dark espresso (base)
 const Color kVelvetInk = Color(0xFFF3ECE4); // warm off-white text
 const Color kVelvetMuted = Color(0xFF9B8F86); // muted warm grey
 
@@ -62,7 +62,7 @@ class AtmosphericPanel extends StatelessWidget {
               top: 0,
               left: 0,
               right: 0,
-              height: radius * 2.4,
+              height: radius * 1.9,
               child: const DecoratedBox(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -86,7 +86,7 @@ class AtmosphericPanel extends StatelessWidget {
 class FocalGlow extends StatelessWidget {
   final Color color;
   final double intensity;
-  const FocalGlow({super.key, required this.color, this.intensity = 0.30});
+  const FocalGlow({super.key, required this.color, this.intensity = 0.20});
 
   @override
   Widget build(BuildContext context) => DecoratedBox(
