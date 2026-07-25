@@ -114,33 +114,54 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
     if (_i >= _challenges.length - 1) {
       if (!_recorded) {
         _recorded = true;
-        _recordAndCelebrate();
+        _finishRun();
       }
-      setState(() => _done = true);
     } else {
       HapticFeedback.selectionClick();
       setState(() => _i += 1);
     }
   }
 
-  Future<void> _recordAndCelebrate() async {
-    final o = await _progress.recordResult(widget.lesson.id, _correct,
-        keysEarned: _keysEarned);
+  /// Record the result, then — on a passing run — play the Stage Clear
+  /// drive-across FIRST and only reveal the summary once the learner taps
+  /// Continue. Awaiting the celebration (rather than firing it and jumping
+  /// straight to the summary) is what guarantees the black stage actually
+  /// shows; the old fire-and-forget lost the race with the summary and the
+  /// widget was often unmounted before the overlay could appear.
+  Future<void> _finishRun() async {
+    RecordOutcome o;
+    try {
+      o = await _progress.recordResult(widget.lesson.id, _correct,
+          keysEarned: _keysEarned);
+    } catch (_) {
+      // Saving failed (e.g. offline) — still show the summary so the learner
+      // isn't stranded on the last question.
+      if (mounted) setState(() => _done = true);
+      return;
+    }
     if (!mounted) return;
+
     final passed = _correct >= kPassScore;
-    // The Stage Clear drive-across celebration — fires on a passed run, with the
-    // star count and the player's equipped tro tro horn/skin.
     if (passed) {
-      final cos = await _progress.loadCosmetics();
+      Map<String, String> equipped = const {};
+      try {
+        equipped = (await _progress.loadCosmetics()).equipped;
+      } catch (_) {
+        // Cosmetics unavailable — celebrate with the default skin.
+      }
       if (!mounted) return;
       await StageClear.run(
         context,
         stars: o.stars < 1 ? 1 : o.stars,
-        skin: TroTroSkin.fromEquipped(cos.equipped),
+        skin: TroTroSkin.fromEquipped(equipped),
       );
       if (!mounted) return;
     }
-    // A level-up is a bigger, named milestone — show it after the drive.
+
+    // Reveal the summary + Mastery Report after the drive.
+    setState(() => _done = true);
+
+    // A level-up is a bigger, named milestone — show it after the summary.
     if (o.leveledUp) {
       celebrateMilestone(context,
           headline: 'Level up!', subline: 'You reached level ${o.level}');
