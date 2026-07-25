@@ -874,10 +874,10 @@ class _MapSkeleton extends StatelessWidget {
     return SkeletonLoader(
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 14, 16, 8),
             child: Row(
-              children: const [
+              children: [
                 SkeletonBox(width: 54, height: 30, radius: 20),
                 SizedBox(width: 8),
                 SkeletonBox(width: 54, height: 30, radius: 20),
@@ -916,8 +916,8 @@ class _MapSkeleton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: const Color(0xFFECE8E0), width: 1.5),
               ),
-              child: Row(
-                children: const [
+              child: const Row(
+                children: [
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

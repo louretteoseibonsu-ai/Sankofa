@@ -135,9 +135,9 @@ class Mascot extends StatelessWidget {
       key: const ValueKey<String>('canonical'),
       alignment: Alignment.bottomCenter,
       transform: Matrix4.identity()
-        ..translate(0.0, -pose.bob)
+        ..translateByDouble(0.0, -pose.bob, 0.0, 1.0)
         ..rotateZ(pose.tilt)
-        ..scale(pose.squashX, pose.squashY),
+        ..scaleByDouble(pose.squashX, pose.squashY, 1.0, 1.0),
       child: bus,
     );
   }
