@@ -11,6 +11,7 @@ import '../widgets/mascot_stage.dart';
 import '../widgets/skeleton.dart';
 import '../widgets/state_message.dart';
 import '../widgets/surface.dart';
+import '../widgets/velvet.dart';
 import '../widgets/tappable_scale.dart';
 import '../widgets/tintable_trotro.dart';
 
@@ -123,50 +124,59 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kVelvetTop,
       appBar: AppBar(
-        title: const Text('The Garage'),
+        backgroundColor: Colors.transparent,
+        foregroundColor: kVelvetInk,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        title: Text('The Garage',
+            style: displayFont(
+                fontSize: 19, fontWeight: FontWeight.w700, color: kVelvetInk)),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 14),
-            child: Row(children: [
-              const KenteShard(size: 18),
-              const SizedBox(width: 5),
-              Text('$_shards',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w800, color: ink, fontSize: 15)),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Text('$_shards', style: editorialNumber(fontSize: 17)),
+              const SizedBox(width: 6),
+              const KenteShard(size: 17),
             ]),
           ),
         ],
       ),
-      body: ListView(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [kVelvetTop, kVelvetBottom],
+          ),
+        ),
+        child: ListView(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 28),
               children: [
                 // Live preview — always rendered so the Hero flight from the
                 // map has a destination during the push transition.
-                AppCard(
-                  radius: 18,
-                  color: const Color(0xFFFBF8F2),
-                  padding: const EdgeInsets.symmetric(vertical: 18),
+                AtmosphericPanel(
+                  radius: 22,
+                  glow: terracotta,
+                  padding: const EdgeInsets.symmetric(vertical: 22),
                   child: Center(
                       child: MascotStage(
                           bodyColor: kTroTroBodyColors[_bodyIndex],
                           equipped: _cos.equipped,
                           width: 240)),
                 ),
-                const SizedBox(height: 8),
-                const Center(
-                  child: Text('Earn shards with 3-star lessons.',
-                      style: TextStyle(color: slate, fontSize: 12.5)),
+                const SizedBox(height: 12),
+                Center(
+                  child: Text('Earn shards with 3-star lessons',
+                      style: microLabel()),
                 ),
                 _BlindBoxCard(shards: _shards, onOpen: _openBlindBox),
                 // ── Body colour (free — swap any time) ──
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(2, 16, 0, 8),
-                  child: Text('Body Colour',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 15,
-                          color: ink)),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(2, 20, 0, 10),
+                  child: Text('Body Colour', style: microLabel()),
                 ),
                 Wrap(
                   spacing: 12,
@@ -182,7 +192,9 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                             color: kTroTroBodyColors[i],
                             shape: BoxShape.circle,
                             border: Border.all(
-                                color: _bodyIndex == i ? ink : Colors.white,
+                                color: _bodyIndex == i
+                                    ? kOchre
+                                    : Colors.white24,
                                 width: _bodyIndex == i ? 3 : 2),
                           ),
                           child: _bodyIndex == i
@@ -229,10 +241,7 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(2, 12, 0, 8),
                     child: Text(kCategoryLabel[cat] ?? cat,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 15,
-                            color: ink)),
+                        style: microLabel()),
                   ),
                   Wrap(
                     spacing: 10,
@@ -252,6 +261,7 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                 ],
               ],
             ),
+      ),
     );
   }
 }
@@ -274,26 +284,25 @@ class _ItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final Widget status;
     if (equipped) {
-      status = const Row(mainAxisSize: MainAxisSize.min, children: [
-        Icon(Icons.check_circle_rounded, color: _terra, size: 16),
-        SizedBox(width: 4),
-        Text('Equipped',
-            style: TextStyle(
-                color: _terra, fontSize: 12, fontWeight: FontWeight.w800)),
-      ]);
+      status = Text('EQUIPPED',
+          style: displayFont(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: kOchre,
+              letterSpacing: 1.2));
     } else if (owned) {
-      status = const Text('Equip',
-          style: TextStyle(
-              color: ink, fontSize: 12, fontWeight: FontWeight.w800));
+      status = Text('Equip',
+          style: displayFont(
+              fontSize: 12, fontWeight: FontWeight.w700, color: kVelvetInk));
     } else {
       status = Row(mainAxisSize: MainAxisSize.min, children: [
         KenteShard(size: 14, muted: !affordable),
         const SizedBox(width: 4),
         Text('${item.costShards}',
-            style: TextStyle(
-                color: affordable ? ink : slate,
-                fontSize: 12,
-                fontWeight: FontWeight.w800)),
+            style: displayFont(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: affordable ? kOchre : kVelvetMuted)),
       ]);
     }
 
@@ -302,9 +311,9 @@ class _ItemCard extends StatelessWidget {
       onTap: onTap,
       width: width,
       radius: 14,
-      borderColor: equipped ? _terra : null,
-      borderWidth: 2,
-      shadow: equipped ? kRaisedShadow : kAmbientShadow,
+      color: const Color(0xFF211B17),
+      borderColor: equipped ? kOchre : Colors.white10,
+      borderWidth: equipped ? 2 : 1,
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
       child: Row(
         children: [
@@ -312,8 +321,10 @@ class _ItemCard extends StatelessWidget {
             child: Text(item.name,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                    fontSize: 14, fontWeight: FontWeight.w700, color: ink)),
+                style: displayFont(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: kVelvetInk)),
           ),
           const SizedBox(width: 6),
           status,
