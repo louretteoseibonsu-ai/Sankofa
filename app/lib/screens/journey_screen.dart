@@ -10,6 +10,7 @@ import '../widgets/celebration.dart';
 import '../widgets/composable_trotro.dart';
 import '../widgets/greeting.dart';
 import '../widgets/mascot.dart';
+import '../widgets/motion.dart';
 import '../widgets/overlay_flight.dart';
 import '../widgets/skeleton.dart';
 import '../widgets/state_message.dart';
@@ -582,14 +583,17 @@ class _JourneyScreenState extends State<JourneyScreen>
                           ),
                       // The tro tro avatar
                       if (n > 0)
-                        AnimatedPositioned(
-                          duration: const Duration(milliseconds: 900),
-                          curve: Curves.easeInOut,
-                          left: points[_displayIndex].dx - 54,
-                          top: points[_displayIndex].dy - 46,
+                        Positioned(
+                          left: 0,
+                          top: 0,
                           width: 108,
                           height: 108 * 250 / 380,
-                          child: GestureDetector(
+                          child: Spring2DBuilder(
+                            target: Offset(points[_displayIndex].dx - 54,
+                                points[_displayIndex].dy - 46),
+                            builder: (context, pos, child) =>
+                                Transform.translate(offset: pos, child: child),
+                            child: GestureDetector(
                             onTap: () => _open(lessons[current]),
                             // Always the illustrated bus (parked, driving, or
                             // arriving) — it just leans forward while driving so
@@ -634,6 +638,7 @@ class _JourneyScreenState extends State<JourneyScreen>
                                 ),
                               ),
                             ),
+                          ),
                           ),
                         ),
                     ],

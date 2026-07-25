@@ -9,6 +9,7 @@ import '../widgets/composable_trotro.dart';
 import '../widgets/mascot.dart';
 import '../widgets/skeleton.dart';
 import '../widgets/state_message.dart';
+import '../widgets/surface.dart';
 import '../widgets/tappable_scale.dart';
 import '../widgets/tintable_trotro.dart';
 
@@ -300,18 +301,15 @@ class _ItemCard extends StatelessWidget {
     }
 
     final width = MediaQuery.of(context).size.width - 16 * 2;
-    return GestureDetector(
+    return TappableScale(
       onTap: onTap,
-      child: Container(
+      child: AppCard(
         width: width,
+        radius: 14,
+        borderColor: equipped ? _terra : null,
+        borderWidth: 2,
+        shadow: equipped ? kRaisedShadow : kAmbientShadow,
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-              color: equipped ? _terra : silverLight,
-              width: equipped ? 2 : 1.5),
-        ),
         child: Row(
           children: [
             Expanded(

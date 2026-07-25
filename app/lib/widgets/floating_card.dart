@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import '../theme.dart';
+import 'surface.dart';
+import 'tappable_scale.dart';
 
-/// Apple-style squircle card with a soft, neutral drop shadow and roomy padding.
+/// Apple-style squircle card — now with layered ambient depth and a spring
+/// press (via [TappableScale]) instead of a flat drop shadow + Material ripple,
+/// so every card that uses it feels elevated and tactile.
 class FloatingCard extends StatelessWidget {
   final Widget child;
   final VoidCallback? onTap;
@@ -16,20 +20,15 @@ class FloatingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
+    final card = DecoratedBox(
       decoration: const ShapeDecoration(
         color: surfaceCard,
         shape: kSquircleCard,
-        shadows: kSoftShadow,
+        shadows: kAmbientShadow,
       ),
-      child: Material(
-        type: MaterialType.transparency,
-        child: InkWell(
-          customBorder: kSquircleCard,
-          onTap: onTap,
-          child: Padding(padding: padding, child: child),
-        ),
-      ),
+      child: Padding(padding: padding, child: child),
     );
+    if (onTap == null) return card;
+    return TappableScale(onTap: onTap, child: card);
   }
 }

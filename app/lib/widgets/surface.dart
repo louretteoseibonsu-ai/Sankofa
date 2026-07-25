@@ -44,6 +44,7 @@ class AppCard extends StatelessWidget {
   final Color? borderColor;
   final double borderWidth;
   final List<BoxShadow> shadow;
+  final double? width;
 
   const AppCard({
     super.key,
@@ -55,6 +56,7 @@ class AppCard extends StatelessWidget {
     this.borderColor,
     this.borderWidth = 1.5,
     this.shadow = kAmbientShadow,
+    this.width,
   });
 
   @override
@@ -63,6 +65,7 @@ class AppCard extends StatelessWidget {
     // bottom. Using a gradient (not a flat color) is what reads as "surface".
     final sheen = Color.alphaBlend(Colors.white.withValues(alpha: 0.35), color);
     return Container(
+      width: width,
       margin: margin,
       padding: padding,
       decoration: BoxDecoration(
