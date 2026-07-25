@@ -143,13 +143,10 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
               children: [
                 // Live preview — always rendered so the Hero flight from the
                 // map has a destination during the push transition.
-                Container(
+                AppCard(
+                  radius: 18,
+                  color: const Color(0xFFFBF8F2),
                   padding: const EdgeInsets.symmetric(vertical: 18),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFBF8F2),
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: silverLight, width: 1.5),
-                  ),
                   child: Center(
                       child: Mascot(
                           bodyColor: kTroTroBodyColors[_bodyIndex],
@@ -348,6 +345,7 @@ class _BlindBoxCard extends StatelessWidget {
           colors: [Color(0xFF3D2A4D), Color(0xFF7A3F36)],
         ),
         borderRadius: BorderRadius.circular(18),
+        boxShadow: kRaisedShadow,
       ),
       child: Row(
         children: [

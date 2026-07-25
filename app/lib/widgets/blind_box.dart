@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import '../data/blind_box_data.dart';
 import '../services/sound_service.dart';
 import '../theme.dart';
+import 'kente_shard.dart';
 import 'mascot.dart';
 import 'tappable_scale.dart';
 
@@ -311,13 +312,22 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
                 fontSize: 25, fontWeight: FontWeight.w700, color: Colors.white),
           ),
           const SizedBox(height: 6),
-          Text(
-            dup
-                ? 'Duplicate — refunded ${widget.result.refund} shards'
-                : 'Added to your collection',
-            style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.7), fontSize: 13),
-          ),
+          if (dup)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Duplicate — refunded ${widget.result.refund}',
+                    style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.7),
+                        fontSize: 13)),
+                const SizedBox(width: 5),
+                const KenteShard(size: 14),
+              ],
+            )
+          else
+            Text('Added to your collection',
+                style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.7), fontSize: 13)),
           const SizedBox(height: 28),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
