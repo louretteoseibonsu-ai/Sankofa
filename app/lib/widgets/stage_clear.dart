@@ -6,8 +6,10 @@ import 'package:flutter/services.dart';
 import '../services/sound_service.dart';
 import 'animations.dart' show celebrateBurst;
 import 'composable_trotro.dart' show TroTroSkin;
+import '../theme.dart';
 import 'mascot.dart';
 import 'tappable_scale.dart';
+import 'velvet.dart';
 
 // High-saturation cartoon palette (Terracotta + grayscale Kente).
 const Color _ink = Color(0xFF2B2B2D);
@@ -250,6 +252,23 @@ class _StageClearViewState extends State<_StageClearView>
             color: Colors.black.withValues(alpha: _showVictory ? 1.0 : blackIn),
           ),
         ),
+        // Velvet warmth + a focal glow for the victory screen.
+        if (_showVictory)
+          const Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [kVelvetTop, kVelvetBottom],
+                ),
+              ),
+            ),
+          ),
+        if (_showVictory)
+          Positioned.fill(
+            child: IgnorePointer(child: FocalGlow(color: _terra)),
+          ),
         // ── Act II: the tro tro drives across the black stage ──────────────
         if (!_showVictory)
           IgnorePointer(
@@ -326,13 +345,13 @@ class _StageClearViewState extends State<_StageClearView>
                 ),
             ],
           ),
-          const SizedBox(height: 18),
-          const Text('STAGE CLEAR',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 18,
-                  letterSpacing: 1.5)),
+          const SizedBox(height: 20),
+          Text('STAGE CLEAR',
+              style: displayFont(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w700,
+                  color: kVelvetInk,
+                  letterSpacing: 2.5)),
           const SizedBox(height: 36),
           AnimatedBuilder(
             animation: _breathe,
