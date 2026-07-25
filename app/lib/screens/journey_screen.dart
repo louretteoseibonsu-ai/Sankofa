@@ -9,6 +9,7 @@ import '../theme.dart';
 import '../widgets/celebration.dart';
 import '../widgets/composable_trotro.dart';
 import '../widgets/greeting.dart';
+import '../widgets/mascot.dart';
 import '../widgets/overlay_flight.dart';
 import '../widgets/skeleton.dart';
 import '../widgets/state_message.dart';
@@ -200,7 +201,7 @@ class _JourneyScreenState extends State<JourneyScreen>
       arcHeight: 46,
       duration: const Duration(milliseconds: 650),
       builder: (w) =>
-          TintableTroTro(bodyColor: _bodyColor, equipped: _equipped, width: w),
+          Mascot(bodyColor: _bodyColor, equipped: _equipped, width: w),
       onStart: () {
         HapticFeedback.selectionClick();
         setState(() => _flying = true); // hide the parked bus during flight
@@ -309,7 +310,7 @@ class _JourneyScreenState extends State<JourneyScreen>
       endScale: 0.3,
       arcHeight: 80,
       builder: (w) =>
-          TintableTroTro(bodyColor: _bodyColor, equipped: _equipped, width: w),
+          Mascot(bodyColor: _bodyColor, equipped: _equipped, width: w),
       onStart: () {
         HapticFeedback.selectionClick();
         setState(() => _flying = true);
@@ -342,7 +343,7 @@ class _JourneyScreenState extends State<JourneyScreen>
       endScale: 0.28, // shrink into the garage button
       arcHeight: 90,
       builder: (w) =>
-          TintableTroTro(bodyColor: _bodyColor, equipped: _equipped, width: w),
+          Mascot(bodyColor: _bodyColor, equipped: _equipped, width: w),
       onStart: () {
         HapticFeedback.selectionClick();
         setState(() => _flying = true); // hide the real bus during the flight
@@ -589,7 +590,7 @@ class _JourneyScreenState extends State<JourneyScreen>
                                       : 0.0,
                                   duration: const Duration(milliseconds: 260),
                                   curve: Curves.easeOut,
-                                  child: TintableTroTro(
+                                  child: Mascot(
                                       key: _troKey,
                                       bodyColor: _bodyColor,
                                       equipped: _equipped,

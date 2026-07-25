@@ -4,6 +4,7 @@ import '../services/progress_service.dart';
 import '../services/sound_service.dart';
 import '../theme.dart';
 import '../widgets/composable_trotro.dart';
+import '../widgets/mascot.dart';
 import '../widgets/skeleton.dart';
 import '../widgets/state_message.dart';
 import '../widgets/tappable_scale.dart';
@@ -117,7 +118,7 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                     border: Border.all(color: silverLight, width: 1.5),
                   ),
                   child: Center(
-                      child: TintableTroTro(
+                      child: Mascot(
                           bodyColor: kTroTroBodyColors[_bodyIndex],
                           equipped: _cos.equipped,
                           width: 240)),

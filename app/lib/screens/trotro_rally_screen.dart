@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../services/progress_service.dart';
 import '../theme.dart';
+import '../widgets/mascot.dart';
 import '../widgets/skeleton.dart';
 import '../widgets/state_message.dart';
 import '../widgets/tintable_trotro.dart';
@@ -216,11 +217,11 @@ class _Lane extends StatelessWidget {
                       left: travel * progress,
                       top: 2,
                       child: isMe
-                          ? TintableTroTro(
+                          ? Mascot(
                               bodyColor: myColor,
                               equipped: myEquipped,
                               width: busW)
-                          : TintableTroTro(
+                          : Mascot(
                               bodyColor: _busColorFor(entry.uid), width: busW),
                     ),
                   ],
