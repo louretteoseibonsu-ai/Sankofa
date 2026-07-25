@@ -298,28 +298,26 @@ class _ItemCard extends StatelessWidget {
     }
 
     final width = MediaQuery.of(context).size.width - 16 * 2;
-    return TappableScale(
+    return AppCard(
       onTap: onTap,
-      child: AppCard(
-        width: width,
-        radius: 14,
-        borderColor: equipped ? _terra : null,
-        borderWidth: 2,
-        shadow: equipped ? kRaisedShadow : kAmbientShadow,
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(item.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w700, color: ink)),
-            ),
-            const SizedBox(width: 6),
-            status,
-          ],
-        ),
+      width: width,
+      radius: 14,
+      borderColor: equipped ? _terra : null,
+      borderWidth: 2,
+      shadow: equipped ? kRaisedShadow : kAmbientShadow,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(item.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                    fontSize: 14, fontWeight: FontWeight.w700, color: ink)),
+          ),
+          const SizedBox(width: 6),
+          status,
+        ],
       ),
     );
   }

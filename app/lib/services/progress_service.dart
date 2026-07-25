@@ -63,12 +63,14 @@ class RecordOutcome {
   final bool leveledUp;
   final int stars; // stars for this lesson now (0..3)
   final int starsGained; // newly earned stars this attempt
+  final int shardsEarned; // Golden Kente shards awarded this attempt
   const RecordOutcome({
     required this.progress,
     required this.level,
     required this.leveledUp,
     required this.stars,
     required this.starsGained,
+    required this.shardsEarned,
   });
 
   static const empty = RecordOutcome(
@@ -76,7 +78,8 @@ class RecordOutcome {
       level: 1,
       leveledUp: false,
       stars: 0,
-      starsGained: 0);
+      starsGained: 0,
+      shardsEarned: 0);
 }
 
 /// Star rating (0–3) for a lesson's best score.
@@ -558,6 +561,7 @@ class ProgressService {
       leveledUp: updated.level > oldLevel,
       stars: newStars,
       starsGained: (newStars - oldStars).clamp(0, 3).toInt(),
+      shardsEarned: shardsEarned,
     );
   }
 

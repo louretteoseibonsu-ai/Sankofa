@@ -14,6 +14,7 @@ import '../widgets/celebration.dart';
 import '../widgets/composable_trotro.dart';
 import '../widgets/continue_button.dart';
 import '../widgets/floating_card.dart';
+import '../widgets/floating_reward.dart';
 import '../widgets/stage_clear.dart';
 import '../widgets/tappable_scale.dart';
 
@@ -160,6 +161,13 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
 
     // Reveal the summary + Mastery Report after the drive.
     setState(() => _done = true);
+
+    // Float the shard gain over the summary.
+    if (o.shardsEarned > 0) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) ShardGain.show(context, o.shardsEarned);
+      });
+    }
 
     // A level-up is a bigger, named milestone — show it after the summary.
     if (o.leveledUp) {
