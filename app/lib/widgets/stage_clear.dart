@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import '../services/sound_service.dart';
 import 'animations.dart' show celebrateBurst;
 import 'composable_trotro.dart' show TroTroSkin;
+import 'mascot.dart';
 import 'tappable_scale.dart';
 
 // High-saturation cartoon palette (Terracotta + grayscale Kente).
@@ -405,26 +406,16 @@ class _StageClearViewState extends State<_StageClearView>
         alignment: Alignment.bottomCenter,
         child: ImageFiltered(
           imageFilter: ui.ImageFilter.blur(sigmaX: blur, sigmaY: 0.001),
-          // Silky 120ms cross-fade between expression frames (wink → drive →
-          // Ta-Da → look-back) instead of a hard cut.
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 120),
-            switchInCurve: Curves.easeOut,
-            switchOutCurve: Curves.easeIn,
-            transitionBuilder: (child, anim) =>
-                FadeTransition(opacity: anim, child: child),
-            layoutBuilder: (current, previous) => Stack(
-              alignment: Alignment.bottomCenter,
-              children: [...previous, if (current != null) current],
-            ),
-            child: Image.asset(
-              _frameFor(p),
-              key: ValueKey(_frameFor(p)),
-              fit: BoxFit.contain,
-              filterQuality: FilterQuality.medium,
-              // If a frame is missing mid-run, fail silent (vector still paints).
-              errorBuilder: (_, __, ___) => const SizedBox.shrink(),
-            ),
+          // The finish-line hero frames now render through the shared Mascot
+          // celebration seam: its internal AnimatedSwitcher cross-fades between
+          // wink → drive → Ta-Da → look-back as the beat (frame path) changes.
+          // If a frame is missing, Mascot fails silent and the vector painter
+          // (drawBus) is still underneath.
+          child: Mascot(
+            bodyColor: _terra, // ignored in celebration mode (branded hero pose)
+            width: w,
+            mode: MascotMode.celebrating,
+            celebrationFrame: _frameFor(p),
           ),
         ),
       ),
