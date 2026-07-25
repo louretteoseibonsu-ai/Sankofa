@@ -159,6 +159,7 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                   child: Text('Earn shards with 3-star lessons.',
                       style: TextStyle(color: slate, fontSize: 12.5)),
                 ),
+                _BlindBoxCard(shards: _shards, onOpen: _openBlindBox),
                 // ── Body colour (free — swap any time) ──
                 const Padding(
                   padding: EdgeInsets.fromLTRB(2, 16, 0, 8),
@@ -194,7 +195,6 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                   ],
                 ),
                 const SizedBox(height: 4),
-                _BlindBoxCard(shards: _shards, onOpen: _openBlindBox),
                 if (_error)
                   Padding(
                     padding: const EdgeInsets.only(top: 30),
@@ -356,18 +356,42 @@ class _BlindBoxCard extends StatelessWidget {
           const Icon(Icons.card_giftcard_rounded,
               color: Color(0xFFE3A92C), size: 34),
           const SizedBox(width: 14),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("Ananse’s Blind Box",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 15)),
-                SizedBox(height: 2),
-                Text('A mystery calabash — rare kente & motifs await.',
+                    style: displayFont(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white)),
+                const SizedBox(height: 2),
+                const Text('A mystery calabash — rare cloth & motifs await.',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: Colors.white70, fontSize: 12)),
+                const SizedBox(height: 5),
+                Text.rich(
+                  const TextSpan(children: [
+                    TextSpan(
+                        text: 'Common',
+                        style: TextStyle(color: Color(0xFF9AA0A6))),
+                    TextSpan(text: '  ·  '),
+                    TextSpan(
+                        text: 'Rare',
+                        style: TextStyle(color: Color(0xFF6FA8DC))),
+                    TextSpan(text: '  ·  '),
+                    TextSpan(
+                        text: 'Legendary',
+                        style: TextStyle(color: Color(0xFFE3A92C))),
+                  ]),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white54),
+                ),
               ],
             ),
           ),

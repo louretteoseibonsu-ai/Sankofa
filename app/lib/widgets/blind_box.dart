@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../data/blind_box_data.dart';
 import '../services/sound_service.dart';
+import '../theme.dart';
 import 'mascot.dart';
 import 'tappable_scale.dart';
 
@@ -21,10 +22,11 @@ Color rarityColor(Rarity r) {
 
 /// Ananse's Folklore Blind Box — a tactile calabash unboxing.
 ///
-/// One controller drives the whole timeline: the kente-wrapped calabash shakes
-/// with rising intensity, bursts in a rarity-tinted particle bloom, then reveals
-/// the reward. For a bus cosmetic the reveal composites the drop straight onto
-/// the canonical [Mascot] via `equipped`, so the reveal IS a live equip preview.
+/// One controller drives the whole timeline: the kente-wrapped calabash coils,
+/// shakes with rising intensity, bursts in a rarity-tinted particle bloom, then
+/// reveals the reward. For a bus cosmetic the reveal composites the drop straight
+/// onto the canonical [Mascot] via `equipped`, so the reveal IS a live equip
+/// preview. Tap during the shake to skip ahead.
 ///
 /// Presented over the current screen via an [OverlayEntry] (see [show]); resolves
 /// when the learner taps Equip or Keep.
@@ -81,13 +83,20 @@ class BlindBoxOpening extends StatefulWidget {
 
 class _BlindBoxOpeningState extends State<BlindBoxOpening>
     with TickerProviderStateMixin {
-  late final AnimationController _c; // shake → burst → reveal
-  late final AnimationController _glow; // reveal glow pulse
+  late final AnimationController _c; // coil → shake → burst → reveal
+  late final AnimationController _glow; // bloom + ground-glow pulse
+  late final AnimationController _spin; // legendary rays + reward sway
   bool _revealed = false;
   final Set<String> _fired = {};
 
   BoxReward get _reward => widget.result.reward;
   Rarity get _rarity => _reward.rarity;
+  bool get _isLegendary => _rarity == Rarity.legendary;
+
+  // Timeline beats.
+  static const double _shakeStart = 0.10; // after the anticipation coil
+  static const double _burstAt = 0.55;
+  static const double _revealAt = 0.72;
 
   @override
   void initState() {
@@ -95,6 +104,9 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
     _glow = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1800))
       ..repeat(reverse: true);
+    _spin = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 9000))
+      ..repeat();
     _c = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 2600))
       ..addListener(_onTick)
@@ -103,26 +115,33 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
 
   void _onTick() {
     final p = _c.value;
-    if (p < 0.55) {
+    if (p >= _shakeStart && p < _burstAt) {
       // rising shake — a haptic tick per beat, faster as it builds
       final beat = (p * 16).floor();
       if (_fired.add('s$beat')) HapticFeedback.selectionClick();
     }
-    if (p >= 0.55 && _fired.add('burst')) {
+    if (p >= _burstAt && _fired.add('burst')) {
       HapticFeedback.heavyImpact();
       SoundService.instance.complete();
     }
-    if (p >= 0.72 && !_revealed) {
+    if (p >= _revealAt && !_revealed) {
+      HapticFeedback.mediumImpact(); // the reward "lands"
       setState(() => _revealed = true);
     } else {
       setState(() {});
     }
   }
 
+  // Tap during the shake to fast-forward to the burst.
+  void _skip() {
+    if (!_revealed && _c.value < _burstAt) _c.forward(from: _burstAt);
+  }
+
   @override
   void dispose() {
     _c.dispose();
     _glow.dispose();
+    _spin.dispose();
     super.dispose();
   }
 
@@ -130,68 +149,91 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
   Widget build(BuildContext context) {
     final p = _c.value;
     final accent = rarityColor(_rarity);
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: Container(color: Colors.black.withValues(alpha: 0.86)),
-        ),
-        // Rarity glow bloom (from the burst onward).
-        if (p >= 0.55)
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: _skip,
+      child: Stack(
+        children: [
           Positioned.fill(
-            child: IgnorePointer(
-              child: AnimatedBuilder(
-                animation: _glow,
-                builder: (_, __) => DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: RadialGradient(
-                      radius: 0.95,
-                      colors: [
-                        accent.withValues(
-                            alpha: _revealed ? 0.20 + 0.08 * _glow.value : 0.32),
-                        Colors.transparent,
-                      ],
+            child: Container(color: Colors.black.withValues(alpha: 0.88)),
+          ),
+          // Rarity bloom (from the burst onward) — stronger + held for legendary.
+          if (p >= _burstAt)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: AnimatedBuilder(
+                  animation: _glow,
+                  builder: (_, __) {
+                    final base = _isLegendary ? 0.30 : 0.18;
+                    return DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: RadialGradient(
+                          radius: 0.95,
+                          colors: [
+                            accent.withValues(
+                                alpha: _revealed
+                                    ? base + 0.10 * _glow.value
+                                    : 0.34),
+                            Colors.transparent,
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          Center(
+            child: _revealed ? _buildReveal(accent) : _buildBox(p, accent),
+          ),
+          // Particle bloom.
+          if (p >= _burstAt && p < 0.92)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: RepaintBoundary(
+                  child: CustomPaint(
+                    painter: _BurstPainter(
+                      t: ((p - _burstAt) / 0.37).clamp(0.0, 1.0),
+                      color: accent,
+                      seed: _reward.id.hashCode,
+                      dense: _isLegendary,
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        Center(
-          child: _revealed ? _buildReveal(accent) : _buildBox(p, accent),
-        ),
-        // Particle burst overlay.
-        if (p >= 0.55 && p < 0.92)
-          Positioned.fill(
-            child: IgnorePointer(
-              child: RepaintBoundary(
-                child: CustomPaint(
-                  painter: _BurstPainter(
-                    t: ((p - 0.55) / 0.37).clamp(0.0, 1.0),
-                    color: accent,
-                    seed: _reward.id.hashCode,
-                    dense: _rarity == Rarity.legendary,
-                  ),
+          // One-frame white flash at the crack for punch.
+          if (p >= _burstAt && p < 0.63)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: Opacity(
+                  opacity: (1 - (p - _burstAt) / 0.08).clamp(0.0, 1.0),
+                  child: const ColoredBox(color: Colors.white),
                 ),
               ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildBox(double p, Color accent) {
-    final shake = (p / 0.55).clamp(0.0, 1.0);
-    final burst = ((p - 0.55) / 0.17).clamp(0.0, 1.0);
-    final dx = math.sin(p * 90) * 6 * shake * (1 - burst);
-    final rot = math.sin(p * 78) * 0.06 * shake * (1 - burst);
+    final coil = (p / _shakeStart).clamp(0.0, 1.0); // anticipation dip
+    final shakeP = ((p - _shakeStart) / (_burstAt - _shakeStart)).clamp(0.0, 1.0);
+    final burst = ((p - _burstAt) / 0.17).clamp(0.0, 1.0);
+    final anticip = p < _shakeStart;
+    final scaleCoil = anticip ? 1.0 - 0.10 * Curves.easeOut.transform(coil) : 1.0;
+    final dy = anticip ? 8.0 * Curves.easeOut.transform(coil) : 0.0;
+    final dx = math.sin(p * 90) * 6 * shakeP * (1 - burst);
+    final rot = math.sin(p * 78) * 0.06 * shakeP * (1 - burst);
     return Opacity(
       opacity: 1.0 - burst,
       child: Transform.translate(
-        offset: Offset(dx, 0),
+        offset: Offset(dx, dy),
         child: Transform.rotate(
           angle: rot,
           child: Transform.scale(
-            scale: 1.0 + 0.5 * burst,
+            scale: scaleCoil * (1.0 + 0.5 * burst),
             child: _Calabash(accent: accent),
           ),
         ),
@@ -202,39 +244,79 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
   Widget _buildReveal(Color accent) {
     final dup = widget.result.duplicate;
     final canEquip = _reward.isBusCosmetic && !dup;
+
+    // The reward, scaling in — with a gentle continuous sway for legendaries.
+    Widget reward = _RewardPreview(
+      reward: _reward,
+      bodyColor: widget.bodyColor,
+      equipped: widget.equipped,
+      accent: accent,
+    );
+    if (_isLegendary) {
+      final inner = reward;
+      reward = AnimatedBuilder(
+        animation: _spin,
+        builder: (_, child) => Transform.rotate(
+            angle: math.sin(_spin.value * 2 * math.pi) * 0.06, child: child),
+        child: inner,
+      );
+    }
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 28),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           _RarityChip(rarity: _rarity, color: accent),
-          const SizedBox(height: 22),
-          TweenAnimationBuilder<double>(
-            tween: Tween(begin: 0.4, end: 1.0),
-            duration: const Duration(milliseconds: 520),
-            curve: Curves.elasticOut,
-            builder: (_, s, child) => Transform.scale(scale: s, child: child),
-            child: _RewardPreview(
-              reward: _reward,
-              bodyColor: widget.bodyColor,
-              equipped: widget.equipped,
-              accent: accent,
+          const SizedBox(height: 24),
+          SizedBox(
+            width: 300,
+            height: 196,
+            child: Stack(
+              alignment: Alignment.center,
+              clipBehavior: Clip.none,
+              children: [
+                // Legendary: slow gold rays behind the reward.
+                if (_isLegendary)
+                  AnimatedBuilder(
+                    animation: _spin,
+                    builder: (_, __) => Transform.rotate(
+                      angle: _spin.value * 2 * math.pi,
+                      child: CustomPaint(
+                          size: const Size(300, 300),
+                          painter: _RayPainter(accent)),
+                    ),
+                  ),
+                // Grounding glow disc — anchors the reward on the black stage.
+                AnimatedBuilder(
+                  animation: _glow,
+                  builder: (_, __) => _groundGlow(accent, _glow.value),
+                ),
+                TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0.4, end: 1.0),
+                  duration: const Duration(milliseconds: 520),
+                  curve: Curves.elasticOut,
+                  builder: (_, s, child) =>
+                      Transform.scale(scale: s, child: child),
+                  child: reward,
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 22),
           Text(
             _reward.name,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.w800, fontSize: 20),
+            style: displayFont(
+                fontSize: 25, fontWeight: FontWeight.w700, color: Colors.white),
           ),
           const SizedBox(height: 6),
           Text(
             dup
                 ? 'Duplicate — refunded ${widget.result.refund} shards'
                 : 'Added to your collection',
-            style:
-                TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 13),
+            style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.7), fontSize: 13),
           ),
           const SizedBox(height: 28),
           Row(
@@ -268,6 +350,27 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
       ),
     );
   }
+
+  /// A soft elliptical glow beneath the reward — the "pedestal".
+  Widget _groundGlow(Color accent, double pulse) => Transform.translate(
+        offset: const Offset(0, 64),
+        child: Transform.scale(
+          scaleY: 0.34,
+          child: Container(
+            width: 250,
+            height: 250,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                colors: [
+                  accent.withValues(alpha: 0.34 + 0.14 * pulse),
+                  accent.withValues(alpha: 0.0),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
 }
 
 /// The reward preview. Bus cosmetics composite onto the canonical Mascot via
@@ -393,11 +496,12 @@ class _RarityChip extends StatelessWidget {
       ),
       child: Text(
         rarity.label.toUpperCase(),
-        style: TextStyle(
-            color: color,
-            fontWeight: FontWeight.w800,
+        style: displayFont(
             fontSize: 12,
-            letterSpacing: 1.5),
+            fontWeight: FontWeight.w700,
+            color: color,
+            letterSpacing: 1.6,
+            height: 1.0),
       ),
     );
   }
@@ -428,18 +532,19 @@ class _PillButton extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: TextStyle(
-              color: filled ? Colors.white : color,
+          style: displayFont(
+              fontSize: 15,
               fontWeight: FontWeight.w700,
-              fontSize: 15),
+              color: filled ? Colors.white : color,
+              letterSpacing: -0.2),
         ),
       ),
     );
   }
 }
 
-/// A kente-wrapped calabash (gourd): a warm body, a woven band across the middle
-/// with alternating accent/gold blocks, and a mystery glyph.
+/// A kente-wrapped calabash (gourd): a warm body, a woven band across the middle,
+/// and a mystery glyph.
 class _Calabash extends StatelessWidget {
   final Color accent;
   const _Calabash({required this.accent});
@@ -456,6 +561,7 @@ class _CalabashPainter extends CustomPainter {
   static const Color _gourd = Color(0xFF9A5B33);
   static const Color _gourdDark = Color(0xFF7A4526);
   static const Color _gold = Color(0xFFE3A92C);
+  static const Color _cream = Color(0xFFF4F1EC);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -481,34 +587,41 @@ class _CalabashPainter extends CustomPainter {
       Paint()..color = Colors.white.withValues(alpha: 0.10),
     );
 
-    // Kente band across the middle: alternating accent / gold blocks.
+    // Woven kente band — thin alternating warp threads over a dark weft base.
     canvas.save();
     canvas.clipPath(Path()..addOval(body));
-    final bandTop = h * 0.52;
-    const bandH = 26.0;
-    const blocks = 7;
-    final bw = w / blocks;
-    for (var i = 0; i < blocks; i++) {
+    final bandTop = h * 0.50;
+    const bandH = 30.0;
+    canvas.drawRect(
+        Rect.fromLTWH(0, bandTop, w, bandH), Paint()..color = _gourdDark);
+    const step = 9.0;
+    final threads = [accent, _gold, _cream];
+    for (var i = 0; i * step < w; i++) {
       canvas.drawRect(
-        Rect.fromLTWH(i * bw, bandTop, bw, bandH),
-        Paint()..color = i.isEven ? accent : _gold,
+        Rect.fromLTWH(i * step, bandTop + 2, step - 2.0, bandH - 4),
+        Paint()..color = threads[i % threads.length],
       );
     }
-    // Thin weave lines above/below the band.
-    final line = Paint()
+    // Two horizontal weft lines binding the band.
+    final weft = Paint()
+      ..color = _gourdDark
+      ..strokeWidth = 2;
+    canvas.drawLine(
+        Offset(0, bandTop + bandH * 0.5), Offset(w, bandTop + bandH * 0.5), weft);
+    final edge = Paint()
       ..color = _gold
       ..strokeWidth = 2;
-    canvas.drawLine(Offset(0, bandTop - 4), Offset(w, bandTop - 4), line);
+    canvas.drawLine(Offset(0, bandTop - 3), Offset(w, bandTop - 3), edge);
     canvas.drawLine(
-        Offset(0, bandTop + bandH + 4), Offset(w, bandTop + bandH + 4), line);
+        Offset(0, bandTop + bandH + 3), Offset(w, bandTop + bandH + 3), edge);
     canvas.restore();
 
-    // Mystery glyph.
+    // Mystery glyph (in the display face).
     final tp = TextPainter(
-      text: const TextSpan(
+      text: TextSpan(
         text: '?',
-        style: TextStyle(
-            color: Colors.white, fontSize: 30, fontWeight: FontWeight.w900),
+        style: displayFont(
+            fontSize: 30, fontWeight: FontWeight.w800, color: Colors.white),
       ),
       textDirection: TextDirection.ltr,
     )..layout();
@@ -517,6 +630,33 @@ class _CalabashPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _CalabashPainter old) => old.accent != accent;
+}
+
+/// Slow radiating rays behind a legendary reward. Static shape; the caller
+/// rotates it with a [Transform].
+class _RayPainter extends CustomPainter {
+  final Color color;
+  _RayPainter(this.color);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final c = Offset(size.width / 2, size.height / 2);
+    final r = size.shortestSide / 2;
+    const n = 12;
+    final paint = Paint()..color = color.withValues(alpha: 0.13);
+    for (var i = 0; i < n; i++) {
+      final a = i * 2 * math.pi / n;
+      final path = Path()
+        ..moveTo(c.dx, c.dy)
+        ..lineTo(c.dx + math.cos(a - 0.05) * r, c.dy + math.sin(a - 0.05) * r)
+        ..lineTo(c.dx + math.cos(a + 0.05) * r, c.dy + math.sin(a + 0.05) * r)
+        ..close();
+      canvas.drawPath(path, paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _RayPainter old) => old.color != color;
 }
 
 /// A one-shot particle bloom from centre. [t] 0→1 drives expansion + fade.
