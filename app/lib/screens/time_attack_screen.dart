@@ -7,6 +7,7 @@ import '../data/quiz_master.dart';
 import '../services/progress_service.dart';
 import '../services/sound_service.dart';
 import '../theme.dart';
+import '../widgets/floating_reward.dart';
 import '../widgets/kente_shard.dart';
 import '../widgets/tappable_scale.dart';
 
@@ -161,6 +162,11 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
       _masteryPerfect = perfect;
       _masteryAward = award;
     });
+    if (award > 0) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) ShardGain.show(context, award);
+      });
+    }
   }
 
   void _restart() {

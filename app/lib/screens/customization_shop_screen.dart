@@ -7,7 +7,7 @@ import '../theme.dart';
 import '../widgets/blind_box.dart';
 import '../widgets/composable_trotro.dart';
 import '../widgets/kente_shard.dart';
-import '../widgets/mascot.dart';
+import '../widgets/mascot_stage.dart';
 import '../widgets/skeleton.dart';
 import '../widgets/state_message.dart';
 import '../widgets/surface.dart';
@@ -148,7 +148,7 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                   color: const Color(0xFFFBF8F2),
                   padding: const EdgeInsets.symmetric(vertical: 18),
                   child: Center(
-                      child: Mascot(
+                      child: MascotStage(
                           bodyColor: kTroTroBodyColors[_bodyIndex],
                           equipped: _cos.equipped,
                           width: 240)),
