@@ -4,6 +4,7 @@ import '../services/progress_service.dart';
 import '../theme.dart';
 import '../widgets/challenge_quiz.dart';
 import '../widgets/floating_card.dart';
+import '../widgets/mascot.dart';
 import '../widgets/skeleton.dart';
 import '../widgets/speak_button.dart';
 import '../widgets/state_message.dart';
@@ -442,8 +443,9 @@ class _StoryStopHeader extends StatefulWidget {
 }
 
 class _StoryStopHeaderState extends State<_StoryStopHeader>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _c;
+    with TickerProviderStateMixin {
+  late final AnimationController _c; // one-shot pull-up (drive in from the left)
+  late final AnimationController _bob; // gentle idle bob once parked at the fire
 
   @override
   void initState() {
@@ -451,11 +453,15 @@ class _StoryStopHeaderState extends State<_StoryStopHeader>
     _c = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1100))
       ..forward();
+    _bob = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 2200))
+      ..repeat(reverse: true);
   }
 
   @override
   void dispose() {
     _c.dispose();
+    _bob.dispose();
     super.dispose();
   }
 
@@ -523,21 +529,25 @@ class _StoryStopHeaderState extends State<_StoryStopHeader>
               right: 40,
               child: _Campfire(),
             ),
-            // Celebratory mascot drives in and parks by the fire.
+            // The canonical mascot pulls up from the left and parks by the fire
+            // with a gentle idle bob — the same bus that drives the map/rally,
+            // so the world stays visually consistent (Commit 2).
             AnimatedBuilder(
-              animation: _c,
-              builder: (_, child) {
+              animation: Listenable.merge([_c, _bob]),
+              builder: (_, __) {
                 final t = Curves.easeOutCubic.transform(_c.value);
                 final x = -160 + 260 * t;
-                return Positioned(bottom: 16, left: x, child: child!);
+                final bob = 5.0 * Curves.easeInOut.transform(_bob.value);
+                return Positioned(
+                  bottom: 16,
+                  left: x,
+                  child: Mascot(
+                    bodyColor: kTroTroBodyColors.first,
+                    width: 118,
+                    pose: MascotPose(bob: bob),
+                  ),
+                );
               },
-              child: Image.asset(
-                'assets/mascot/stageclear/trotro_tada.png',
-                width: 122,
-                fit: BoxFit.contain,
-                errorBuilder: (_, __, ___) =>
-                    const TintableTroTro(bodyColor: terracotta, width: 118),
-              ),
             ),
           ],
         ),
