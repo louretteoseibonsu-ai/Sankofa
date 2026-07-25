@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../services/progress_service.dart';
 import '../theme.dart';
+import '../widgets/skeleton.dart';
 import '../widgets/state_message.dart';
 import '../widgets/tintable_trotro.dart';
 
@@ -74,7 +75,7 @@ class _TroTroRallyScreenState extends State<TroTroRallyScreen> {
             );
           }
           if (!snap.hasData) {
-            return const Center(child: CircularProgressIndicator());
+            return const SkeletonListView(rows: 6, header: false);
           }
           final entries = snap.data!;
           if (entries.isEmpty) {

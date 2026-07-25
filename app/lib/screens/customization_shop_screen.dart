@@ -4,6 +4,7 @@ import '../services/progress_service.dart';
 import '../services/sound_service.dart';
 import '../theme.dart';
 import '../widgets/composable_trotro.dart';
+import '../widgets/skeleton.dart';
 import '../widgets/state_message.dart';
 import '../widgets/tappable_scale.dart';
 import '../widgets/tintable_trotro.dart';
@@ -179,9 +180,17 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                     ),
                   ),
                 if (!_error && _loading)
-                  const Padding(
-                    padding: EdgeInsets.only(top: 30),
-                    child: Center(child: CircularProgressIndicator()),
+                  const SkeletonLoader(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 12),
+                      child: Column(
+                        children: [
+                          SkeletonCard(),
+                          SkeletonCard(),
+                          SkeletonCard(),
+                        ],
+                      ),
+                    ),
                   ),
                 if (!_error && !_loading)
                   for (final cat in kCosmeticCategories) ...[

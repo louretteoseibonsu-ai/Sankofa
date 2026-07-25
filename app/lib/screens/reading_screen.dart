@@ -4,6 +4,7 @@ import '../services/progress_service.dart';
 import '../theme.dart';
 import '../widgets/challenge_quiz.dart';
 import '../widgets/floating_card.dart';
+import '../widgets/skeleton.dart';
 import '../widgets/speak_button.dart';
 import '../widgets/state_message.dart';
 import '../widgets/tintable_trotro.dart';
@@ -63,7 +64,7 @@ class _ReadingListScreenState extends State<ReadingListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) return const Center(child: CircularProgressIndicator());
+    if (_loading) return const SkeletonListView(rows: 5);
     if (_error) {
       return StateMessage(
         icon: Icons.wifi_off_rounded,
