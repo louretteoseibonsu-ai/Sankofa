@@ -55,18 +55,42 @@ class _MascotStageState extends State<MascotStage>
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: _poke,
-      child: AnimatedBuilder(
-        animation: Listenable.merge([_idle, _tilt]),
-        builder: (_, __) {
-          final bob = 4.0 * math.sin(2 * math.pi * _idle.value);
-          final pose = MascotPose(bob: bob, tilt: _tilt.value);
-          return Mascot(
-            bodyColor: widget.bodyColor,
-            equipped: widget.equipped,
-            width: widget.width,
-            pose: pose,
-          );
-        },
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        clipBehavior: Clip.none,
+        children: [
+          // Grounding contact shadow — a static floor pool so the bus reads as
+          // sculpted/planted rather than floating (deepens on velvet-dark).
+          Padding(
+            padding: EdgeInsets.only(bottom: widget.width * 0.03),
+            child: Transform.scale(
+              scaleY: 0.26,
+              child: Container(
+                width: widget.width * 0.60,
+                height: widget.width * 0.60,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [Color(0x80000000), Color(0x00000000)],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          AnimatedBuilder(
+            animation: Listenable.merge([_idle, _tilt]),
+            builder: (_, __) {
+              final bob = 4.0 * math.sin(2 * math.pi * _idle.value);
+              final pose = MascotPose(bob: bob, tilt: _tilt.value);
+              return Mascot(
+                bodyColor: widget.bodyColor,
+                equipped: widget.equipped,
+                width: widget.width,
+                pose: pose,
+              );
+            },
+          ),
+        ],
       ),
     );
   }
