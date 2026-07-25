@@ -1,5 +1,7 @@
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../data/blind_box_data.dart';
 import '../data/lesson_catalog.dart';
 import '../data/trotro_cosmetics.dart';
 import 'stats_notifier.dart';
@@ -407,6 +409,44 @@ class ProgressService {
           SetOptions(merge: true),
         );
         return reward;
+      });
+    } catch (_) {
+      return null; // offline or write contention — treat as not opened
+    }
+  }
+
+  /// Opens one Ananse blind box for [kBlindBoxCost] shards. Atomic: reads the
+  /// balance + owned set, runs the weighted [rollUnbox], debits shards and adds
+  /// a NEW reward to `cosmeticsOwned` in a single transaction so rapid taps or a
+  /// stale (offline-cached) read can't double-spend. A duplicate roll refunds
+  /// shards instead of adding to owned. Returns the [UnboxResult], or null if
+  /// unaffordable / offline.
+  Future<UnboxResult?> buyBlindBox() async {
+    final uid = _uid;
+    if (uid == null) return null;
+    final ref = _db.collection('users').doc(uid);
+    final rng = Random();
+    try {
+      return await _db.runTransaction<UnboxResult?>((tx) async {
+        final snap = await tx.get(ref);
+        final data = snap.data() ?? {};
+        final shards = (data['shards'] as num?)?.toInt() ?? 0;
+        if (shards < kBlindBoxCost) return null;
+        final owned = {
+          ...kDefaultOwned,
+          ...((data['cosmeticsOwned'] as List?)?.cast<String>() ?? const [])
+        };
+        final result = rollUnbox(rng, owned: owned);
+        final net = kBlindBoxCost - result.refund; // duplicates partly refund
+        final update = <String, dynamic>{
+          'shards': FieldValue.increment(-net),
+        };
+        if (!result.duplicate) {
+          update['cosmeticsOwned'] =
+              FieldValue.arrayUnion([result.reward.id]);
+        }
+        tx.set(ref, update, SetOptions(merge: true));
+        return result;
       });
     } catch (_) {
       return null; // offline or write contention — treat as not opened

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,6 +43,37 @@ class BlindBoxOpening extends StatefulWidget {
     required this.onEquip,
     required this.onKeep,
   });
+
+  /// Plays the unboxing over the current screen via an [OverlayEntry].
+  /// Resolves to `true` if the learner tapped Equip, `false` if they kept it —
+  /// the caller then persists the equip and refreshes. Doing the equip after
+  /// this resolves (rather than in a callback) avoids racing the reload.
+  static Future<bool> show(
+    BuildContext context, {
+    required UnboxResult result,
+    required Color bodyColor,
+    Map<String, String> equipped = const {},
+  }) {
+    final overlay = Overlay.of(context);
+    final completer = Completer<bool>();
+    late OverlayEntry entry;
+    void finish(bool equip) {
+      entry.remove();
+      if (!completer.isCompleted) completer.complete(equip);
+    }
+
+    entry = OverlayEntry(
+      builder: (_) => BlindBoxOpening(
+        result: result,
+        bodyColor: bodyColor,
+        equipped: equipped,
+        onEquip: () => finish(true),
+        onKeep: () => finish(false),
+      ),
+    );
+    overlay.insert(entry);
+    return completer.future;
+  }
 
   @override
   State<BlindBoxOpening> createState() => _BlindBoxOpeningState();
@@ -252,25 +284,97 @@ class _RewardPreview extends StatelessWidget {
     required this.accent,
   });
 
+  /// True if the layered cosmetic PNG is actually bundled yet.
+  static Future<bool> _hasArt(BuildContext context, String path) async {
+    try {
+      await DefaultAssetBundle.of(context).load(path);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (reward.isBusCosmetic) {
-      // Layer the drop straight onto the equipped map → instant preview.
-      final preview = {...equipped, reward.category: reward.id};
-      return Mascot(bodyColor: bodyColor, equipped: preview, width: 220);
+    // Figurine collectible (dashboard trophy — art TBD, styled placeholder).
+    if (!reward.isBusCosmetic) {
+      return Container(
+        width: 150,
+        height: 150,
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.06),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: accent, width: 2),
+        ),
+        child: Icon(Icons.auto_awesome, color: accent, size: 64),
+      );
     }
-    // Figurine collectible (art TBD — placeholder card for now).
-    return Container(
-      width: 150,
-      height: 150,
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: accent, width: 2),
-      ),
-      child: Icon(Icons.auto_awesome, color: accent, size: 64),
+    // Bus cosmetic: if the layer is bundled, show it live on the canonical
+    // Mascot (an instant equip preview). Until the art ships, fall back to a
+    // clean procedural kente swatch so the reward always reads.
+    final path =
+        'assets/mascot/trotro_gameplay/${reward.category}/${reward.id}.png';
+    return FutureBuilder<bool>(
+      future: _hasArt(context, path),
+      builder: (context, snap) {
+        if (snap.data == true) {
+          return Mascot(
+            bodyColor: bodyColor,
+            equipped: {...equipped, reward.category: reward.id},
+            width: 220,
+          );
+        }
+        return _KenteSwatch(accent: accent);
+      },
     );
   }
+}
+
+/// A procedurally woven kente tile — the graceful stand-in for a bus cosmetic
+/// whose final layered art hasn't shipped yet. Reads clearly as "you won a
+/// cloth" and needs no assets.
+class _KenteSwatch extends StatelessWidget {
+  final Color accent;
+  const _KenteSwatch({required this.accent});
+
+  @override
+  Widget build(BuildContext context) => ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: CustomPaint(
+            size: const Size(190, 150), painter: _KentePainter(accent)),
+      );
+}
+
+class _KentePainter extends CustomPainter {
+  final Color accent;
+  _KentePainter(this.accent);
+
+  static const Color _dark = Color(0xFF2B2B2D);
+  static const Color _gold = Color(0xFFE3A92C);
+  static const Color _cream = Color(0xFFF4F1EC);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawRect(Offset.zero & size, Paint()..color = _dark);
+    const cols = 6, rows = 5;
+    final cw = size.width / cols, ch = size.height / rows;
+    final palette = [accent, _gold, _cream, _dark];
+    for (var y = 0; y < rows; y++) {
+      for (var x = 0; x < cols; x++) {
+        final block = Rect.fromLTWH(x * cw, y * ch, cw, ch).deflate(1.5);
+        canvas.drawRect(
+            block, Paint()..color = palette[(x + y) % palette.length]);
+        // A woven weft stripe across the middle of each block.
+        canvas.drawRect(
+          Rect.fromLTWH(x * cw, y * ch + ch * 0.4, cw, ch * 0.2).deflate(1.5),
+          Paint()..color = _gold.withValues(alpha: 0.5),
+        );
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _KentePainter old) => old.accent != accent;
 }
 
 class _RarityChip extends StatelessWidget {

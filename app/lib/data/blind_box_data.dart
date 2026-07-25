@@ -35,7 +35,7 @@ extension RarityMeta on Rarity {
       case Rarity.rare:
         return 20;
       case Rarity.legendary:
-        return 60;
+        return 30; // kept below kBlindBoxCost so a dupe never nets a profit
     }
   }
 }

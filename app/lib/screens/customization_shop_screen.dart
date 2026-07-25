@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import '../data/blind_box_data.dart';
 import '../data/trotro_cosmetics.dart';
 import '../services/progress_service.dart';
 import '../services/sound_service.dart';
 import '../theme.dart';
+import '../widgets/blind_box.dart';
 import '../widgets/composable_trotro.dart';
 import '../widgets/mascot.dart';
 import '../widgets/skeleton.dart';
@@ -66,6 +68,35 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
     setState(() => _bodyIndex = i);
     SoundService.instance.tap();
     await _service.equipBodyColor(i);
+  }
+
+  Future<void> _openBlindBox() async {
+    if (_shards < kBlindBoxCost) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('You need $kBlindBoxCost shards to open a box — '
+              'earn more by scoring 3 stars on lessons.')));
+      return;
+    }
+    final result = await _service.buyBlindBox();
+    if (!mounted) return;
+    if (result == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Couldn’t open the box — check your connection.')));
+      return;
+    }
+    SoundService.instance.complete();
+    final equip = await BlindBoxOpening.show(
+      context,
+      result: result,
+      bodyColor: kTroTroBodyColors[_bodyIndex],
+      equipped: _cos.equipped,
+    );
+    if (!mounted) return;
+    // Persist the equip AFTER the overlay resolves (avoids racing the reload).
+    if (equip && result.reward.isBusCosmetic) {
+      await _service.equipCosmetic(result.reward.category, result.reward.id);
+    }
+    await _reload();
   }
 
   Future<void> _onTap(ShopItem item) async {
@@ -163,6 +194,7 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                   ],
                 ),
                 const SizedBox(height: 4),
+                _BlindBoxCard(shards: _shards, onOpen: _openBlindBox),
                 if (_error)
                   Padding(
                     padding: const EdgeInsets.only(top: 30),
@@ -293,6 +325,82 @@ class _ItemCard extends StatelessWidget {
             status,
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// The entry point to Ananse's Folklore Blind Boxes — a kente-toned CTA that
+/// spends [kBlindBoxCost] shards to open a mystery calabash.
+class _BlindBoxCard extends StatelessWidget {
+  final int shards;
+  final VoidCallback onOpen;
+  const _BlindBoxCard({required this.shards, required this.onOpen});
+
+  @override
+  Widget build(BuildContext context) {
+    final canAfford = shards >= kBlindBoxCost;
+    return Container(
+      margin: const EdgeInsets.only(top: 18, bottom: 6),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF3D2A4D), Color(0xFF7A3F36)],
+        ),
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.card_giftcard_rounded,
+              color: Color(0xFFE3A92C), size: 34),
+          const SizedBox(width: 14),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Ananse’s Blind Box",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 15)),
+                SizedBox(height: 2),
+                Text('A mystery calabash — rare kente & motifs await.',
+                    style: TextStyle(color: Colors.white70, fontSize: 12)),
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          TappableScale(
+            onTap: onOpen,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: BoxDecoration(
+                color:
+                    canAfford ? const Color(0xFFE3A92C) : Colors.white24,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.diamond_rounded,
+                      size: 15,
+                      color: canAfford
+                          ? const Color(0xFF3D2A4D)
+                          : Colors.white70),
+                  const SizedBox(width: 4),
+                  Text('$kBlindBoxCost',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          color: canAfford
+                              ? const Color(0xFF3D2A4D)
+                              : Colors.white70)),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
