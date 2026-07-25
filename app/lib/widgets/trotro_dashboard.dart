@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../theme.dart';
 import 'fuel_gauge.dart';
+import 'kente_shard.dart';
 
 const Color _gold = Color(0xFFE3A92C);
 const Color _terra = Color(0xFFBE5235);
@@ -82,7 +83,8 @@ class TroTroDashboard extends StatelessWidget {
                     icon: Icons.diamond_rounded,
                     color: _terra,
                     value: shards,
-                    label: 'kente shards'),
+                    label: 'kente shards',
+                    iconOverride: const KenteShard(size: 20)),
               ),
             ],
           ),
@@ -193,11 +195,13 @@ class _Counter extends StatelessWidget {
   final Color color;
   final int value;
   final String label;
+  final Widget? iconOverride; // e.g. a custom KenteShard for the shards counter
   const _Counter(
       {required this.icon,
       required this.color,
       required this.value,
-      required this.label});
+      required this.label,
+      this.iconOverride});
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +214,7 @@ class _Counter extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(icon, color: color, size: 20),
+          iconOverride ?? Icon(icon, color: color, size: 20),
           const SizedBox(width: 8),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

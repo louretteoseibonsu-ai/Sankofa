@@ -6,6 +6,7 @@ import '../services/sound_service.dart';
 import '../theme.dart';
 import '../widgets/blind_box.dart';
 import '../widgets/composable_trotro.dart';
+import '../widgets/kente_shard.dart';
 import '../widgets/mascot.dart';
 import '../widgets/skeleton.dart';
 import '../widgets/state_message.dart';
@@ -128,7 +129,7 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 14),
             child: Row(children: [
-              const Icon(Icons.diamond_rounded, color: _terra, size: 18),
+              const KenteShard(size: 18),
               const SizedBox(width: 5),
               Text('$_shards',
                   style: const TextStyle(
@@ -289,8 +290,7 @@ class _ItemCard extends StatelessWidget {
               color: ink, fontSize: 12, fontWeight: FontWeight.w800));
     } else {
       status = Row(mainAxisSize: MainAxisSize.min, children: [
-        Icon(Icons.diamond_rounded,
-            color: affordable ? _terra : silver, size: 14),
+        KenteShard(size: 14, muted: !affordable),
         const SizedBox(width: 4),
         Text('${item.costShards}',
             style: TextStyle(
@@ -401,24 +401,18 @@ class _BlindBoxCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
                 color:
-                    canAfford ? const Color(0xFFE3A92C) : Colors.white24,
+                    canAfford ? const Color(0xFFBE5235) : Colors.white24,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.diamond_rounded,
-                      size: 15,
-                      color: canAfford
-                          ? const Color(0xFF3D2A4D)
-                          : Colors.white70),
+                  KenteShard(size: 15, muted: !canAfford),
                   const SizedBox(width: 4),
                   Text('$kBlindBoxCost',
                       style: TextStyle(
                           fontWeight: FontWeight.w800,
-                          color: canAfford
-                              ? const Color(0xFF3D2A4D)
-                              : Colors.white70)),
+                          color: canAfford ? Colors.white : Colors.white70)),
                 ],
               ),
             ),
