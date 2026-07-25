@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../data/avatar.dart';
+import '../data/landmark.dart';
 import '../data/lesson_catalog.dart';
 import '../data/trotro_cosmetics.dart';
 import '../services/progress_service.dart';
@@ -8,7 +10,9 @@ import '../services/sound_service.dart';
 import '../theme.dart';
 import '../widgets/celebration.dart';
 import '../widgets/composable_trotro.dart';
+import '../widgets/avatar_badge.dart';
 import '../widgets/greeting.dart';
+import '../widgets/landmark_sheet.dart';
 import '../widgets/mascot.dart';
 import '../widgets/motion.dart';
 import '../widgets/overlay_flight.dart';
@@ -524,6 +528,16 @@ class _JourneyScreenState extends State<JourneyScreen>
                           child: const Icon(Icons.emoji_events_rounded,
                               color: _roadGold, size: 40),
                         ),
+                      // Cultural landmark points of interest
+                      for (final lm in kLandmarks)
+                        Positioned(
+                          left: lm.coordinates.dx * w - 26,
+                          top: lm.coordinates.dy * height - 26,
+                          child: _LandmarkMarker(
+                            landmark: lm,
+                            onTap: () => showLandmarkSheet(context, lm),
+                          ),
+                        ),
                       // Region name tags at each region's first stop
                       for (int i = 0; i < n; i++)
                         if (i == 0 ||
@@ -631,6 +645,17 @@ class _JourneyScreenState extends State<JourneyScreen>
                                           equipped: _equipped,
                                           width: 104,
                                           pose: pose,
+                                        ),
+                                        // The chosen avatar rides up front.
+                                        Positioned(
+                                          top: 12,
+                                          right: 18,
+                                          child: AvatarBadge(
+                                            avatar: avatarById(
+                                                _equipped['avatar']),
+                                            size: 26,
+                                            selected: true,
+                                          ),
                                         ),
                                       ],
                                     );
@@ -1072,4 +1097,64 @@ class _DustPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _DustPainter old) => old.t != t;
+}
+
+/// A collectible landmark pin on the world map — a small tile of the landmark's
+/// art (or an accent placeholder), locked until earned. Tap opens its info sheet.
+class _LandmarkMarker extends StatelessWidget {
+  final Landmark landmark;
+  final VoidCallback onTap;
+  const _LandmarkMarker({required this.landmark, required this.onTap});
+
+  static Future<bool> _hasArt(BuildContext c, String path) async {
+    try {
+      await DefaultAssetBundle.of(c).load(path);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TappableScale(
+      onTap: onTap,
+      child: Container(
+        width: 52,
+        height: 52,
+        decoration: BoxDecoration(
+          color: const Color(0xFF1E1A17),
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(
+              color: landmark.isUnlocked ? landmark.accent : Colors.white24,
+              width: 2),
+          boxShadow: kSoftShadow,
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(13),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              FutureBuilder<bool>(
+                future: _hasArt(context, landmark.imageAsset),
+                builder: (context, snap) => snap.data == true
+                    ? Image.asset(landmark.imageAsset, fit: BoxFit.cover)
+                    : Center(
+                        child: Icon(Icons.place_rounded,
+                            color: landmark.accent, size: 24)),
+              ),
+              if (!landmark.isUnlocked)
+                const ColoredBox(
+                  color: Color(0x99000000),
+                  child: Center(
+                    child: Icon(Icons.lock_rounded,
+                        color: Colors.white70, size: 20),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

@@ -1,8 +1,10 @@
 import 'dart:math' as math;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../data/avatar.dart';
 import '../services/progress_service.dart';
 import '../theme.dart';
+import '../widgets/avatar_badge.dart';
 import '../widgets/mascot.dart';
 import '../widgets/motion.dart';
 import '../widgets/skeleton.dart';
@@ -44,6 +46,7 @@ class _TroTroRallyScreenState extends State<TroTroRallyScreen>
   String? _myUid;
   Color _myColor = kTroTroBodyColors.first; // equipped Garage body colour
   Map<String, String> _myEquipped = const {}; // equipped cosmetics (kente…)
+  Avatar _myAvatar = avatarById(null); // selected driver avatar
 
   // Shared engine-idle bob for every racer on the grid; each lane reads it with
   // its own phase (via rank) so the buses breathe out of sync.
@@ -70,6 +73,7 @@ class _TroTroRallyScreenState extends State<TroTroRallyScreen>
     setState(() {
       _myColor = troTroBodyColorFor(cos.equipped);
       _myEquipped = cos.equipped;
+      _myAvatar = avatarById(cos.equipped['avatar']);
     });
   }
 
@@ -130,6 +134,7 @@ class _TroTroRallyScreenState extends State<TroTroRallyScreen>
                   isMe: entries[i].uid == myUid,
                   myColor: _myColor,
                   myEquipped: _myEquipped,
+                  myAvatar: _myAvatar,
                   idle: _idle,
                 ),
               const SizedBox(height: 10),
@@ -152,6 +157,7 @@ class _Lane extends StatelessWidget {
   final bool isMe;
   final Color myColor;
   final Map<String, String> myEquipped;
+  final Avatar myAvatar;
   final Animation<double> idle;
   const _Lane({
     required this.rank,
@@ -160,6 +166,7 @@ class _Lane extends StatelessWidget {
     required this.isMe,
     required this.myColor,
     required this.myEquipped,
+    required this.myAvatar,
     required this.idle,
   });
 
@@ -175,14 +182,23 @@ class _Lane extends StatelessWidget {
       shadow: isMe ? kRaisedShadow : kAmbientShadow,
       child: Row(
         children: [
-          SizedBox(
-            width: 20,
-            child: Text('$rank',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    color: isMe ? _terra : charcoal)),
-          ),
+          isMe
+              ? AvatarBadge(avatar: myAvatar, size: 30, selected: true)
+              : Container(
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: _busColorFor(entry.uid),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Text('$rank',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 13,
+                            color: Colors.white)),
+                  ),
+                ),
           const SizedBox(width: 8),
           SizedBox(
             width: 68,
