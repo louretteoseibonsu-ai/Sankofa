@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 /// The Garage body-paint palette. Index 0 is the default terracotta. Stored as
 /// an index (not a raw ARGB) so persistence stays SDK-agnostic.
@@ -23,21 +21,6 @@ Color troTroBodyColorFor(Map<String, String> equipped) =>
 int troTroBodyIndexFor(Map<String, String> equipped) {
   final i = int.tryParse(equipped['bodyColor'] ?? '');
   return (i != null && i >= 0 && i < kTroTroBodyColors.length) ? i : 0;
-}
-
-/// Caches the bundled-asset manifest once so the layered tro tro can skip any
-/// accessory layer whose art hasn't been added yet (no exceptions, no log spam).
-class _AssetManifest {
-  static Future<Set<String>>? _future;
-  static Future<Set<String>> keys() => _future ??= _load();
-  static Future<Set<String>> _load() async {
-    try {
-      final json = await rootBundle.loadString('AssetManifest.json');
-      return (jsonDecode(json) as Map<String, dynamic>).keys.toSet();
-    } catch (_) {
-      return <String>{};
-    }
-  }
 }
 
 /// The illustrated tro tro, built as a stack of transparent layers so it is both
@@ -80,23 +63,18 @@ class _TintableTroTroState extends State<TintableTroTro> {
   static const List<String> _underChassis = <String>[];
   static const List<String> _overChassis = ['rim', 'roof', 'kente'];
 
-  Set<String> _assets = const {};
-
-  @override
-  void initState() {
-    super.initState();
-    _AssetManifest.keys().then((k) {
-      if (mounted) setState(() => _assets = k);
-    });
-  }
-
   Widget? _accessory(String category) {
     final id = widget.equipped[category];
     if (id == null) return null;
-    final path = '$_dir$category/$id.png';
-    if (!_assets.contains(path)) return null; // art not bundled yet → skip
-    return Image.asset(path,
-        fit: BoxFit.contain, filterQuality: FilterQuality.medium);
+    // Render the layer directly. If the art isn't bundled yet, the errorBuilder
+    // skips it silently — no dependency on AssetManifest.json, which isn't
+    // reliably loadable on newer Flutter and was hiding *bundled* layers too.
+    return Image.asset(
+      '$_dir$category/$id.png',
+      fit: BoxFit.contain,
+      filterQuality: FilterQuality.medium,
+      errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+    );
   }
 
   @override
