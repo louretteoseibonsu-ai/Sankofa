@@ -7,6 +7,7 @@ import '../services/sound_service.dart';
 import '../theme.dart';
 import 'kente_shard.dart';
 import 'mascot.dart';
+import 'velvet.dart';
 import 'tappable_scale.dart';
 
 /// The accent colour for each rarity tier (kept in the UI layer).
@@ -156,7 +157,18 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
       child: Stack(
         children: [
           Positioned.fill(
-            child: Container(color: Colors.black.withValues(alpha: 0.88)),
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    kVelvetTop.withValues(alpha: 0.94),
+                    kVelvetBottom.withValues(alpha: 0.96),
+                  ],
+                ),
+              ),
+            ),
           ),
           // Rarity bloom (from the burst onward) — stronger + held for legendary.
           if (p >= _burstAt)

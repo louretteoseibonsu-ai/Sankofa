@@ -210,6 +210,7 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                   Padding(
                     padding: const EdgeInsets.only(top: 30),
                     child: StateMessage(
+                      dark: true,
                       icon: Icons.wifi_off_rounded,
                       title: 'Couldn’t load the Garage',
                       subtitle: 'Check your connection and try again.',
@@ -229,9 +230,9 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                       padding: EdgeInsets.only(top: 12),
                       child: Column(
                         children: [
-                          SkeletonCard(),
-                          SkeletonCard(),
-                          SkeletonCard(),
+                          SkeletonCard(dark: true),
+                          SkeletonCard(dark: true),
+                          SkeletonCard(dark: true),
                         ],
                       ),
                     ),
