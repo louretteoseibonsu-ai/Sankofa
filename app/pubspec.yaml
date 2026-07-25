@@ -44,6 +44,8 @@ flutter:
     # Accessory layers — uncomment each folder once you add its PNGs:
     # - assets/mascot/trotro_gameplay/rim/
     # - assets/mascot/trotro_gameplay/roof/
+    - assets/avatars/       # Super Family avatar portraits
+    - assets/landmarks/     # cultural landmark icons
     - assets/icon/app_icon.png
 
 # Run once after `flutter pub get`:  dart run flutter_launcher_icons
