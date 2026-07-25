@@ -384,6 +384,7 @@ class _BlindBoxCard extends StatelessWidget {
                     TextSpan(
                         text: 'Legendary',
                         style: TextStyle(color: Color(0xFFE3A92C))),
+                    TextSpan(text: ' awaits'),
                   ]),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
