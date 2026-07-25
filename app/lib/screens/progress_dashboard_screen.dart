@@ -347,8 +347,7 @@ class _StreakCard extends StatelessWidget {
               const PulseEmoji('🔥', size: 26),
               const SizedBox(width: 10),
               Text('${s.streak}',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w800, fontSize: 26, color: ink)),
+                  style: displayFont(fontSize: 26, fontWeight: FontWeight.w800)),
               const SizedBox(width: 6),
               const Text('day streak',
                   style: TextStyle(color: slate, fontSize: 14)),

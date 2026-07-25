@@ -19,9 +19,8 @@ class ReviewPickerScreen extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
-        const Text('Review Quizzes',
-            style: TextStyle(
-                fontWeight: FontWeight.w800, fontSize: 26, color: ink)),
+        Text('Review Quizzes',
+            style: displayFont(fontSize: 26, fontWeight: FontWeight.w800)),
         const SizedBox(height: 4),
         const Text('Mixed practice from the lessons you’ve studied. '
             'No pressure — this doesn’t affect your XP.',

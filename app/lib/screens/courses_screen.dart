@@ -51,9 +51,8 @@ class _CoursesScreenState extends State<CoursesScreen> {
       child: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          const Text('Courses',
-              style: TextStyle(
-                  fontWeight: FontWeight.w800, fontSize: 26, color: ink)),
+          Text('Courses',
+              style: displayFont(fontSize: 26, fontWeight: FontWeight.w800)),
           const SizedBox(height: 4),
           const Text('Structured tracks that take you from your first word to '
               'real conversation.',

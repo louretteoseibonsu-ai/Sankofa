@@ -77,8 +77,8 @@ class _DayNameScreenState extends State<DayNameScreen> {
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
-        const Text('Akan Day Name',
-            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 26, color: ink)),
+        Text('Akan Day Name',
+            style: displayFont(fontSize: 26, fontWeight: FontWeight.w800)),
         const SizedBox(height: 4),
         const Text('Your name is given by the day you were born.',
             style: TextStyle(color: inkSoft, fontSize: 14.5)),

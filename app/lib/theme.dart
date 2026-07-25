@@ -36,6 +36,35 @@ const List<BoxShadow> kSoftShadow = [
   BoxShadow(color: Color(0x0A000000), blurRadius: 3, offset: Offset(0, 1)),
 ];
 
+// ── Type system ───────────────────────────────────────────────────────────
+// Two faces, one job each: Space Grotesk carries the display/heading voice
+// (characterful, a touch geometric), Inter carries body + UI (neutral, legible,
+// and — crucially — it draws the Twi glyphs ɔ/ɛ). Space Grotesk has a limited
+// character set, so Inter is registered as a per-glyph fallback: any character
+// Space Grotesk can't render falls to Inter instead of an OS default.
+List<String>? _headingFallback() {
+  final f = GoogleFonts.inter().fontFamily;
+  return f != null ? <String>[f] : null;
+}
+
+/// Space Grotesk display/heading style with an Inter fallback for Twi glyphs.
+/// Headings want tight tracking and tight leading — the defaults reflect that.
+TextStyle displayFont({
+  required double fontSize,
+  FontWeight fontWeight = FontWeight.w600,
+  Color color = charcoal,
+  double height = 1.1,
+  double letterSpacing = -0.4,
+}) {
+  return GoogleFonts.spaceGrotesk(
+    fontSize: fontSize,
+    fontWeight: fontWeight,
+    color: color,
+    height: height,
+    letterSpacing: letterSpacing,
+  ).copyWith(fontFamilyFallback: _headingFallback());
+}
+
 ThemeData buildTheme() {
   final scheme = ColorScheme.fromSeed(
     seedColor: terracotta,
@@ -50,9 +79,26 @@ ThemeData buildTheme() {
     displayColor: charcoal,
   );
 
+  // Headings (display/headline/title) speak Space Grotesk; body/label stay
+  // Inter. Tight leading on the big sizes, a clear step above body — this is
+  // where the "premium, not default" hierarchy lives.
+  final fb = _headingFallback();
+  TextStyle head(TextStyle? b, FontWeight w, double h, [double ls = -0.4]) =>
+      GoogleFonts.spaceGrotesk(textStyle: b, fontWeight: w, height: h, letterSpacing: ls)
+          .copyWith(color: charcoal, fontFamilyFallback: fb);
+  final text2 = text.copyWith(
+    displayLarge: head(text.displayLarge, FontWeight.w600, 1.04),
+    displayMedium: head(text.displayMedium, FontWeight.w600, 1.05),
+    displaySmall: head(text.displaySmall, FontWeight.w600, 1.07),
+    headlineLarge: head(text.headlineLarge, FontWeight.w600, 1.08),
+    headlineMedium: head(text.headlineMedium, FontWeight.w600, 1.12),
+    headlineSmall: head(text.headlineSmall, FontWeight.w600, 1.15),
+    titleLarge: head(text.titleLarge, FontWeight.w700, 1.2, -0.2),
+  );
+
   return base.copyWith(
     scaffoldBackgroundColor: canvas,
-    textTheme: text,
+    textTheme: text2,
     splashColor: charcoal.withValues(alpha: 0.05),
     highlightColor: Colors.transparent,
     appBarTheme: AppBarTheme(
@@ -61,8 +107,8 @@ ThemeData buildTheme() {
       elevation: 0,
       scrolledUnderElevation: 0,
       centerTitle: false,
-      titleTextStyle:
-          GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 18, color: charcoal),
+      titleTextStyle: displayFont(
+          fontSize: 19, fontWeight: FontWeight.w700, letterSpacing: -0.3),
     ),
     // Primary CTA — deeper terracotta so white label meets WCAG AA contrast.
     filledButtonTheme: FilledButtonThemeData(

@@ -214,8 +214,8 @@ class _TranslateScreenState extends State<TranslateScreen> {
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
-        const Text('AI Translate',
-            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 26, color: ink)),
+        Text('AI Translate',
+            style: displayFont(fontSize: 26, fontWeight: FontWeight.w800)),
         const SizedBox(height: 2),
         const Text('Free to use — English ⇆ Twi with native audio.',
             style: TextStyle(color: slate, fontSize: 13.5)),

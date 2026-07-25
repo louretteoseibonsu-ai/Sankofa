@@ -70,11 +70,11 @@ class _SymbolsScreenState extends State<SymbolsScreen> {
           },
         ),
         const _WeeklyTop3Strip(),
-        const Padding(
-          padding: EdgeInsets.fromLTRB(20, 0, 20, 4),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 4),
           child: Text(
             'Adinkra Symbols',
-            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 26, color: ink),
+            style: displayFont(fontSize: 26, fontWeight: FontWeight.w800),
           ),
         ),
         const Padding(

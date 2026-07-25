@@ -77,8 +77,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               const SizedBox(height: 28),
               if (_step == 0) ...[
                 Text('Akwaaba, $name 🇬🇭',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w800, fontSize: 26, color: ink)),
+                    style: displayFont(fontSize: 26, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 6),
                 const Text('What brings you to Twi?',
                     style: TextStyle(color: slate, fontSize: 15)),
@@ -98,9 +97,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ),
               ] else ...[
-                const Text('Where are you based?',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w800, fontSize: 26, color: ink)),
+                Text('Where are you based?',
+                    style: displayFont(fontSize: 26, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 6),
                 const Text('So we can tailor examples and timing.',
                     style: TextStyle(color: slate, fontSize: 15)),

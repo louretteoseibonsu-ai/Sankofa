@@ -5,6 +5,7 @@ import 'screens/login_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/plan_picker_screen.dart';
 import 'services/auth_service.dart';
+import 'services/notification_service.dart';
 import 'theme.dart';
 
 /// Shows the login screen when signed out, the app when signed in —
@@ -52,6 +53,8 @@ class _SignedInRouterState extends State<_SignedInRouter> {
     final auth = AuthService();
     // Mirror account info into Firestore so the admin panel can list this user.
     await auth.syncUserDoc();
+    // Register for push nudges (best-effort; prompts for permission).
+    NotificationService.instance.register();
     final disabled = await auth.isDisabled();
     final needsPlan = disabled ? false : await auth.needsPlanChoice();
     final needsOnboarding = disabled ? false : await auth.needsOnboarding();

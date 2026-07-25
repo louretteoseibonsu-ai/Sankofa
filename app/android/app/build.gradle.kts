@@ -33,6 +33,12 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+            // Disable R8/resource shrinking. It was stripping classes that
+            // Firebase / ML Kit need at runtime, causing a black screen / crash
+            // in release builds. Safe to keep off for now; revisit with proper
+            // ProGuard keep-rules before optimising APK size.
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
     }
 }

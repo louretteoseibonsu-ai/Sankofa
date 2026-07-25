@@ -462,9 +462,8 @@ class _LensScreenState extends State<LensScreen> {
       children: [
         Row(
           children: [
-            const Text('Sankofa Lens',
-                style: TextStyle(
-                    fontWeight: FontWeight.w800, fontSize: 26, color: ink)),
+            Text('Sankofa Lens',
+                style: displayFont(fontSize: 26, fontWeight: FontWeight.w800)),
             const SizedBox(width: 10),
             if (_premium != true && kLensFreeDuringTesting)
               Container(

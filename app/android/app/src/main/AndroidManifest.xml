@@ -29,6 +29,18 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- Use the stable Skia renderer instead of Impeller. Impeller on
+             Vulkan can show a black screen on some Android devices (e.g. certain
+             Samsung models). Set to true again later to re-test Impeller. -->
+        <meta-data
+            android:name="io.flutter.embedding.android.EnableImpeller"
+            android:value="false" />
+        <!-- Tell Google Play services to download the ML Kit image-labeling
+             model at install time so Sankofa Lens works on first use (without
+             this, on-device recognition fails until the model downloads). -->
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="ica" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

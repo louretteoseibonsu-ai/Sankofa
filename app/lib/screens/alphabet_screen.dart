@@ -52,10 +52,9 @@ class AlphabetScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.all(20),
-      children: const [
+      children: [
         Text('The Twi Alphabet',
-            style: TextStyle(
-                fontWeight: FontWeight.w800, fontSize: 26, color: ink)),
+            style: displayFont(fontSize: 26, fontWeight: FontWeight.w800)),
         SizedBox(height: 4),
         Text('Tap any example to hear the sound. Twi drops c, j, q, v, x, z '
             'and adds two special vowels: ɛ and ɔ.',

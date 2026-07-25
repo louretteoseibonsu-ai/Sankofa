@@ -86,8 +86,7 @@ class _ReadingListScreenState extends State<ReadingListScreen> {
               widget.folkloreOnly
                   ? 'Anansesɛm — Spider Tales'
                   : 'Reading & Comprehension',
-              style: const TextStyle(
-                  fontWeight: FontWeight.w800, fontSize: 26, color: ink)),
+              style: displayFont(fontSize: 26, fontWeight: FontWeight.w800)),
           const SizedBox(height: 4),
           Text(
               widget.folkloreOnly

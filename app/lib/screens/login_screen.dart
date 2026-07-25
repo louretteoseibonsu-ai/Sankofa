@@ -217,10 +217,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
+                  Text(
                     'Sankofa Twi',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 26, color: ink),
+                    style: displayFont(fontSize: 26, fontWeight: FontWeight.w800),
                   ),
                   Text(
                     _isRegister ? 'Create your account' : 'Welcome back',

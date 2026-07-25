@@ -32,10 +32,9 @@ class PlanPickerScreen extends StatelessWidget {
           padding: const EdgeInsets.all(24),
           children: [
             const SizedBox(height: 12),
-            const Text('Akwaaba! 🎉',
+            Text('Akwaaba! 🎉',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontWeight: FontWeight.w800, fontSize: 26, color: ink)),
+                style: displayFont(fontSize: 26, fontWeight: FontWeight.w800)),
             const SizedBox(height: 4),
             const Text('Choose how you’d like to begin.',
                 textAlign: TextAlign.center,
