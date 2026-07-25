@@ -9,6 +9,7 @@ import '../widgets/celebration.dart';
 import '../widgets/composable_trotro.dart';
 import '../widgets/greeting.dart';
 import '../widgets/overlay_flight.dart';
+import '../widgets/state_message.dart';
 import '../widgets/tappable_scale.dart';
 import '../widgets/tintable_trotro.dart';
 import '../widgets/trotro_mascot.dart';
@@ -98,6 +99,7 @@ class _JourneyScreenState extends State<JourneyScreen>
   Color _bodyColor = kTroTroBodyColors.first;
   Map<String, String> _equipped = const {}; // cosmetics for the layered avatar
   bool _firstLoad = true;
+  bool _error = false; // set when the initial load fails (offline / no cache)
 
   // Boss = last stop of each region; region name keyed by category id.
   static final Set<String> _bossIds = {
@@ -115,8 +117,19 @@ class _JourneyScreenState extends State<JourneyScreen>
   }
 
   Future<void> _reload() async {
-    final stats = await _service.loadStats();
-    final cos = await _service.loadCosmetics();
+    Stats stats;
+    CosmeticState cos;
+    try {
+      stats = await _service.loadStats();
+      cos = await _service.loadCosmetics();
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _loading = false;
+        _error = true;
+      });
+      return;
+    }
     if (!mounted) return;
     final p = stats.progress;
     final newCurrent = _currentIndexFor(p);
@@ -128,6 +141,7 @@ class _JourneyScreenState extends State<JourneyScreen>
       _bodyColor = troTroBodyColorFor(cos.equipped);
       _equipped = cos.equipped;
       _loading = false;
+      _error = false;
     });
 
     if (_firstLoad) {
@@ -358,6 +372,21 @@ class _JourneyScreenState extends State<JourneyScreen>
   @override
   Widget build(BuildContext context) {
     if (_loading) return const Center(child: CircularProgressIndicator());
+    if (_error) {
+      return StateMessage(
+        icon: Icons.wifi_off_rounded,
+        title: 'Couldn’t load your journey',
+        subtitle: 'Check your connection and try again.',
+        actionLabel: 'Retry',
+        onAction: () {
+          setState(() {
+            _loading = true;
+            _error = false;
+          });
+          _reload();
+        },
+      );
+    }
     final lessons = kLessonsFlat;
     final n = lessons.length;
     final current = _currentIndex;

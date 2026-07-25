@@ -5,6 +5,7 @@ import '../theme.dart';
 import '../widgets/challenge_quiz.dart';
 import '../widgets/floating_card.dart';
 import '../widgets/speak_button.dart';
+import '../widgets/state_message.dart';
 import '../widgets/tintable_trotro.dart';
 
 /// Progressive list of reading passages — pass one to unlock the next.
@@ -21,6 +22,7 @@ class _ReadingListScreenState extends State<ReadingListScreen> {
   final _service = ProgressService();
   Set<String> _passed = {};
   bool _loading = true;
+  bool _error = false;
 
   @override
   void initState() {
@@ -29,12 +31,21 @@ class _ReadingListScreenState extends State<ReadingListScreen> {
   }
 
   Future<void> _reload() async {
-    final passed = await _service.loadReadingPassed();
-    if (!mounted) return;
-    setState(() {
-      _passed = passed;
-      _loading = false;
-    });
+    try {
+      final passed = await _service.loadReadingPassed();
+      if (!mounted) return;
+      setState(() {
+        _passed = passed;
+        _loading = false;
+        _error = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _loading = false;
+        _error = true;
+      });
+    }
   }
 
   List<ReadingPassage> get _passages => widget.folkloreOnly
@@ -53,6 +64,18 @@ class _ReadingListScreenState extends State<ReadingListScreen> {
   @override
   Widget build(BuildContext context) {
     if (_loading) return const Center(child: CircularProgressIndicator());
+    if (_error) {
+      return StateMessage(
+        icon: Icons.wifi_off_rounded,
+        title: 'Couldn’t load your reading',
+        subtitle: 'Check your connection and try again.',
+        actionLabel: 'Retry',
+        onAction: () {
+          setState(() => _loading = true);
+          _reload();
+        },
+      );
+    }
     return RefreshIndicator(
       onRefresh: _reload,
       child: ListView(

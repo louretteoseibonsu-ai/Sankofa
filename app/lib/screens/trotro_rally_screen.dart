@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../services/progress_service.dart';
 import '../theme.dart';
+import '../widgets/state_message.dart';
 import '../widgets/tintable_trotro.dart';
 
 const Color _terra = Color(0xFFBE5235);
@@ -63,9 +64,26 @@ class _TroTroRallyScreenState extends State<TroTroRallyScreen> {
       body: StreamBuilder<List<LeaderboardEntry>>(
         stream: service.weeklyTop(limit: 12),
         builder: (context, snap) {
-          final entries = snap.data ?? const <LeaderboardEntry>[];
-          if (entries.isEmpty) {
+          if (snap.hasError) {
+            return StateMessage(
+              icon: Icons.wifi_off_rounded,
+              title: 'Couldn’t load the rally',
+              subtitle: 'Check your connection and try again.',
+              actionLabel: 'Retry',
+              onAction: () => setState(() {}),
+            );
+          }
+          if (!snap.hasData) {
             return const Center(child: CircularProgressIndicator());
+          }
+          final entries = snap.data!;
+          if (entries.isEmpty) {
+            return const StateMessage(
+              icon: Icons.directions_bus_rounded,
+              title: 'No racers yet this week',
+              subtitle: 'Finish a lesson to line up on the grid — '
+                  'be the first tro tro out.',
+            );
           }
           final topXp = entries
               .map((e) => e.xp)

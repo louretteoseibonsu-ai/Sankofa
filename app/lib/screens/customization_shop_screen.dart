@@ -4,6 +4,7 @@ import '../services/progress_service.dart';
 import '../services/sound_service.dart';
 import '../theme.dart';
 import '../widgets/composable_trotro.dart';
+import '../widgets/state_message.dart';
 import '../widgets/tappable_scale.dart';
 import '../widgets/tintable_trotro.dart';
 
@@ -27,6 +28,7 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
   int _shards = 0;
   int _bodyIndex = 0; // equipped body-colour palette index
   bool _loading = true;
+  bool _error = false;
 
   @override
   void initState() {
@@ -35,14 +37,26 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
   }
 
   Future<void> _reload() async {
-    final stats = await _service.loadStats();
-    final cos = await _service.loadCosmetics();
+    Stats stats;
+    CosmeticState cos;
+    try {
+      stats = await _service.loadStats();
+      cos = await _service.loadCosmetics();
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _loading = false;
+        _error = true;
+      });
+      return;
+    }
     if (!mounted) return;
     setState(() {
       _shards = stats.shards;
       _cos = cos;
       _bodyIndex = troTroBodyIndexFor(cos.equipped);
       _loading = false;
+      _error = false;
     });
   }
 
@@ -147,12 +161,29 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                   ],
                 ),
                 const SizedBox(height: 4),
-                if (_loading)
+                if (_error)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: StateMessage(
+                      icon: Icons.wifi_off_rounded,
+                      title: 'Couldn’t load the Garage',
+                      subtitle: 'Check your connection and try again.',
+                      actionLabel: 'Retry',
+                      onAction: () {
+                        setState(() {
+                          _loading = true;
+                          _error = false;
+                        });
+                        _reload();
+                      },
+                    ),
+                  ),
+                if (!_error && _loading)
                   const Padding(
                     padding: EdgeInsets.only(top: 30),
                     child: Center(child: CircularProgressIndicator()),
                   ),
-                if (!_loading)
+                if (!_error && !_loading)
                   for (final cat in kCosmeticCategories) ...[
                     Padding(
                       padding: const EdgeInsets.fromLTRB(2, 12, 0, 8),
