@@ -104,6 +104,11 @@ class _JourneyScreenState extends State<JourneyScreen>
   bool _firstLoad = true;
   bool _error = false; // set when the initial load fails (offline / no cache)
 
+  // Continuous engine-idle bob for the parked map bus — grows into a bigger bob
+  // + forward lean + light motion blur while driving between stops. Feeds a live
+  // MascotPose so the canonical bus reads as alive without swapping art.
+  late final AnimationController _driveBob;
+
   // Boss = last stop of each region; region name keyed by category id.
   static final Set<String> _bossIds = {
     for (final c in kCategories)
@@ -116,7 +121,16 @@ class _JourneyScreenState extends State<JourneyScreen>
   @override
   void initState() {
     super.initState();
+    _driveBob = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 900))
+      ..repeat(reverse: true);
     _reload();
+  }
+
+  @override
+  void dispose() {
+    _driveBob.dispose();
+    super.dispose();
   }
 
   Future<void> _reload() async {
@@ -584,17 +598,39 @@ class _JourneyScreenState extends State<JourneyScreen>
                             child: Center(
                               child: Opacity(
                                 opacity: _flying ? 0.0 : 1.0,
-                                child: AnimatedRotation(
-                                  turns: _troState == TroTroState.drive
-                                      ? -0.02
-                                      : 0.0,
-                                  duration: const Duration(milliseconds: 260),
-                                  curve: Curves.easeOut,
-                                  child: Mascot(
-                                      key: _troKey,
-                                      bodyColor: _bodyColor,
-                                      equipped: _equipped,
-                                      width: 104),
+                                child: AnimatedBuilder(
+                                  animation: _driveBob,
+                                  builder: (_, __) {
+                                    final driving =
+                                        _troState == TroTroState.drive;
+                                    final wave = Curves.easeInOut
+                                        .transform(_driveBob.value);
+                                    final pose = MascotPose(
+                                      bob: (driving ? 6.0 : 2.5) * wave,
+                                      tilt: driving ? -0.05 : 0.0,
+                                      blur: driving ? 1.2 : 0.0,
+                                    );
+                                    return Stack(
+                                      clipBehavior: Clip.none,
+                                      alignment: Alignment.bottomCenter,
+                                      children: [
+                                        if (driving)
+                                          Positioned(
+                                            left: 2,
+                                            bottom: 6,
+                                            child:
+                                                _DriveDust(t: _driveBob.value),
+                                          ),
+                                        Mascot(
+                                          key: _troKey,
+                                          bodyColor: _bodyColor,
+                                          equipped: _equipped,
+                                          width: 104,
+                                          pose: pose,
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 ),
                               ),
                             ),
@@ -995,4 +1031,40 @@ class _RoadPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _RoadPainter old) =>
       old.pts != pts || old.passed != passed || old.palettes != palettes;
+}
+
+/// A little kente-dust wake kicked up behind the bus while it drives between
+/// stops. Three puffs drift back (left) and fade — driven by the map's idle
+/// controller so it costs nothing extra.
+class _DriveDust extends StatelessWidget {
+  final double t; // 0..1 pulse from the drive-bob controller
+  const _DriveDust({required this.t});
+
+  @override
+  Widget build(BuildContext context) => IgnorePointer(
+        child: CustomPaint(size: const Size(34, 22), painter: _DustPainter(t)),
+      );
+}
+
+class _DustPainter extends CustomPainter {
+  final double t;
+  _DustPainter(this.t);
+
+  static const Color _dust = Color(0xFFCBB89B);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    for (var i = 0; i < 3; i++) {
+      final phase = (t + i / 3) % 1.0;
+      final op = (1 - phase) * 0.5;
+      final r = 3.0 + phase * 6.0;
+      final cx = size.width - phase * size.width;
+      final cy = size.height - 4 - i * 2.0;
+      canvas.drawCircle(
+          Offset(cx, cy), r, Paint()..color = _dust.withValues(alpha: op));
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _DustPainter old) => old.t != t;
 }

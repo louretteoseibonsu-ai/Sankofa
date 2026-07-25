@@ -36,17 +36,30 @@ class TroTroRallyScreen extends StatefulWidget {
   State<TroTroRallyScreen> createState() => _TroTroRallyScreenState();
 }
 
-class _TroTroRallyScreenState extends State<TroTroRallyScreen> {
+class _TroTroRallyScreenState extends State<TroTroRallyScreen>
+    with SingleTickerProviderStateMixin {
   final ProgressService service = ProgressService();
   String? _myUid;
   Color _myColor = kTroTroBodyColors.first; // equipped Garage body colour
   Map<String, String> _myEquipped = const {}; // equipped cosmetics (kente…)
+
+  // Shared engine-idle bob for every racer on the grid; each lane reads it with
+  // its own phase (via rank) so the buses breathe out of sync.
+  late final AnimationController _idle = AnimationController(
+      vsync: this, duration: const Duration(milliseconds: 1800))
+    ..repeat();
 
   @override
   void initState() {
     super.initState();
     _myUid = FirebaseAuth.instance.currentUser?.uid;
     _loadCosmetics();
+  }
+
+  @override
+  void dispose() {
+    _idle.dispose();
+    super.dispose();
   }
 
   Future<void> _loadCosmetics() async {
@@ -115,6 +128,7 @@ class _TroTroRallyScreenState extends State<TroTroRallyScreen> {
                   isMe: entries[i].uid == myUid,
                   myColor: _myColor,
                   myEquipped: _myEquipped,
+                  idle: _idle,
                 ),
               const SizedBox(height: 10),
               const Center(
@@ -136,6 +150,7 @@ class _Lane extends StatelessWidget {
   final bool isMe;
   final Color myColor;
   final Map<String, String> myEquipped;
+  final Animation<double> idle;
   const _Lane({
     required this.rank,
     required this.entry,
@@ -143,6 +158,7 @@ class _Lane extends StatelessWidget {
     required this.isMe,
     required this.myColor,
     required this.myEquipped,
+    required this.idle,
   });
 
   @override
@@ -216,13 +232,25 @@ class _Lane extends StatelessWidget {
                       curve: Curves.easeOutCubic,
                       left: travel * progress,
                       top: 2,
-                      child: isMe
-                          ? Mascot(
-                              bodyColor: myColor,
-                              equipped: myEquipped,
-                              width: busW)
-                          : Mascot(
-                              bodyColor: _busColorFor(entry.uid), width: busW),
+                      child: AnimatedBuilder(
+                        animation: idle,
+                        builder: (_, __) {
+                          final bob = 2.0 *
+                              math.sin(2 * math.pi * idle.value +
+                                  rank.toDouble());
+                          final pose = MascotPose(bob: bob);
+                          return isMe
+                              ? Mascot(
+                                  bodyColor: myColor,
+                                  equipped: myEquipped,
+                                  width: busW,
+                                  pose: pose)
+                              : Mascot(
+                                  bodyColor: _busColorFor(entry.uid),
+                                  width: busW,
+                                  pose: pose);
+                        },
+                      ),
                     ),
                   ],
                 ),
