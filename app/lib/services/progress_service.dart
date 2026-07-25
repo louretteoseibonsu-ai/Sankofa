@@ -371,6 +371,15 @@ class ProgressService {
     }, SetOptions(merge: true));
   }
 
+  /// Equips a player avatar (persisted in cosmeticEquipped.avatar).
+  Future<void> equipAvatar(String id) async {
+    final uid = _uid;
+    if (uid == null) return;
+    await _db.collection('users').doc(uid).set({
+      'cosmeticEquipped': {'avatar': id},
+    }, SetOptions(merge: true));
+  }
+
   /// Saves the chosen tro tro body-colour palette index (free — swap any time).
   Future<void> equipBodyColor(int index) async {
     final uid = _uid;

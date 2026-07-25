@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import '../data/avatar.dart';
 import '../data/blind_box_data.dart';
 import '../data/trotro_cosmetics.dart';
 import '../services/progress_service.dart';
 import '../services/sound_service.dart';
 import '../theme.dart';
+import '../widgets/avatar_carousel.dart';
 import '../widgets/blind_box.dart';
 import '../widgets/composable_trotro.dart';
 import '../widgets/kente_shard.dart';
@@ -32,8 +34,10 @@ class CustomizationShopScreen extends StatefulWidget {
 class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
   final _service = ProgressService();
   CosmeticState _cos = CosmeticState.empty;
+  Stats _stats = Stats.empty;
   int _shards = 0;
   int _bodyIndex = 0; // equipped body-colour palette index
+  String _avatarId = kDefaultAvatarId;
   bool _loading = true;
   bool _error = false;
 
@@ -59,9 +63,11 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
     }
     if (!mounted) return;
     setState(() {
+      _stats = stats;
       _shards = stats.shards;
       _cos = cos;
       _bodyIndex = troTroBodyIndexFor(cos.equipped);
+      _avatarId = cos.equipped['avatar'] ?? kDefaultAvatarId;
       _loading = false;
       _error = false;
     });
@@ -71,6 +77,12 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
     setState(() => _bodyIndex = i);
     SoundService.instance.tap();
     await _service.equipBodyColor(i);
+  }
+
+  Future<void> _selectAvatar(Avatar a) async {
+    setState(() => _avatarId = a.id);
+    SoundService.instance.tap();
+    await _service.equipAvatar(a.id);
   }
 
   Future<void> _openBlindBox() async {
@@ -123,6 +135,14 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final level = _stats.progress.level;
+    final streak = _stats.streak;
+    final mastered = _stats.progress.best.values.where((v) => v >= 10).length;
+    final unlockedAvatars = <String>{
+      for (final a in kAvatars)
+        if (a.unlockedBy(level: level, streak: streak, mastered: mastered))
+          a.id
+    };
     return Scaffold(
       backgroundColor: kVelvetTop,
       appBar: AppBar(
@@ -172,6 +192,16 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                   child: Text('Earn shards with 3-star lessons',
                       style: microLabel()),
                 ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(2, 16, 0, 6),
+                  child: Text('Driver', style: microLabel()),
+                ),
+                AvatarCarousel(
+                  selectedId: _avatarId,
+                  unlockedIds: unlockedAvatars,
+                  onSelect: _selectAvatar,
+                ),
+                const SizedBox(height: 10),
                 _BlindBoxCard(shards: _shards, onOpen: _openBlindBox),
                 // ── Body colour (free — swap any time) ──
                 Padding(
