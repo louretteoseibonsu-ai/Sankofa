@@ -42,19 +42,6 @@ const List<Landmark> kLandmarks = [
         'butterflies and the occasional glimpse of forest elephants below.',
   ),
   Landmark(
-    id: 'osu',
-    name: 'Osu Night Market',
-    region: 'Accra',
-    coordinates: Offset(0.30, 0.34),
-    imageAsset: 'assets/landmarks/osu.png',
-    accent: Color(0xFFE2725B),
-    isUnlocked: true,
-    descriptionText:
-        'Accra’s heart after dark. Osu’s Oxford Street hums with jollof and '
-        'kelewele stalls, live highlife spilling from bars, boutiques and '
-        'late-night street food — the city’s vibrant culinary and culture hub.',
-  ),
-  Landmark(
     id: 'coco',
     name: 'Coco Beach',
     region: 'Nungua, Accra',
@@ -66,19 +53,6 @@ const List<Landmark> kLandmarks = [
         'A golden stretch of Accra coastline where palm shade meets calm '
         'Atlantic waves — a laid-back spot for grilled tilapia, cold '
         'sobolo and an unhurried sunset over the Gulf of Guinea.',
-  ),
-  Landmark(
-    id: 'labadi',
-    name: 'Labadi Beach',
-    region: 'La, Accra',
-    coordinates: Offset(0.38, 0.70),
-    imageAsset: 'assets/landmarks/labadi.png',
-    accent: Color(0xFF2E86C1),
-    isUnlocked: true,
-    descriptionText:
-        'Accra’s most beloved beach. Weekends bring drumming circles, reggae '
-        'and highlife, horse rides along the sand and a warm, festive crowd — '
-        'the coast at its most alive.',
   ),
   Landmark(
     id: 'elmina',
