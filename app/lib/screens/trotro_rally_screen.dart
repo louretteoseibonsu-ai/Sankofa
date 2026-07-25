@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import '../services/progress_service.dart';
 import '../theme.dart';
 import '../widgets/mascot.dart';
+import '../widgets/motion.dart';
 import '../widgets/skeleton.dart';
+import '../widgets/surface.dart';
 import '../widgets/state_message.dart';
 import '../widgets/tintable_trotro.dart';
 
@@ -163,15 +165,14 @@ class _Lane extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AppCard(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
-      decoration: BoxDecoration(
-        color: isMe ? const Color(0xFFF7E6DF) : Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-            color: isMe ? _terra : silverLight, width: isMe ? 2 : 1.5),
-      ),
+      radius: 16,
+      color: isMe ? const Color(0xFFF7E6DF) : Colors.white,
+      borderColor: isMe ? _terra : null,
+      borderWidth: 2,
+      shadow: isMe ? kRaisedShadow : kAmbientShadow,
       child: Row(
         children: [
           SizedBox(
@@ -227,29 +228,33 @@ class _Lane extends StatelessWidget {
                       child: Icon(Icons.sports_score_rounded,
                           color: _gold, size: 20),
                     ),
-                    AnimatedPositioned(
-                      duration: const Duration(milliseconds: 600),
-                      curve: Curves.easeOutCubic,
-                      left: travel * progress,
+                    Positioned(
+                      left: 0,
                       top: 2,
-                      child: AnimatedBuilder(
-                        animation: idle,
-                        builder: (_, __) {
-                          final bob = 2.0 *
-                              math.sin(2 * math.pi * idle.value +
-                                  rank.toDouble());
-                          final pose = MascotPose(bob: bob);
-                          return isMe
-                              ? Mascot(
-                                  bodyColor: myColor,
-                                  equipped: myEquipped,
-                                  width: busW,
-                                  pose: pose)
-                              : Mascot(
-                                  bodyColor: _busColorFor(entry.uid),
-                                  width: busW,
-                                  pose: pose);
-                        },
+                      child: SpringBuilder(
+                        target: travel * progress,
+                        builder: (context, value, child) =>
+                            Transform.translate(
+                                offset: Offset(value, 0), child: child),
+                        child: AnimatedBuilder(
+                          animation: idle,
+                          builder: (_, __) {
+                            final bob = 2.0 *
+                                math.sin(2 * math.pi * idle.value +
+                                    rank.toDouble());
+                            final pose = MascotPose(bob: bob);
+                            return isMe
+                                ? Mascot(
+                                    bodyColor: myColor,
+                                    equipped: myEquipped,
+                                    width: busW,
+                                    pose: pose)
+                                : Mascot(
+                                    bodyColor: _busColorFor(entry.uid),
+                                    width: busW,
+                                    pose: pose);
+                          },
+                        ),
                       ),
                     ),
                   ],
