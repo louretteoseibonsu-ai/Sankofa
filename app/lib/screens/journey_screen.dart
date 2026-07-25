@@ -371,7 +371,7 @@ class _JourneyScreenState extends State<JourneyScreen>
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) return const Center(child: CircularProgressIndicator());
+    if (_loading) return const _MapSkeleton();
     if (_error) {
       return StateMessage(
         icon: Icons.wifi_off_rounded,
@@ -856,6 +856,84 @@ class _Node extends StatelessWidget {
           ],
         ),
         child: Center(child: icon),
+      ),
+    );
+  }
+}
+
+/// Loading placeholder shaped like the journey: HUD pills, a winding trail of
+/// stop discs, and the bottom "what next" card.
+class _MapSkeleton extends StatelessWidget {
+  const _MapSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return SkeletonLoader(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+            child: Row(
+              children: const [
+                SkeletonBox(width: 54, height: 30, radius: 20),
+                SizedBox(width: 8),
+                SkeletonBox(width: 54, height: 30, radius: 20),
+                Spacer(),
+                SkeletonBox(width: 92, height: 30, radius: 20),
+                SizedBox(width: 8),
+                SkeletonBox(width: 30, height: 30, radius: 15),
+                SizedBox(width: 6),
+                SkeletonBox(width: 30, height: 30, radius: 15),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 18),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  for (int i = 0; i < 5; i++)
+                    Align(
+                      alignment: i.isEven
+                          ? Alignment.centerLeft
+                          : Alignment.centerRight,
+                      child: const SkeletonBox(width: 52, height: 52, radius: 26),
+                    ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 6, 16, 16),
+            child: Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFFECE8E0), width: 1.5),
+              ),
+              child: Row(
+                children: const [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SkeletonBox(width: 120, height: 12),
+                        SizedBox(height: 8),
+                        SkeletonBox(width: 180, height: 16),
+                        SizedBox(height: 6),
+                        SkeletonBox(width: 90, height: 12),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 12),
+                  SkeletonBox(width: 92, height: 42, radius: 21),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
