@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme.dart';
-import '../widgets/floating_card.dart';
+import '../widgets/velvet.dart';
 import 'alphabet_screen.dart';
 import 'courses_screen.dart';
 import 'day_name_screen.dart';
@@ -32,7 +32,15 @@ class ToolsHubScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFF17130F), Color(0xFF1E1A17)],
+        ),
+      ),
+      child: ListView(
       padding: const EdgeInsets.all(20),
       children: [
         _ToolRow(
@@ -87,6 +95,7 @@ class ToolsHubScreen extends StatelessWidget {
           onTap: () => _openPage(context, const LeaderboardScreen()),
         ),
       ],
+      ),
     );
   }
 }
@@ -107,28 +116,49 @@ class _ToolRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
-      child: FloatingCard(
-        onTap: onTap,
-        child: Row(
-          children: [
-            Icon(icon, color: charcoal, size: 22),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 16,
-                          color: ink)),
-                  Text(subtitle,
-                      style: const TextStyle(color: slate, fontSize: 12.5)),
-                ],
-              ),
+      child: Material(
+        color: const Color(0xFF211B17),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+          side: const BorderSide(color: Colors.white10, width: 1),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          splashColor: kOchre.withValues(alpha: 0.08),
+          highlightColor: kOchre.withValues(alpha: 0.05),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Container(
+                  width: 42,
+                  height: 42,
+                  decoration: const BoxDecoration(
+                      color: Color(0x22D4A373), shape: BoxShape.circle),
+                  child: Icon(icon, color: kOchre, size: 22),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title,
+                          style: displayFont(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: kVelvetInk)),
+                      const SizedBox(height: 2),
+                      Text(subtitle,
+                          style: const TextStyle(
+                              color: kVelvetMuted, fontSize: 12.5)),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right, color: Colors.white24),
+              ],
             ),
-            const Icon(Icons.chevron_right, color: Colors.black26),
-          ],
+          ),
         ),
       ),
     );

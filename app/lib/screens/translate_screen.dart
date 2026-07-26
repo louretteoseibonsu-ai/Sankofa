@@ -8,8 +8,39 @@ import '../services/audio_bundle.dart';
 import '../services/credits_service.dart';
 import '../theme.dart';
 import '../widgets/credits_bar.dart';
-import '../widgets/floating_card.dart';
+import '../widgets/velvet.dart';
 import 'upgrade_screen.dart';
+
+/// A velvet surface card for the dark Translate hub. Tappable when [onTap] set.
+Widget _velvetCard({required Widget child, VoidCallback? onTap}) {
+  final decorated = Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: const Color(0xFF211B17),
+      borderRadius: BorderRadius.circular(18),
+      border: Border.all(color: Colors.white10),
+    ),
+    child: child,
+  );
+  if (onTap == null) return decorated;
+  return Material(
+    color: const Color(0xFF211B17),
+    borderRadius: BorderRadius.circular(18),
+    clipBehavior: Clip.antiAlias,
+    child: InkWell(
+      onTap: onTap,
+      splashColor: kOchre.withValues(alpha: 0.08),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: Colors.white10),
+        ),
+        child: child,
+      ),
+    ),
+  );
+}
 
 class TranslateScreen extends StatefulWidget {
   const TranslateScreen({super.key});
@@ -58,7 +89,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
     if (!mounted) return false;
     return await showModalBottomSheet<bool>(
           context: context,
-          backgroundColor: Colors.white,
+          backgroundColor: const Color(0xFF1E1A17),
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
@@ -69,26 +100,25 @@ class _TranslateScreenState extends State<TranslateScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("You're out of AI credits",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w800,
+                  Text("You're out of AI credits",
+                      style: displayFont(
+                          fontWeight: FontWeight.w700,
                           fontSize: 18,
-                          color: ink)),
+                          color: kVelvetInk)),
                   const SizedBox(height: 6),
                   const Text(
                       'AI credits cover translations, Lens scans and audio. They '
                       'reset next month. Top up now with $kAiCreditPackSize '
                       'credits for $kAiCreditPackPedis pedis.',
-                      style: TextStyle(color: slate, height: 1.45)),
+                      style: TextStyle(color: kVelvetMuted, height: 1.45)),
                   const SizedBox(height: 12),
                   Row(
                     children: [
-                      const Icon(Icons.spa_outlined,
-                          size: 18, color: plantainGreen),
+                      const Icon(Icons.spa_outlined, size: 18, color: kOchre),
                       const SizedBox(width: 6),
                       Text('You have ${s.pedis} pedis',
                           style: const TextStyle(
-                              fontWeight: FontWeight.w700, color: ink)),
+                              fontWeight: FontWeight.w700, color: kVelvetInk)),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -211,14 +241,23 @@ class _TranslateScreenState extends State<TranslateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFF17130F), Color(0xFF1E1A17)],
+        ),
+      ),
+      child: ListView(
       padding: const EdgeInsets.all(20),
       children: [
         Text('AI Translate',
-            style: displayFont(fontSize: 26, fontWeight: FontWeight.w800)),
+            style: displayFont(
+                fontSize: 26, fontWeight: FontWeight.w800, color: kVelvetInk)),
         const SizedBox(height: 2),
         const Text('Free to use — English ⇆ Twi with native audio.',
-            style: TextStyle(color: slate, fontSize: 13.5)),
+            style: TextStyle(color: kVelvetMuted, fontSize: 13.5)),
         const SizedBox(height: 10),
         if (_status != null)
           CreditsBar(
@@ -226,13 +265,13 @@ class _TranslateScreenState extends State<TranslateScreen> {
         // Gentle upgrade nudge — only for free users who are running low.
         if (_status != null && !_status!.premium && _status!.remaining <= 5) ...[
           const SizedBox(height: 10),
-          FloatingCard(
+          _velvetCard(
             onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const UpgradeScreen())),
             child: Row(
               children: [
                 const Icon(Icons.workspace_premium_outlined,
-                    color: Color(0xFFE3A92C), size: 20),
+                    color: kOchre, size: 20),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
@@ -241,16 +280,22 @@ class _TranslateScreenState extends State<TranslateScreen> {
                           : 'Running low — Premium gives 400 AI credits a month.',
                       style: const TextStyle(
                           fontSize: 12.5,
-                          color: ink,
+                          color: kVelvetInk,
                           fontWeight: FontWeight.w600)),
                 ),
-                const Icon(Icons.chevron_right, color: Colors.black26),
+                const Icon(Icons.chevron_right, color: Colors.white24),
               ],
             ),
           ),
         ],
         const SizedBox(height: 14),
         SegmentedButton<bool>(
+          style: SegmentedButton.styleFrom(
+            foregroundColor: kVelvetMuted,
+            selectedForegroundColor: const Color(0xFF17130F),
+            selectedBackgroundColor: kOchre,
+            side: const BorderSide(color: Colors.white24),
+          ),
           segments: const [
             ButtonSegment(value: true, label: Text('English → Twi')),
             ButtonSegment(value: false, label: Text('Twi → English')),
@@ -259,7 +304,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
           onSelectionChanged: (s) => setState(() => _enToTw = s.first),
         ),
         const SizedBox(height: 16),
-        FloatingCard(
+        _velvetCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -267,12 +312,19 @@ class _TranslateScreenState extends State<TranslateScreen> {
                 controller: _controller,
                 minLines: 2,
                 maxLines: 4,
+                style: const TextStyle(color: kVelvetInk),
+                cursorColor: kOchre,
                 decoration: InputDecoration(
                   hintText: _enToTw ? 'Type English…' : 'Type Twi…',
+                  hintStyle: const TextStyle(color: kVelvetMuted),
+                  filled: false,
                   border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  contentPadding: EdgeInsets.zero,
                 ),
               ),
-              const Divider(),
+              const Divider(color: Colors.white12),
               Align(
                 alignment: Alignment.centerRight,
                 child: FilledButton(
@@ -290,27 +342,33 @@ class _TranslateScreenState extends State<TranslateScreen> {
         if (_error != null)
           Text(_error!, style: const TextStyle(color: accentCoral)),
         if (_translation != null)
-          FloatingCard(
+          _velvetCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Translation',
-                    style: TextStyle(
-                        color: plantainGreen, fontWeight: FontWeight.w700, fontSize: 12)),
+                Text('TRANSLATION',
+                    style: microLabel(color: kOchre)),
                 const SizedBox(height: 6),
                 Text(_translation!,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w800, fontSize: 20, color: ink)),
+                    style: displayFont(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 22,
+                        color: kVelvetInk)),
                 const SizedBox(height: 8),
                 OutlinedButton.icon(
                   onPressed: _listen,
-                  icon: const Icon(Icons.volume_up, color: plantainGreen),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: kVelvetInk,
+                    side: const BorderSide(color: Colors.white24),
+                  ),
+                  icon: const Icon(Icons.volume_up, color: kOchre),
                   label: const Text('Listen (Twi)'),
                 ),
               ],
             ),
           ),
       ],
+      ),
     );
   }
 }
