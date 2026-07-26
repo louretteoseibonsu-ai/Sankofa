@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'widgets/app_avatar.dart';
 import 'widgets/greeting.dart';
-import 'widgets/kente_pattern.dart';
 import 'screens/profile_screen.dart';
 import 'screens/journey_screen.dart';
 import 'screens/translate_screen.dart';
@@ -59,26 +58,29 @@ class _AppShellState extends State<AppShell> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         titleSpacing: 16,
-        flexibleSpace: const KenteHeaderBackground(),
-        // Home (Journey) greets the user by name; other tabs show their label.
-        // Dark scrim behind the title so white text stays legible over any
-        // colour in the kente banner.
-        title: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        // Clean velvet header with a single intentional kente thread — no
+        // longer a busy full-bleed pattern.
+        flexibleSpace: const DecoratedBox(
           decoration: BoxDecoration(
-            color: const Color(0xCC1A1A1A),
-            borderRadius: BorderRadius.circular(12),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFF17130F), Color(0xFF1E1A17)],
+            ),
+            border:
+                Border(bottom: BorderSide(color: Color(0x33D4A373), width: 1)),
           ),
-          child: _index == 0
-              ? const GreetingTitle()
-              : Text(
-                  _dest[_index].label,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 20,
-                      color: Colors.white),
-                ),
         ),
+        // Home (Journey) greets the user by name; other tabs show their label.
+        title: _index == 0
+            ? const GreetingTitle()
+            : Text(
+                _dest[_index].label,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 20,
+                    color: Color(0xFFF3ECE4)),
+              ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16),
@@ -93,7 +95,7 @@ class _AppShellState extends State<AppShell> {
                   child: Container(
                     padding: const EdgeInsets.all(2.5),
                     decoration: const BoxDecoration(
-                        color: Colors.white, shape: BoxShape.circle),
+                        color: Color(0xFFD4A373), shape: BoxShape.circle),
                     child: AppAvatar(
                         user: FirebaseAuth.instance.currentUser, radius: 16),
                   ),

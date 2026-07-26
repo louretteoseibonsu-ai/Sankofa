@@ -136,18 +136,22 @@ ThemeData buildTheme() {
         textStyle: GoogleFonts.inter(fontWeight: FontWeight.w600),
       ),
     ),
-    // Navigation stays neutral (terracotta is reserved for CTAs).
+    // Velvet-dark nav shell: terracotta for the active tab, ochre indicator.
     navigationBarTheme: NavigationBarThemeData(
-      backgroundColor: canvas,
+      backgroundColor: const Color(0xFF17130F),
       elevation: 0,
       height: 66,
-      indicatorColor: silverLight,
+      indicatorColor: const Color(0x33D4A373),
       labelTextStyle: WidgetStatePropertyAll(
-        GoogleFonts.inter(fontSize: 11.5, fontWeight: FontWeight.w600, color: charcoal),
+        GoogleFonts.inter(
+            fontSize: 11.5,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFFF3ECE4)),
       ),
       iconTheme: WidgetStateProperty.resolveWith((states) {
         final selected = states.contains(WidgetState.selected);
-        return IconThemeData(color: selected ? charcoal : slate);
+        return IconThemeData(
+            color: selected ? terracotta : const Color(0xFF9B8F86));
       }),
     ),
     inputDecorationTheme: InputDecorationTheme(
