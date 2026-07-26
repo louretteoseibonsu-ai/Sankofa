@@ -36,48 +36,8 @@ const Color _roadMuted = Color(0xFF3A322C); // locked road ahead (velvet)
 const Color _mutedDot = Color(0xFF52463C);
 const Color _doneGreen = Color(0xFF2E6B3B);
 
-/// A travelled-road palette (base tarmac + centre kente thread) for a zone.
-class _ZonePalette {
-  final Color base;
-  final Color thread;
-  const _ZonePalette(this.base, this.thread);
-}
-
-const _ZonePalette _defaultZone = _ZonePalette(_roadActive, _roadGold);
-
-// Landmark zones override with their own flavour; everything else inherits its
-// Act's palette so the road shifts mood by Act rather than flickering per stop.
-const Map<String, _ZonePalette> _zonePalettes = {
-  'village_gate': _ZonePalette(Color(0xFFBE5235), Color(0xFFE3A92C)),
-  'village_compound': _ZonePalette(Color(0xFFBE5235), Color(0xFFE3A92C)),
-  'city_center': _ZonePalette(Color(0xFFC98A2B), Color(0xFFF0C36B)),
-  'transit_hub': _ZonePalette(Color(0xFF3E7CA8), Color(0xFFF0C36B)),
-  'family_kitchen': _ZonePalette(Color(0xFFC0553B), Color(0xFFF0C36B)),
-  'sacred_grove': _ZonePalette(Color(0xFF2E6B3B), Color(0xFFE3A92C)),
-};
-
-// Act-level fallback palettes (by course id).
-const Map<String, _ZonePalette> _actPalettes = {
-  'foundations': _ZonePalette(Color(0xFFBE5235), Color(0xFFE3A92C)),
-  'everyday': _ZonePalette(Color(0xFFC98A2B), Color(0xFFF0C36B)),
-  'people': _ZonePalette(Color(0xFF7A4FB5), Color(0xFFE3A92C)),
-  'arts': _ZonePalette(Color(0xFF1F7A8C), Color(0xFFF0C36B)),
-};
-
-// categoryId → course ("Act") id, precomputed from the catalog.
-final Map<String, String> _categoryCourse = {
-  for (final course in kCourses)
-    for (final cid in course.categoryIds) cid: course.id,
-};
-
-/// Resolves the road palette for a category: its own zone theme if it is a
-/// landmark, otherwise its Act's palette.
-_ZonePalette _paletteForCategory(String categoryId) {
-  final cat = categoryById(categoryId);
-  final own = _zonePalettes[cat.zoneTheme];
-  if (own != null) return own;
-  return _actPalettes[_categoryCourse[categoryId]] ?? _defaultZone;
-}
+// (The old per-zone/per-Act road palettes were retired when the road moved to a
+// single sculpted terracotta+ochre treatment in _RoadPainter.)
 
 /// The Sankofa "world map" — a winding kente road through cultural regions.
 /// The tro tro is the player's avatar: it parks at the current stop and drives
@@ -396,18 +356,22 @@ class _JourneyScreenState extends State<JourneyScreen>
   Widget build(BuildContext context) {
     if (_loading) return const _MapSkeleton();
     if (_error) {
-      return StateMessage(
-        icon: Icons.wifi_off_rounded,
-        title: 'Couldn’t load your journey',
-        subtitle: 'Check your connection and try again.',
-        actionLabel: 'Retry',
-        onAction: () {
-          setState(() {
-            _loading = true;
-            _error = false;
-          });
-          _reload();
-        },
+      return ColoredBox(
+        color: const Color(0xFF17130F),
+        child: StateMessage(
+          dark: true,
+          icon: Icons.wifi_off_rounded,
+          title: 'Couldn’t load your journey',
+          subtitle: 'Check your connection and try again.',
+          actionLabel: 'Retry',
+          onAction: () {
+            setState(() {
+              _loading = true;
+              _error = false;
+            });
+            _reload();
+          },
+        ),
       );
     }
     final lessons = kLessonsFlat;
@@ -513,10 +477,6 @@ class _JourneyScreenState extends State<JourneyScreen>
               final passedFlags = [
                 for (int i = 0; i < n; i++) _p.passed(lessons[i].id)
               ];
-              final zonePalettes = [
-                for (int i = 0; i < n; i++)
-                  _paletteForCategory(lessons[i].categoryId)
-              ];
 
               return SingleChildScrollView(
                 reverse: true, // start scrolled to the bottom (stop 0)
@@ -530,7 +490,7 @@ class _JourneyScreenState extends State<JourneyScreen>
                     children: [
                       CustomPaint(
                         size: Size(w, height),
-                        painter: _RoadPainter(points, passedFlags, zonePalettes),
+                        painter: _RoadPainter(points, passedFlags),
                       ),
                       // Goal marker at the top of the map
                       if (n > 0)
@@ -969,82 +929,97 @@ class _MapSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SkeletonLoader(
-      child: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(16, 14, 16, 8),
-            child: Row(
-              children: [
-                SkeletonBox(width: 54, height: 30, radius: 20),
-                SizedBox(width: 8),
-                SkeletonBox(width: 54, height: 30, radius: 20),
-                Spacer(),
-                SkeletonBox(width: 92, height: 30, radius: 20),
-                SizedBox(width: 8),
-                SkeletonBox(width: 30, height: 30, radius: 15),
-                SizedBox(width: 6),
-                SkeletonBox(width: 30, height: 30, radius: 15),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 18),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    // Velvet base so the skeleton never flashes light before the map paints.
+    return const ColoredBox(
+      color: Color(0xFF17130F),
+      child: SkeletonLoader(
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(16, 14, 16, 8),
+              child: Row(
                 children: [
-                  for (int i = 0; i < 5; i++)
-                    Align(
-                      alignment: i.isEven
-                          ? Alignment.centerLeft
-                          : Alignment.centerRight,
-                      child: const SkeletonBox(width: 52, height: 52, radius: 26),
-                    ),
+                  SkeletonBox(width: 54, height: 30, radius: 20, dark: true),
+                  SizedBox(width: 8),
+                  SkeletonBox(width: 54, height: 30, radius: 20, dark: true),
+                  Spacer(),
+                  SkeletonBox(width: 92, height: 30, radius: 20, dark: true),
+                  SizedBox(width: 8),
+                  SkeletonBox(width: 30, height: 30, radius: 15, dark: true),
+                  SizedBox(width: 6),
+                  SkeletonBox(width: 30, height: 30, radius: 15, dark: true),
                 ],
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 6, 16, 16),
-            child: Container(
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: const Color(0xFFECE8E0), width: 1.5),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 44, vertical: 18),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _SkeletonNodeRow(0),
+                    _SkeletonNodeRow(1),
+                    _SkeletonNodeRow(2),
+                    _SkeletonNodeRow(3),
+                    _SkeletonNodeRow(4),
+                  ],
+                ),
               ),
-              child: const Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SkeletonBox(width: 120, height: 12),
-                        SizedBox(height: 8),
-                        SkeletonBox(width: 180, height: 16),
-                        SizedBox(height: 6),
-                        SkeletonBox(width: 90, height: 12),
-                      ],
-                    ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(16, 6, 16, 16),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Color(0xFF211B17),
+                  borderRadius: BorderRadius.all(Radius.circular(16)),
+                  border: Border.fromBorderSide(
+                      BorderSide(color: Colors.white10, width: 1.5)),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(14),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SkeletonBox(width: 120, height: 12, dark: true),
+                            SizedBox(height: 8),
+                            SkeletonBox(width: 180, height: 16, dark: true),
+                            SizedBox(height: 6),
+                            SkeletonBox(width: 90, height: 12, dark: true),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 12),
+                      SkeletonBox(width: 92, height: 42, radius: 21, dark: true),
+                    ],
                   ),
-                  SizedBox(width: 12),
-                  SkeletonBox(width: 92, height: 42, radius: 21),
-                ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
+/// One alternating node placeholder row in the dark map skeleton.
+class _SkeletonNodeRow extends StatelessWidget {
+  final int i;
+  const _SkeletonNodeRow(this.i);
+  @override
+  Widget build(BuildContext context) => Align(
+        alignment: i.isEven ? Alignment.centerLeft : Alignment.centerRight,
+        child: const SkeletonBox(width: 52, height: 52, radius: 26, dark: true),
+      );
+}
+
 class _RoadPainter extends CustomPainter {
   final List<Offset> pts;
   final List<bool> passed; // passed[i] → segment i→i+1 is "travelled"
-  final List<_ZonePalette> palettes; // palettes[i] → colour of stop i's zone
-  const _RoadPainter(this.pts, this.passed, this.palettes);
+  const _RoadPainter(this.pts, this.passed);
 
   Path _segment(int i) {
     final a = pts[i], b = pts[i + 1];
@@ -1114,7 +1089,7 @@ class _RoadPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _RoadPainter old) =>
-      old.pts != pts || old.passed != passed || old.palettes != palettes;
+      old.pts != pts || old.passed != passed;
 }
 
 /// A little kente-dust wake kicked up behind the bus while it drives between
