@@ -11,8 +11,8 @@ import '../widgets/skeleton.dart';
 import '../widgets/surface.dart';
 import '../widgets/state_message.dart';
 import '../widgets/tintable_trotro.dart';
+import '../widgets/velvet.dart';
 
-const Color _terra = Color(0xFFBE5235);
 const Color _gold = Color(0xFFE3A92C);
 
 // Distinct bus paintwork per racer (stable per uid, so it doesn't change weekly).
@@ -81,12 +81,22 @@ class _TroTroRallyScreenState extends State<TroTroRallyScreen>
   Widget build(BuildContext context) {
     final myUid = _myUid;
     return Scaffold(
-      appBar: AppBar(title: const Text('Tro Tro Rally')),
+      backgroundColor: kVelvetTop,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        foregroundColor: kVelvetInk,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        title: Text('Tro Tro Rally',
+            style: displayFont(
+                fontSize: 19, fontWeight: FontWeight.w700, color: kVelvetInk)),
+      ),
       body: StreamBuilder<List<LeaderboardEntry>>(
         stream: service.weeklyTop(limit: 12),
         builder: (context, snap) {
           if (snap.hasError) {
             return StateMessage(
+              dark: true,
               icon: Icons.wifi_off_rounded,
               title: 'Couldn’t load the rally',
               subtitle: 'Check your connection and try again.',
@@ -95,11 +105,12 @@ class _TroTroRallyScreenState extends State<TroTroRallyScreen>
             );
           }
           if (!snap.hasData) {
-            return const SkeletonListView(rows: 6, header: false);
+            return const SkeletonListView(rows: 6, header: false, dark: true);
           }
           final entries = snap.data!;
           if (entries.isEmpty) {
             return const StateMessage(
+              dark: true,
               icon: Icons.directions_bus_rounded,
               title: 'No racers yet this week',
               subtitle: 'Finish a lesson to line up on the grid — '
@@ -115,14 +126,9 @@ class _TroTroRallyScreenState extends State<TroTroRallyScreen>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('THIS WEEK',
-                      style: TextStyle(
-                          color: _terra,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 1.5)),
+                  Text('THIS WEEK', style: microLabel(color: kOchre)),
                   Text('${entries.length} racers',
-                      style: const TextStyle(color: slate, fontSize: 12)),
+                      style: const TextStyle(color: kVelvetMuted, fontSize: 12)),
                 ],
               ),
               const SizedBox(height: 12),
@@ -140,7 +146,7 @@ class _TroTroRallyScreenState extends State<TroTroRallyScreen>
               const SizedBox(height: 10),
               const Center(
                 child: Text('Top racers promote on Sunday. Yɛn kɔ!',
-                    style: TextStyle(color: slate, fontSize: 12.5)),
+                    style: TextStyle(color: kVelvetMuted, fontSize: 12.5)),
               ),
             ],
           );
@@ -176,9 +182,9 @@ class _Lane extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
       radius: 16,
-      color: isMe ? const Color(0xFFF7E6DF) : Colors.white,
-      borderColor: isMe ? _terra : null,
-      borderWidth: 2,
+      color: isMe ? const Color(0xFF2A211C) : const Color(0xFF211B17),
+      borderColor: isMe ? kOchre : Colors.white10,
+      borderWidth: isMe ? 2 : 1,
       shadow: isMe ? kRaisedShadow : kAmbientShadow,
       child: Row(
         children: [
@@ -212,9 +218,9 @@ class _Lane extends StatelessWidget {
                     style: const TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 13,
-                        color: ink)),
+                        color: kVelvetInk)),
                 Text('${entry.xp} XP',
-                    style: const TextStyle(color: slate, fontSize: 11)),
+                    style: const TextStyle(color: kVelvetMuted, fontSize: 11)),
               ],
             ),
           ),
@@ -234,7 +240,7 @@ class _Lane extends StatelessWidget {
                       child: Container(
                         height: 3,
                         decoration: BoxDecoration(
-                            color: silverLight,
+                            color: Colors.white12,
                             borderRadius: BorderRadius.circular(2)),
                       ),
                     ),
