@@ -5,7 +5,7 @@ import '../data/lesson_catalog.dart';
 import '../services/progress_service.dart';
 import '../theme.dart';
 import '../widgets/animations.dart';
-import '../widgets/floating_card.dart';
+import '../widgets/velvet.dart';
 import '../widgets/pedis_store.dart';
 import '../widgets/tappable_scale.dart';
 import '../widgets/trotro_dashboard.dart';
@@ -15,8 +15,25 @@ import 'trotro_rally_screen.dart';
 import 'upgrade_screen.dart';
 
 const Color _gold = Color(0xFFE3A92C);
-const Color _green = Color(0xFF2E6B3B);
+const Color _green = Color(0xFF63C583); // brighter — legible on velvet
 const Color _red = Color(0xFF9B2D2A);
+
+/// A velvet surface card for the dark Progress hub (drop-in for the old
+/// light FloatingCard on this screen).
+class _VCard extends StatelessWidget {
+  final Widget child;
+  const _VCard({required this.child});
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF211B17),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: Colors.white10),
+        ),
+        child: child,
+      );
+}
 
 class ProgressDashboardScreen extends StatefulWidget {
   const ProgressDashboardScreen({super.key});
@@ -50,28 +67,42 @@ class _ProgressDashboardScreenState extends State<ProgressDashboardScreen> {
         height: 46,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          border: Border.all(color: silverLight, width: 1.5),
+          border: Border.all(color: const Color(0x1FFFFFFF), width: 1.5),
           borderRadius: BorderRadius.circular(14),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 18, color: charcoal),
+            Icon(icon, size: 18, color: kVelvetInk),
             const SizedBox(width: 6),
             Text(label,
                 style: const TextStyle(
-                    color: charcoal, fontWeight: FontWeight.w700)),
+                    color: kVelvetInk, fontWeight: FontWeight.w700)),
           ],
         ),
       );
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) return const Center(child: CircularProgressIndicator());
+    if (_loading) {
+      return const ColoredBox(
+        color: Color(0xFF17130F),
+        child: Center(
+            child: CircularProgressIndicator(color: Color(0xFFD4A373))),
+      );
+    }
     final p = _s.progress;
     final totalLessons = kLessonsFlat.length;
 
-    return RefreshIndicator(
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFF17130F), Color(0xFF1E1A17)],
+        ),
+      ),
+      child: RefreshIndicator(
       onRefresh: _reload,
       child: ListView(
         padding: const EdgeInsets.all(20),
@@ -166,6 +197,7 @@ class _ProgressDashboardScreenState extends State<ProgressDashboardScreen> {
           const SizedBox(height: 28),
         ],
       ),
+      ),
     );
   }
 }
@@ -183,9 +215,11 @@ class _Section extends StatelessWidget {
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(
+        iconColor: kOchre,
+        collapsedIconColor: kVelvetMuted,
         title: Text(title,
             style: const TextStyle(
-                fontWeight: FontWeight.w800, fontSize: 16, color: ink)),
+                fontWeight: FontWeight.w800, fontSize: 16, color: kVelvetInk)),
         initiallyExpanded: initiallyExpanded,
         tilePadding: EdgeInsets.zero,
         childrenPadding: const EdgeInsets.only(bottom: 8),
@@ -256,7 +290,7 @@ class _LevelHero extends StatelessWidget {
   Widget build(BuildContext context) {
     final lg = _league(p.totalXp);
     final pct = p.xpIntoLevel / p.xpForNextLevel;
-    return FloatingCard(
+    return _VCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -284,9 +318,9 @@ class _LevelHero extends StatelessWidget {
                         style: const TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 18,
-                            color: ink)),
+                            color: kVelvetInk)),
                     Text('${p.totalXp} XP total',
-                        style: const TextStyle(color: slate, fontSize: 13)),
+                        style: const TextStyle(color: kVelvetMuted, fontSize: 13)),
                   ],
                 ),
               ),
@@ -294,7 +328,7 @@ class _LevelHero extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                    color: const Color(0xFFFBF1D8),
+                    color: const Color(0x22D4A373),
                     borderRadius: BorderRadius.circular(10)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -303,10 +337,10 @@ class _LevelHero extends StatelessWidget {
                         style: const TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 13,
-                            color: Color(0xFF8A6A12))),
+                            color: kOchre)),
                     Text(lg.meaning,
                         style: const TextStyle(
-                            color: Color(0xFFA98A3A), fontSize: 10)),
+                            color: Color(0xFFB8935F), fontSize: 10)),
                   ],
                 ),
               ),
@@ -318,13 +352,13 @@ class _LevelHero extends StatelessWidget {
             child: LinearProgressIndicator(
               value: pct.clamp(0.0, 1.0),
               minHeight: 9,
-              backgroundColor: silverLight,
+              backgroundColor: const Color(0x1FFFFFFF),
               valueColor: const AlwaysStoppedAnimation(terracotta),
             ),
           ),
           const SizedBox(height: 6),
           Text('${p.xpIntoLevel} / ${p.xpForNextLevel} XP to level ${p.level + 1}',
-              style: const TextStyle(color: slate, fontSize: 12)),
+              style: const TextStyle(color: kVelvetMuted, fontSize: 12)),
         ],
       ),
     );
@@ -338,7 +372,7 @@ class _StreakCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingCard(
+    return _VCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -350,17 +384,17 @@ class _StreakCard extends StatelessWidget {
                   style: displayFont(fontSize: 26, fontWeight: FontWeight.w800)),
               const SizedBox(width: 6),
               const Text('day streak',
-                  style: TextStyle(color: slate, fontSize: 14)),
+                  style: TextStyle(color: kVelvetMuted, fontSize: 14)),
               const Spacer(),
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                    color: glyphTile,
+                    color: const Color(0xFF2A211C),
                     borderRadius: BorderRadius.circular(10)),
                 child: Text('❄ ${s.freezes} freeze${s.freezes == 1 ? '' : 's'}',
                     style: const TextStyle(
-                        color: slate,
+                        color: kVelvetMuted,
                         fontWeight: FontWeight.w700,
                         fontSize: 12)),
               ),
@@ -369,7 +403,7 @@ class _StreakCard extends StatelessWidget {
           const SizedBox(height: 12),
           const Text('YOUR KENTE CLOTH',
               style: TextStyle(
-                  color: slate,
+                  color: kVelvetMuted,
                   fontWeight: FontWeight.w700,
                   fontSize: 10.5,
                   letterSpacing: 0.6)),
@@ -386,7 +420,7 @@ class _StreakCard extends StatelessWidget {
               s.streak == 0
                   ? 'Finish a lesson today to start weaving your cloth.'
                   : 'Each day you practise weaves another row. Keep it going!',
-              style: const TextStyle(color: slate, fontSize: 12)),
+              style: const TextStyle(color: kVelvetMuted, fontSize: 12)),
         ],
       ),
     );
@@ -410,7 +444,7 @@ class _KenteClothPainter extends CustomPainter {
       for (int c = 0; c < seg; c++) {
         final base = _cols[(r + c) % _cols.length];
         final paint = Paint()
-          ..color = filled ? base : silverLight;
+          ..color = filled ? base : const Color(0x1FFFFFFF);
         canvas.drawRect(Rect.fromLTWH(c * w, y, w - 1, rowH - 1), paint);
       }
     }
@@ -446,7 +480,7 @@ class _DailyQuests extends StatelessWidget {
       ),
     ];
     final doneCount = quests.where((q) => q.done).length;
-    return FloatingCard(
+    return _VCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -454,11 +488,11 @@ class _DailyQuests extends StatelessWidget {
             children: [
               const Text('Daily quests',
                   style: TextStyle(
-                      fontWeight: FontWeight.w800, fontSize: 16, color: ink)),
+                      fontWeight: FontWeight.w800, fontSize: 16, color: kVelvetInk)),
               const Spacer(),
               Text('$doneCount / 3',
                   style: const TextStyle(
-                      color: slate, fontWeight: FontWeight.w700, fontSize: 13)),
+                      color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 13)),
             ],
           ),
           const SizedBox(height: 10),
@@ -471,7 +505,7 @@ class _DailyQuests extends StatelessWidget {
                       q.done
                           ? Icons.check_circle
                           : Icons.radio_button_unchecked,
-                      color: q.done ? _green : silver,
+                      color: q.done ? _green : const Color(0x3DFFFFFF),
                       size: 22),
                   const SizedBox(width: 12),
                   Expanded(
@@ -481,14 +515,14 @@ class _DailyQuests extends StatelessWidget {
                         Text(q.label,
                             style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                color: q.done ? slate : ink)),
+                                color: q.done ? kVelvetMuted : kVelvetInk)),
                         const SizedBox(height: 4),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(6),
                           child: LinearProgressIndicator(
                             value: q.progress,
                             minHeight: 5,
-                            backgroundColor: silverLight,
+                            backgroundColor: const Color(0x1FFFFFFF),
                             valueColor: AlwaysStoppedAnimation(
                                 q.done ? _green : terracotta),
                           ),
@@ -537,7 +571,7 @@ class _WalletCardState extends State<_WalletCard> {
   @override
   Widget build(BuildContext context) {
     final canBuy = widget.pedis >= ProgressService.kFreezeCost;
-    return FloatingCard(
+    return _VCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -547,26 +581,30 @@ class _WalletCardState extends State<_WalletCard> {
               const SizedBox(width: 10),
               const Text('Pedis wallet',
                   style: TextStyle(
-                      fontWeight: FontWeight.w800, fontSize: 16, color: ink)),
+                      fontWeight: FontWeight.w800, fontSize: 16, color: kVelvetInk)),
               const Spacer(),
               Text('${widget.pedis}',
                   style: const TextStyle(
                       fontWeight: FontWeight.w800,
                       fontSize: 18,
-                      color: charcoal)),
+                      color: kVelvetInk)),
             ],
           ),
           const SizedBox(height: 6),
           const Text(
               'Earn pedis as you learn. Spend them on AI Translate & Lens '
               'top-ups, streak freezes, and avatars.',
-              style: TextStyle(color: slate, fontSize: 12.5, height: 1.4)),
+              style: TextStyle(color: kVelvetMuted, fontSize: 12.5, height: 1.4)),
           const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: (canBuy && !_busy) ? _buyFreeze : null,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: kVelvetInk,
+                    side: const BorderSide(color: Colors.white24),
+                  ),
                   icon: const Icon(Icons.ac_unit, size: 16),
                   label: const Text('Freeze · ${ProgressService.kFreezeCost}'),
                 ),
@@ -637,7 +675,7 @@ class _TreasureCardState extends State<_TreasureCard> {
   @override
   Widget build(BuildContext context) {
     final ready = widget.keys >= 3;
-    return FloatingCard(
+    return _VCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -647,7 +685,7 @@ class _TreasureCardState extends State<_TreasureCard> {
               const SizedBox(width: 10),
               const Text('Wisdom keys',
                   style: TextStyle(
-                      fontWeight: FontWeight.w800, fontSize: 16, color: ink)),
+                      fontWeight: FontWeight.w800, fontSize: 16, color: kVelvetInk)),
               const Spacer(),
               Text('${widget.keys}',
                   style: const TextStyle(
@@ -661,7 +699,7 @@ class _TreasureCardState extends State<_TreasureCard> {
               ready
                   ? 'You have enough keys to open a treasure chest!'
                   : 'Chain 3 correct answers in a lesson to earn a key. Collect 3 to open a chest.',
-              style: const TextStyle(color: slate, fontSize: 12.5, height: 1.4)),
+              style: const TextStyle(color: kVelvetMuted, fontSize: 12.5, height: 1.4)),
           const SizedBox(height: 10),
           Row(
             children: [
@@ -671,7 +709,7 @@ class _TreasureCardState extends State<_TreasureCard> {
                   child: Text(i < widget.keys ? '🗝' : '▫️',
                       style: TextStyle(
                           fontSize: 18,
-                          color: i < widget.keys ? null : silver)),
+                          color: i < widget.keys ? null : const Color(0x3DFFFFFF))),
                 ),
               const Spacer(),
               FilledButton.icon(
@@ -699,7 +737,7 @@ class _SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Text(text,
       style:
-          const TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: ink));
+          const TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: kVelvetInk));
 }
 
 class _Metric extends StatelessWidget {
@@ -714,7 +752,7 @@ class _Metric extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         decoration: BoxDecoration(
-            color: glyphTile, borderRadius: BorderRadius.circular(16)),
+            color: const Color(0xFF2A211C), borderRadius: BorderRadius.circular(16)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -722,8 +760,8 @@ class _Metric extends StatelessWidget {
             const SizedBox(height: 6),
             Text(value,
                 style: const TextStyle(
-                    fontWeight: FontWeight.w800, fontSize: 22, color: ink)),
-            Text(label, style: const TextStyle(color: slate, fontSize: 12)),
+                    fontWeight: FontWeight.w800, fontSize: 22, color: kVelvetInk)),
+            Text(label, style: const TextStyle(color: kVelvetMuted, fontSize: 12)),
           ],
         ),
       ),
@@ -758,16 +796,16 @@ class _MasteryRow extends StatelessWidget {
                     style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 13.5,
-                        color: ink)),
+                        color: kVelvetInk)),
                 const SizedBox(height: 4),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(6),
                   child: LinearProgressIndicator(
                     value: m.clamp(0.0, 1.0),
                     minHeight: 6,
-                    backgroundColor: silverLight,
+                    backgroundColor: const Color(0x1FFFFFFF),
                     valueColor:
-                        AlwaysStoppedAnimation(full ? _green : charcoal),
+                        AlwaysStoppedAnimation(full ? _green : terracotta),
                   ),
                 ),
               ],
@@ -778,7 +816,7 @@ class _MasteryRow extends StatelessWidget {
               style: TextStyle(
                   fontWeight: FontWeight.w800,
                   fontSize: 12.5,
-                  color: full ? _green : slate)),
+                  color: full ? _green : kVelvetMuted)),
         ],
       ),
     );
@@ -837,7 +875,7 @@ class _BadgeTile extends StatelessWidget {
     final svg = kAdinkraSymbols
         .firstWhere((s) => s.id == b.glyph, orElse: () => kAdinkraSymbols.first)
         .svg;
-    final color = b.earned ? _gold : silver;
+    final color = b.earned ? _gold : const Color(0x3DFFFFFF);
     return Column(
       children: [
         Container(
@@ -845,7 +883,7 @@ class _BadgeTile extends StatelessWidget {
           height: 54,
           padding: const EdgeInsets.all(11),
           decoration: BoxDecoration(
-            color: b.earned ? const Color(0xFF2B2B2D) : glyphTile,
+            color: b.earned ? const Color(0xFF2B2B2D) : const Color(0xFF2A211C),
             shape: BoxShape.circle,
             border: Border.all(color: color, width: 2),
           ),
@@ -860,7 +898,7 @@ class _BadgeTile extends StatelessWidget {
                 fontSize: 10.5,
                 height: 1.1,
                 fontWeight: FontWeight.w600,
-                color: b.earned ? ink : slate)),
+                color: b.earned ? kVelvetInk : kVelvetMuted)),
       ],
     );
   }
