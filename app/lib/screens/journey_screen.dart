@@ -35,7 +35,6 @@ const Color _roadGold = Color(0xFFE3A92C); // kente centre thread
 const Color _roadMuted = Color(0xFF3A322C); // locked road ahead (velvet)
 const Color _mutedDot = Color(0xFF52463C);
 const Color _doneGreen = Color(0xFF2E6B3B);
-const Color _lockGrey = Color(0xFF9AA0A6);
 
 /// A travelled-road palette (base tarmac + centre kente thread) for a zone.
 class _ZonePalette {
@@ -418,10 +417,12 @@ class _JourneyScreenState extends State<JourneyScreen>
 
     return DecoratedBox(
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF17130F), Color(0xFF1E1A17)],
+        // Subtle radial ambient — a warm glow toward the top where the campaign
+        // banner + bus live, falling to near-black velvet at the edges.
+        gradient: RadialGradient(
+          center: Alignment(0.0, -0.55),
+          radius: 1.3,
+          colors: [Color(0xFF241C17), Color(0xFF141110)],
         ),
       ),
       child: Column(
@@ -827,27 +828,30 @@ class _RegionTag extends StatelessWidget {
     final isLandmark = landmark.isNotEmpty;
     if (!isLandmark) {
       return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
-            color: unlocked ? const Color(0xFFF7E6DF) : glyphTile,
-            borderRadius: BorderRadius.circular(9)),
+          color: unlocked ? const Color(0xE6241C17) : const Color(0xCC1A1613),
+          borderRadius: BorderRadius.circular(9),
+          border: Border.all(
+              color: unlocked ? const Color(0x66D4A373) : Colors.white10,
+              width: 1),
+        ),
         child: Text(unlocked ? name : '$name · locked',
-            style: TextStyle(
-                color: unlocked ? _roadActive : slate,
+            style: displayFont(
                 fontSize: 11,
-                fontWeight: FontWeight.w700)),
+                fontWeight: FontWeight.w700,
+                color: unlocked ? kOchre : kVelvetMuted)),
       );
     }
     // Landmark "sign": name + the artifact you earn for clearing its boss.
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 128),
+      constraints: const BoxConstraints(maxWidth: 132),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
-          color: unlocked ? const Color(0xFFFFF6E4) : glyphTile,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-              color: unlocked ? _roadGold : silver, width: 1.2),
+          color: unlocked ? const Color(0xE6241C17) : const Color(0xCC1A1613),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: unlocked ? kOchre : Colors.white12, width: 1.2),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -856,22 +860,22 @@ class _RegionTag extends StatelessWidget {
             Text(unlocked ? landmark : '$landmark · locked',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    color: unlocked ? _roadActive : slate,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w800,
+                style: displayFont(
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w700,
+                    color: unlocked ? kVelvetInk : kVelvetMuted,
                     height: 1.05)),
-            const SizedBox(height: 2),
+            const SizedBox(height: 3),
             Row(mainAxisSize: MainAxisSize.min, children: [
               Icon(Icons.workspace_premium_rounded,
-                  size: 12, color: unlocked ? _roadGold : silver),
+                  size: 12, color: unlocked ? kOchre : Colors.white24),
               const SizedBox(width: 3),
               Flexible(
                 child: Text(artifact,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        color: unlocked ? const Color(0xFF8A5A12) : slate,
+                        color: unlocked ? kOchre : kVelvetMuted,
                         fontSize: 10,
                         fontWeight: FontWeight.w600)),
               ),
@@ -899,28 +903,36 @@ class _Node extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double size = isBoss ? 64 : 52;
-    final Color fill;
-    final Color border;
-    final Widget icon;
+    final Color fill, border, iconColor;
+    final IconData iconData;
+    List<BoxShadow> shadow = const [
+      BoxShadow(color: Color(0x66000000), blurRadius: 10, offset: Offset(0, 4)),
+    ];
     if (passed) {
-      fill = _doneGreen;
+      fill = const Color(0xFF20261D);
       border = _doneGreen;
-      icon = Icon(isBoss ? Icons.account_balance_rounded : Icons.check,
-          color: Colors.white, size: isBoss ? 30 : 24);
+      iconColor = const Color(0xFF63C583);
+      iconData = isBoss ? Icons.account_balance_rounded : Icons.check_rounded;
     } else if (unlocked) {
-      fill = Colors.white;
+      fill = const Color(0xFF2A211C);
       border = terracotta;
-      icon = Icon(
-          isBoss
-              ? Icons.account_balance_rounded
-              : Icons.play_arrow_rounded,
-          color: terracotta,
-          size: isBoss ? 30 : 26);
+      iconColor = terracotta;
+      iconData =
+          isBoss ? Icons.account_balance_rounded : Icons.play_arrow_rounded;
+      // Terracotta inner glow — the "next" node draws the eye.
+      shadow = [
+        const BoxShadow(
+            color: Color(0x66000000), blurRadius: 10, offset: Offset(0, 4)),
+        BoxShadow(
+            color: terracotta.withValues(alpha: 0.5),
+            blurRadius: 18,
+            spreadRadius: 1),
+      ];
     } else {
-      fill = const Color(0xFFEDEEF0);
-      border = _lockGrey;
-      icon = Icon(isBoss ? Icons.account_balance_rounded : Icons.lock,
-          color: _lockGrey, size: isBoss ? 26 : 20);
+      fill = const Color(0xFF1B1714);
+      border = Colors.white12;
+      iconColor = const Color(0xFF6E655C);
+      iconData = isBoss ? Icons.account_balance_rounded : Icons.lock_rounded;
     }
     return GestureDetector(
       onTap: onTap,
@@ -928,16 +940,23 @@ class _Node extends StatelessWidget {
         width: size,
         height: size,
         decoration: BoxDecoration(
-          color: fill,
+          // Matte sculpt: a faint top sheen over the base fill.
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.alphaBlend(Colors.white.withValues(alpha: 0.06), fill),
+              fill,
+            ],
+          ),
           shape: isBoss ? BoxShape.rectangle : BoxShape.circle,
           borderRadius: isBoss ? BorderRadius.circular(16) : null,
-          border: Border.all(color: border, width: isBoss ? 4 : 3),
-          boxShadow: const [
-            BoxShadow(
-                color: Color(0x1A000000), blurRadius: 6, offset: Offset(0, 2)),
-          ],
+          border: Border.all(color: border, width: isBoss ? 3 : 2.5),
+          boxShadow: shadow,
         ),
-        child: Center(child: icon),
+        child: Center(
+          child: Icon(iconData, color: iconColor, size: isBoss ? 30 : 24),
+        ),
       ),
     );
   }
@@ -1038,28 +1057,50 @@ class _RoadPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (pts.length < 2) return;
+    const road = Color(0xFFE2725B); // terracotta
+    const dash = Color(0xFFD4A373); // ochre
+    const depth = Color(0xFF0C0A09); // sculpted shadow under the road
     for (int i = 0; i < pts.length - 1; i++) {
       final active = i < passed.length && passed[i];
       final path = _segment(i);
-      // Travelled road takes the palette of the zone it leads INTO (stop i+1).
-      final zone = (i + 1) < palettes.length ? palettes[i + 1] : _defaultZone;
-      // Road base
+      // Sculpted depth: a dark under-stroke so the road reads raised + tactile.
       canvas.drawPath(
         path,
         Paint()
           ..style = PaintingStyle.stroke
           ..strokeCap = StrokeCap.round
           ..strokeJoin = StrokeJoin.round
-          ..strokeWidth = active ? 14 : 12
-          ..color = active ? zone.base : _roadMuted,
+          ..strokeWidth = active ? 17 : 14
+          ..color = depth,
       );
-      // Centre pattern — zone kente thread when travelled, faint dots when locked
+      // Road surface — terracotta when travelled, dark warm when locked ahead.
+      canvas.drawPath(
+        path,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.round
+          ..strokeJoin = StrokeJoin.round
+          ..strokeWidth = active ? 13 : 11
+          ..color = active ? road : _roadMuted,
+      );
+      // Thin top sheen for the sculpted highlight.
+      if (active) {
+        canvas.drawPath(
+          path,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeCap = StrokeCap.round
+            ..strokeWidth = 3
+            ..color = Colors.white.withValues(alpha: 0.12),
+        );
+      }
+      // Warm ochre dashed centre-line.
       final centre = Paint()
         ..style = PaintingStyle.stroke
         ..strokeCap = StrokeCap.round
         ..strokeWidth = active ? 4 : 3
-        ..color = active ? zone.thread : _mutedDot;
-      final dashOn = active ? 7.0 : 2.0;
+        ..color = active ? dash : _mutedDot;
+      final dashOn = active ? 8.0 : 2.0;
       final dashGap = active ? 12.0 : 16.0;
       for (final m in path.computeMetrics()) {
         double d = 0;
