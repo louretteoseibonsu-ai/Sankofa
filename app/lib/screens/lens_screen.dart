@@ -16,8 +16,44 @@ import '../services/sound_service.dart';
 import '../theme.dart';
 import '../widgets/animations.dart';
 import '../widgets/credits_bar.dart';
-import '../widgets/floating_card.dart';
+import '../widgets/velvet.dart';
 import '../widgets/premium_lock.dart';
+
+/// A velvet surface card for the dark Lens hub. Tappable when [onTap] is set.
+class _VCard extends StatelessWidget {
+  final Widget child;
+  final VoidCallback? onTap;
+  const _VCard({required this.child, this.onTap});
+  @override
+  Widget build(BuildContext context) {
+    final decoration = BoxDecoration(
+      color: const Color(0xFF211B17),
+      borderRadius: BorderRadius.circular(18),
+      border: Border.all(color: Colors.white10),
+    );
+    if (onTap == null) {
+      return Container(
+          padding: const EdgeInsets.all(16), decoration: decoration, child: child);
+    }
+    return Material(
+      color: const Color(0xFF211B17),
+      borderRadius: BorderRadius.circular(18),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        splashColor: kOchre.withValues(alpha: 0.08),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: Colors.white10),
+          ),
+          child: child,
+        ),
+      ),
+    );
+  }
+}
 
 /// Sankofa Lens — point the camera at any object, get its Twi name + audio you
 /// can play out loud to communicate, and collect it in your visual dictionary.
@@ -86,7 +122,7 @@ class _LensScreenState extends State<LensScreen> {
     if (!mounted) return false;
     return await showModalBottomSheet<bool>(
           context: context,
-          backgroundColor: Colors.white,
+          backgroundColor: const Color(0xFF1E1A17),
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
@@ -101,22 +137,22 @@ class _LensScreenState extends State<LensScreen> {
                       style: TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 18,
-                          color: ink)),
+                          color: kVelvetInk)),
                   const SizedBox(height: 6),
                   const Text(
                       'AI credits cover Lens scans, translations and audio. They '
                       'reset next month. Top up now with $kAiCreditPackSize '
                       'credits for $kAiCreditPackPedis pedis.',
-                      style: TextStyle(color: slate, height: 1.45)),
+                      style: TextStyle(color: kVelvetMuted, height: 1.45)),
                   const SizedBox(height: 12),
                   Row(
                     children: [
                       const Icon(Icons.spa_outlined,
-                          size: 18, color: plantainGreen),
+                          size: 18, color: const Color(0xFF63C583)),
                       const SizedBox(width: 6),
                       Text('You have ${s.pedis} pedis',
                           style: const TextStyle(
-                              fontWeight: FontWeight.w700, color: ink)),
+                              fontWeight: FontWeight.w700, color: kVelvetInk)),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -147,6 +183,10 @@ class _LensScreenState extends State<LensScreen> {
                       width: double.infinity,
                       child: OutlinedButton(
                         onPressed: () => Navigator.pop(ctx, false),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: kVelvetInk,
+                          side: const BorderSide(color: Colors.white24),
+                        ),
                         child: const Text('Got it'),
                       ),
                     ),
@@ -445,7 +485,11 @@ class _LensScreenState extends State<LensScreen> {
   @override
   Widget build(BuildContext context) {
     if (_premium == null) {
-      return const Center(child: CircularProgressIndicator());
+      return const ColoredBox(
+        color: Color(0xFF17130F),
+        child: Center(
+            child: CircularProgressIndicator(color: Color(0xFFD4A373))),
+      );
     }
     final unlocked = _premium == true || kLensFreeDuringTesting;
     if (!unlocked) {
@@ -457,13 +501,58 @@ class _LensScreenState extends State<LensScreen> {
         icon: Icons.center_focus_strong,
       );
     }
-    return ListView(
+    return Theme(
+      data: Theme.of(context).copyWith(
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            foregroundColor: kVelvetInk,
+            side: const BorderSide(color: Colors.white24),
+          ),
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(foregroundColor: kOchre),
+        ),
+        chipTheme: Theme.of(context).chipTheme.copyWith(
+              backgroundColor: const Color(0xFF2A211C),
+              selectedColor: kOchre,
+              labelStyle: const TextStyle(color: kVelvetInk),
+              secondaryLabelStyle: const TextStyle(color: Color(0xFF17130F)),
+              side: const BorderSide(color: Colors.white24),
+            ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: const Color(0xFF2A211C),
+          hintStyle: const TextStyle(color: kVelvetMuted),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Colors.white24),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Colors.white24),
+          ),
+        ),
+      ),
+      child: DecoratedBox(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF17130F), Color(0xFF1E1A17)],
+          ),
+        ),
+        child: ListView(
       padding: const EdgeInsets.all(20),
       children: [
         Row(
           children: [
             Text('Sankofa Lens',
-                style: displayFont(fontSize: 26, fontWeight: FontWeight.w800)),
+                style: displayFont(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w800,
+                    color: kVelvetInk)),
             const SizedBox(width: 10),
             if (_premium != true && kLensFreeDuringTesting)
               Container(
@@ -482,7 +571,7 @@ class _LensScreenState extends State<LensScreen> {
         ),
         const SizedBox(height: 4),
         const Text('Point. Learn. Speak — show & say it to a Twi speaker.',
-            style: TextStyle(color: slate, fontSize: 14.5)),
+            style: TextStyle(color: kVelvetMuted, fontSize: 14.5)),
         const SizedBox(height: 14),
         if (_creditStatus != null)
           CreditsBar(
@@ -528,7 +617,7 @@ class _LensScreenState extends State<LensScreen> {
                   child: CircularProgressIndicator(strokeWidth: 2)),
               const SizedBox(width: 12),
               Text(_busyMsg ?? 'Working…',
-                  style: const TextStyle(color: slate)),
+                  style: const TextStyle(color: kVelvetMuted)),
             ],
           ),
         ],
@@ -544,7 +633,7 @@ class _LensScreenState extends State<LensScreen> {
         // Result — Twi found, or a graceful "unavailable" fallback
         if (_labels.isNotEmpty && !_busy && (_twi != null || _twiUnavailable)) ...[
           const SizedBox(height: 16),
-          FloatingCard(
+          _VCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -552,7 +641,7 @@ class _LensScreenState extends State<LensScreen> {
                     'It looks like: ${_labels[_selected].label} '
                     '(${(_labels[_selected].confidence * 100).round()}%)',
                     style: const TextStyle(
-                        color: plantainGreen,
+                        color: const Color(0xFF63C583),
                         fontWeight: FontWeight.w700,
                         fontSize: 12)),
                 const SizedBox(height: 8),
@@ -561,7 +650,7 @@ class _LensScreenState extends State<LensScreen> {
                       style: const TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 28,
-                          color: ink)),
+                          color: kVelvetInk)),
                   const SizedBox(height: 12),
                   Row(
                     children: [
@@ -585,12 +674,12 @@ class _LensScreenState extends State<LensScreen> {
                       style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 16,
-                          color: ink)),
+                          color: kVelvetInk)),
                   const SizedBox(height: 4),
                   const Text(
                       'The translator may be waking up or offline. You can '
                       'retry, or save the object and add the Twi later.',
-                      style: TextStyle(color: slate, fontSize: 12.5)),
+                      style: TextStyle(color: kVelvetMuted, fontSize: 12.5)),
                   const SizedBox(height: 12),
                   Row(
                     children: [
@@ -613,7 +702,7 @@ class _LensScreenState extends State<LensScreen> {
                 if (_labels.length > 1) ...[
                   const SizedBox(height: 14),
                   const Text('Not quite? Try:',
-                      style: TextStyle(color: slate, fontSize: 12)),
+                      style: TextStyle(color: kVelvetMuted, fontSize: 12)),
                   const SizedBox(height: 6),
                   Wrap(
                     spacing: 8,
@@ -652,10 +741,10 @@ class _LensScreenState extends State<LensScreen> {
                 const SizedBox(height: 22),
                 const Text('Collections',
                     style: TextStyle(
-                        fontWeight: FontWeight.w800, fontSize: 16, color: ink)),
+                        fontWeight: FontWeight.w800, fontSize: 16, color: kVelvetInk)),
                 const SizedBox(height: 4),
                 const Text('Fill each set by finding its objects in the world.',
-                    style: TextStyle(color: slate, fontSize: 12.5)),
+                    style: TextStyle(color: kVelvetMuted, fontSize: 12.5)),
                 const SizedBox(height: 12),
                 GridView(
                   shrinkWrap: true,
@@ -675,19 +764,19 @@ class _LensScreenState extends State<LensScreen> {
                 const SizedBox(height: 24),
                 const Text('Your visual dictionary',
                     style: TextStyle(
-                        fontWeight: FontWeight.w800, fontSize: 16, color: ink)),
+                        fontWeight: FontWeight.w800, fontSize: 16, color: kVelvetInk)),
                 const SizedBox(height: 4),
                 const Text('Tap any object to hear it again.',
-                    style: TextStyle(color: slate, fontSize: 12.5)),
+                    style: TextStyle(color: kVelvetMuted, fontSize: 12.5)),
                 const SizedBox(height: 12),
                 if (finds.isEmpty)
                   const Text('No finds yet — capture your first object!',
-                      style: TextStyle(color: slate))
+                      style: TextStyle(color: kVelvetMuted))
                 else
                   for (final f in finds)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8),
-                      child: FloatingCard(
+                      child: _VCard(
                         onTap: f.twi.isEmpty ? null : () => _playTwi(f.twi),
                         child: Row(
                           children: [
@@ -699,13 +788,13 @@ class _LensScreenState extends State<LensScreen> {
                                       style: const TextStyle(
                                           fontWeight: FontWeight.w800,
                                           fontSize: 16,
-                                          color: ink)),
+                                          color: kVelvetInk)),
                                   Text(
                                       f.twi.isEmpty
                                           ? 'Twi pending — tap Retry next time'
                                           : f.english,
                                       style: const TextStyle(
-                                          color: slate, fontSize: 12.5)),
+                                          color: kVelvetMuted, fontSize: 12.5)),
                                 ],
                               ),
                             ),
@@ -713,7 +802,7 @@ class _LensScreenState extends State<LensScreen> {
                                 f.twi.isEmpty
                                     ? Icons.hourglass_empty
                                     : Icons.volume_up,
-                                color: f.twi.isEmpty ? slate : plantainGreen,
+                                color: f.twi.isEmpty ? kVelvetMuted : const Color(0xFF63C583),
                                 size: 20),
                           ],
                         ),
@@ -725,6 +814,8 @@ class _LensScreenState extends State<LensScreen> {
         ),
         const SizedBox(height: 24),
       ],
+        ),
+      ),
     );
   }
 
@@ -757,12 +848,11 @@ class _LensScreenState extends State<LensScreen> {
               autofocus: true,
               textCapitalization: TextCapitalization.none,
               textInputAction: TextInputAction.done,
+              style: const TextStyle(color: kVelvetInk),
+              cursorColor: kOchre,
               decoration: const InputDecoration(
                 isDense: true,
                 hintText: 'e.g. fan',
-                border: OutlineInputBorder(),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               ),
               onSubmitted: (_) => _submitManual(),
             ),
@@ -788,11 +878,11 @@ class _LensScreenState extends State<LensScreen> {
       children: [
         const Text('Badges',
             style:
-                TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: ink)),
+                TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: kVelvetInk)),
         const SizedBox(height: 10),
         if (earned.isEmpty)
           const Text('Save your first find to earn a badge.',
-              style: TextStyle(color: slate, fontSize: 12.5))
+              style: TextStyle(color: kVelvetMuted, fontSize: 12.5))
         else
           Wrap(
             spacing: 8,
@@ -824,7 +914,7 @@ class _LensScreenState extends State<LensScreen> {
         if (!allEarned) ...[
           const SizedBox(height: 8),
           Text('Next: ${next.name} — ${next.threshold - total} more to go',
-              style: const TextStyle(color: slate, fontSize: 12)),
+              style: const TextStyle(color: kVelvetMuted, fontSize: 12)),
         ],
       ],
     );
@@ -836,10 +926,10 @@ class _LensScreenState extends State<LensScreen> {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF211B17),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-            color: done ? plantainGreen : silverLight,
+            color: done ? const Color(0xFF63C583) : Colors.white10,
             width: done ? 1.5 : 1),
       ),
       child: Column(
@@ -848,7 +938,8 @@ class _LensScreenState extends State<LensScreen> {
         children: [
           Row(
             children: [
-              Icon(c.icon, size: 18, color: done ? plantainGreen : charcoal),
+              Icon(c.icon,
+                  size: 18, color: done ? const Color(0xFF63C583) : kVelvetInk),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(c.name,
@@ -857,10 +948,10 @@ class _LensScreenState extends State<LensScreen> {
                     style: const TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 13,
-                        color: ink)),
+                        color: kVelvetInk)),
               ),
               if (done)
-                const Icon(Icons.check_circle, size: 16, color: plantainGreen),
+                const Icon(Icons.check_circle, size: 16, color: const Color(0xFF63C583)),
             ],
           ),
           const SizedBox(height: 8),
@@ -869,14 +960,14 @@ class _LensScreenState extends State<LensScreen> {
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 6,
-              backgroundColor: silverLight,
+              backgroundColor: const Color(0x1FFFFFFF),
               valueColor: AlwaysStoppedAnimation(
-                  done ? plantainGreen : terracotta),
+                  done ? const Color(0xFF63C583) : terracotta),
             ),
           ),
           const SizedBox(height: 4),
           Text('$count / ${c.goal}',
-              style: const TextStyle(color: slate, fontSize: 11)),
+              style: const TextStyle(color: kVelvetMuted, fontSize: 11)),
         ],
       ),
     );
