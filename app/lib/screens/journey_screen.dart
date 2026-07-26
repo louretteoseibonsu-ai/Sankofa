@@ -11,6 +11,7 @@ import '../theme.dart';
 import '../widgets/celebration.dart';
 import '../widgets/composable_trotro.dart';
 import '../widgets/avatar_badge.dart';
+import '../widgets/campaign_banner.dart';
 import '../widgets/greeting.dart';
 import '../widgets/landmark_sheet.dart';
 import '../widgets/mascot.dart';
@@ -416,6 +417,7 @@ class _JourneyScreenState extends State<JourneyScreen>
 
     return Column(
       children: [
+        const CampaignBanner(),
         // ── HUD overlay ──────────────────────────────────────────────
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
