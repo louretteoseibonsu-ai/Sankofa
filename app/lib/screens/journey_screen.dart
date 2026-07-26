@@ -21,6 +21,7 @@ import '../widgets/skeleton.dart';
 import '../widgets/state_message.dart';
 import '../widgets/tappable_scale.dart';
 import '../widgets/tintable_trotro.dart';
+import '../widgets/velvet.dart';
 import '../widgets/trotro_mascot.dart';
 import 'customization_shop_screen.dart';
 import 'reading_screen.dart';
@@ -31,8 +32,8 @@ import 'time_attack_screen.dart';
 // Road / map palette.
 const Color _roadActive = Color(0xFFBE5235); // travelled — vibrant terracotta
 const Color _roadGold = Color(0xFFE3A92C); // kente centre thread
-const Color _roadMuted = Color(0xFFD9DCE0); // locked road ahead
-const Color _mutedDot = Color(0xFFBFC2C7);
+const Color _roadMuted = Color(0xFF3A322C); // locked road ahead (velvet)
+const Color _mutedDot = Color(0xFF52463C);
 const Color _doneGreen = Color(0xFF2E6B3B);
 const Color _lockGrey = Color(0xFF9AA0A6);
 
@@ -415,9 +416,17 @@ class _JourneyScreenState extends State<JourneyScreen>
     final current = _currentIndex;
     final regionName = _catName[lessons[current].categoryId] ?? 'Journey';
 
-    return Column(
-      children: [
-        const CampaignBanner(),
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFF17130F), Color(0xFF1E1A17)],
+        ),
+      ),
+      child: Column(
+        children: [
+          const CampaignBanner(),
         // ── HUD overlay ──────────────────────────────────────────────
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
@@ -469,7 +478,7 @@ class _JourneyScreenState extends State<JourneyScreen>
                       constraints: const BoxConstraints(),
                       onPressed: _openAnansesem,
                       icon: const Icon(Icons.local_fire_department_rounded),
-                      color: charcoal,
+                      color: kVelvetInk,
                       tooltip: 'Anansesɛm',
                     ),
                     IconButton(
@@ -479,7 +488,7 @@ class _JourneyScreenState extends State<JourneyScreen>
                       constraints: const BoxConstraints(),
                       onPressed: _openGarage,
                       icon: const Icon(Icons.garage_rounded),
-                      color: charcoal,
+                      color: kVelvetInk,
                       tooltip: 'Garage',
                     ),
                   ],
@@ -683,9 +692,9 @@ class _JourneyScreenState extends State<JourneyScreen>
             child: Container(
               padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: const Color(0xFF211B17),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: silverLight, width: 1.5),
+                border: Border.all(color: Colors.white10, width: 1.5),
               ),
               child: Row(
                 children: [
@@ -693,6 +702,7 @@ class _JourneyScreenState extends State<JourneyScreen>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // velvet current-stop card
                         Text(
                           _stats.streak > 0
                               ? '🔥 Day ${_stats.streak} · ${regionName.toUpperCase()}'
@@ -706,13 +716,13 @@ class _JourneyScreenState extends State<JourneyScreen>
                         const SizedBox(height: 2),
                         Text(lessons[current].title,
                             style: const TextStyle(
-                                color: ink,
+                                color: kVelvetInk,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700)),
                         const SizedBox(height: 1),
                         Text(
                           'Continue, ${firstNameOf(FirebaseAuth.instance.currentUser)}',
-                          style: const TextStyle(color: slate, fontSize: 12),
+                          style: const TextStyle(color: kVelvetMuted, fontSize: 12),
                         ),
                       ],
                     ),
@@ -751,6 +761,7 @@ class _JourneyScreenState extends State<JourneyScreen>
           ),
         ),
       ],
+      ),
     );
   }
 }
@@ -767,16 +778,16 @@ class _Pill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF211B17),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: silverLight, width: 1.5),
+        border: Border.all(color: Colors.white10, width: 1.5),
       ),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         Icon(icon, color: iconColor, size: 17),
         const SizedBox(width: 5),
         Text(label,
             style: const TextStyle(
-                color: ink, fontSize: 13, fontWeight: FontWeight.w800)),
+                color: kVelvetInk, fontSize: 13, fontWeight: FontWeight.w800)),
       ]),
     );
   }
