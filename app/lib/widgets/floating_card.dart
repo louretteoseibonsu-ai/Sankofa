@@ -20,10 +20,19 @@ class FloatingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Brightness-aware: under a dark theme (e.g. the velvet Tools destinations)
+    // the card flips to a velvet surface with a hairline; light usages elsewhere
+    // are untouched.
+    final dark = Theme.of(context).brightness == Brightness.dark;
     final card = DecoratedBox(
-      decoration: const ShapeDecoration(
-        color: surfaceCard,
-        shape: kSquircleCard,
+      decoration: ShapeDecoration(
+        color: dark ? const Color(0xFF211B17) : surfaceCard,
+        shape: dark
+            ? const ContinuousRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                side: BorderSide(color: Colors.white10),
+              )
+            : kSquircleCard,
         shadows: kAmbientShadow,
       ),
       child: Padding(padding: padding, child: child),

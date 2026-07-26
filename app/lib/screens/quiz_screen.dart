@@ -7,6 +7,7 @@ import '../data/lesson_content.dart';
 import '../services/progress_service.dart';
 import '../services/sound_service.dart';
 import '../theme.dart';
+import '../widgets/velvet.dart';
 import '../widgets/continue_button.dart';
 import '../widgets/floating_card.dart';
 
@@ -132,13 +133,13 @@ class _QuizScreenState extends State<QuizScreen> {
                   style: const TextStyle(
                       fontWeight: FontWeight.w800,
                       fontSize: 44,
-                      color: charcoal)),
+                      color: kVelvetInk)),
               const SizedBox(height: 8),
               const Text('Yɛ wo adɛn! (Well done!)',
-                  style: TextStyle(fontSize: 16, color: ink)),
+                  style: TextStyle(fontSize: 16, color: kVelvetInk)),
               const SizedBox(height: 4),
               const Text('A fresh mix awaits.',
-                  style: TextStyle(fontSize: 13, color: slate)),
+                  style: TextStyle(fontSize: 13, color: kVelvetMuted)),
               const SizedBox(height: 20),
               FilledButton(
                   onPressed: _restart, child: const Text('New quiz')),
@@ -157,7 +158,7 @@ class _QuizScreenState extends State<QuizScreen> {
           children: [
             Text('Dynamic Quiz · ${q.category}',
                 style: const TextStyle(
-                    color: slate, fontWeight: FontWeight.w700, fontSize: 12)),
+                    color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 12)),
             Text('${_index + 1} / ${_session.length}',
                 style: const TextStyle(color: Colors.black54, fontSize: 12)),
           ],
@@ -165,18 +166,18 @@ class _QuizScreenState extends State<QuizScreen> {
         const SizedBox(height: 8),
         Text(q.question,
             style: const TextStyle(
-                fontWeight: FontWeight.w800, fontSize: 20, color: ink)),
+                fontWeight: FontWeight.w800, fontSize: 20, color: kVelvetInk)),
         const SizedBox(height: 16),
         ...q.options.map((opt) {
-          Color border = Colors.black12;
-          Color bg = Colors.white;
+          Color border = Colors.white12;
+          Color bg = const Color(0xFF211B17);
           if (_selected != null) {
             if (opt == q.answer) {
-              border = const Color(0xFF2E6B3B);
-              bg = const Color(0xFFEAF3EC);
+              border = const Color(0xFF63C583);
+              bg = const Color(0xFF17281C);
             } else if (opt == _selected) {
               border = terracotta;
-              bg = const Color(0xFFFBEEEA);
+              bg = const Color(0xFF2C1D18);
             }
           }
           return Padding(
@@ -195,7 +196,7 @@ class _QuizScreenState extends State<QuizScreen> {
                   ),
                   child: Text(opt,
                       style: const TextStyle(
-                          fontWeight: FontWeight.w600, color: ink)),
+                          fontWeight: FontWeight.w600, color: kVelvetInk)),
                 ),
               ),
             ),
@@ -206,7 +207,7 @@ class _QuizScreenState extends State<QuizScreen> {
             const SizedBox(height: 8),
             FloatingCard(
               child: Text(q.explanation,
-                  style: const TextStyle(height: 1.4, color: ink)),
+                  style: const TextStyle(height: 1.4, color: kVelvetInk)),
             ),
           ],
           const SizedBox(height: 16),

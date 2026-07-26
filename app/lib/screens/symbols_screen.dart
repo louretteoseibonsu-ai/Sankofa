@@ -5,6 +5,7 @@ import '../data/adinkra_symbols.dart';
 import '../services/auth_service.dart';
 import '../services/progress_service.dart';
 import '../theme.dart';
+import '../widgets/velvet.dart';
 import '../widgets/adinkra_glyph.dart';
 import '../widgets/floating_card.dart';
 import 'leaderboard_screen.dart';
@@ -101,7 +102,7 @@ class _SymbolsScreenState extends State<SymbolsScreen> {
                       height: 64,
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: glyphTile,
+                        color: const Color(0xFF2A211C),
                         borderRadius: BorderRadius.circular(18),
                       ),
                       child: ClipRRect(
@@ -131,7 +132,7 @@ class _SymbolsScreenState extends State<SymbolsScreen> {
                             style: TextStyle(
                                 fontWeight: FontWeight.w800,
                                 fontSize: 17,
-                                color: locked ? slate : ink),
+                                color: locked ? kVelvetMuted : kVelvetInk),
                           ),
                           const SizedBox(height: 2),
                           Text(
@@ -157,7 +158,7 @@ class _SymbolsScreenState extends State<SymbolsScreen> {
   void _showDetail(BuildContext context, AdinkraSymbol s) {
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFF1E1A17),
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -182,7 +183,7 @@ class _SymbolsScreenState extends State<SymbolsScreen> {
                   height: 120,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: glyphTile,
+                    color: const Color(0xFF2A211C),
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: AdinkraGlyph(svg: s.svg, size: 88),
@@ -191,17 +192,17 @@ class _SymbolsScreenState extends State<SymbolsScreen> {
               const SizedBox(height: 16),
               Text(s.name,
                   style: const TextStyle(
-                      fontWeight: FontWeight.w800, fontSize: 22, color: ink)),
+                      fontWeight: FontWeight.w800, fontSize: 22, color: kVelvetInk)),
               Text('"${s.literal}"',
                   style: const TextStyle(
-                      fontStyle: FontStyle.italic, color: Colors.black54)),
+                      fontStyle: FontStyle.italic, color: kVelvetMuted)),
               const SizedBox(height: 8),
               Text(s.value,
                   style: const TextStyle(
-                      color: plantainGreen, fontWeight: FontWeight.w700)),
+                      color: kOchre, fontWeight: FontWeight.w700)),
               const SizedBox(height: 12),
               Text(s.description,
-                  style: const TextStyle(height: 1.5, color: ink)),
+                  style: const TextStyle(height: 1.5, color: kVelvetInk)),
               const SizedBox(height: 8),
             ],
           ),
@@ -227,7 +228,7 @@ class _WeeklyTop3Strip extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.fromLTRB(20, 6, 20, 12),
           child: Material(
-            color: Colors.white,
+            color: const Color(0xFF211B17),
             borderRadius: BorderRadius.circular(18),
             child: InkWell(
               borderRadius: BorderRadius.circular(18),
@@ -237,7 +238,7 @@ class _WeeklyTop3Strip extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: silverLight, width: 1.2),
+                  border: Border.all(color: const Color(0x1FFFFFFF), width: 1.2),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,12 +253,12 @@ class _WeeklyTop3Strip extends StatelessWidget {
                               style: TextStyle(
                                   fontWeight: FontWeight.w800,
                                   fontSize: 14,
-                                  color: ink)),
+                                  color: kVelvetInk)),
                         ),
                         Row(
                           children: [
                             Text('Leaderboard',
-                                style: TextStyle(color: slate, fontSize: 12)),
+                                style: TextStyle(color: kVelvetMuted, fontSize: 12)),
                             Icon(Icons.chevron_right,
                                 size: 18, color: Colors.black26),
                           ],
@@ -290,7 +291,7 @@ class _WeeklyTop3Strip extends StatelessWidget {
                                         style: const TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 14,
-                                            color: ink)),
+                                            color: kVelvetInk)),
                                   ),
                                   if (list[i].isBot)
                                     const Padding(
@@ -305,7 +306,7 @@ class _WeeklyTop3Strip extends StatelessWidget {
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w800,
                                     fontSize: 13,
-                                    color: charcoal)),
+                                    color: kVelvetInk)),
                           ],
                         ),
                       ),

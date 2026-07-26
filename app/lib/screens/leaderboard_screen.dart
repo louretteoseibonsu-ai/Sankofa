@@ -5,6 +5,7 @@ import '../data/adinkra_symbols.dart';
 import '../data/special_avatars.dart';
 import '../services/progress_service.dart';
 import '../theme.dart';
+import '../widgets/velvet.dart';
 
 /// Pushed full-screen leaderboard (with its own app bar + back button).
 class LeaderboardScreen extends StatelessWidget {
@@ -13,6 +14,7 @@ class LeaderboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
+      backgroundColor: Color(0xFF141110),
       appBar: null,
       body: SafeArea(
         child: Column(
@@ -35,12 +37,12 @@ class _LbHeader extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            icon: const Icon(Icons.arrow_back, color: charcoal),
+            icon: const Icon(Icons.arrow_back, color: kVelvetInk),
             onPressed: () => Navigator.of(context).maybePop(),
           ),
           const Text('Leaderboard',
               style: TextStyle(
-                  fontWeight: FontWeight.w800, fontSize: 20, color: charcoal)),
+                  fontWeight: FontWeight.w800, fontSize: 20, color: kVelvetInk)),
         ],
       ),
     );
@@ -73,10 +75,10 @@ class _LeaderboardViewState extends State<LeaderboardView> {
                     style: TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 15,
-                        color: ink)),
+                        color: kVelvetInk)),
                 Spacer(),
                 Text('Resets every Monday',
-                    style: TextStyle(color: slate, fontSize: 12)),
+                    style: TextStyle(color: kVelvetMuted, fontSize: 12)),
               ],
             ),
           ),
@@ -106,10 +108,10 @@ class _LeaderboardViewState extends State<LeaderboardView> {
               return Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                 decoration: BoxDecoration(
-                  color: isMe ? const Color(0xFFFBEEEA) : Colors.white,
+                  color: isMe ? const Color(0xFF2C1D18) : const Color(0xFF211B17),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: isMe ? terracotta : silverLight,
+                    color: isMe ? terracotta : Colors.white10,
                     width: isMe ? 1.6 : 1.2,
                   ),
                 ),
@@ -135,7 +137,7 @@ class _LeaderboardViewState extends State<LeaderboardView> {
                                     style: const TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 15,
-                                        color: ink)),
+                                        color: kVelvetInk)),
                               ),
                               if (e.isBot)
                                 const Padding(
@@ -147,7 +149,7 @@ class _LeaderboardViewState extends State<LeaderboardView> {
                           ),
                           Text('Level ${e.level}',
                               style:
-                                  const TextStyle(color: slate, fontSize: 12)),
+                                  const TextStyle(color: kVelvetMuted, fontSize: 12)),
                         ],
                       ),
                     ),
@@ -155,7 +157,7 @@ class _LeaderboardViewState extends State<LeaderboardView> {
                         style: const TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 15,
-                            color: charcoal)),
+                            color: kVelvetInk)),
                   ],
                 ),
               );
@@ -191,7 +193,7 @@ class _RankBadge extends StatelessWidget {
     return Text('$rank',
         textAlign: TextAlign.center,
         style: const TextStyle(
-            color: slate, fontWeight: FontWeight.w700, fontSize: 14));
+            color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 14));
   }
 }
 
@@ -204,7 +206,7 @@ class _Message extends StatelessWidget {
           padding: const EdgeInsets.all(32),
           child: Text(text,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: slate, height: 1.5)),
+              style: const TextStyle(color: kVelvetMuted, height: 1.5)),
         ),
       );
 }
@@ -250,7 +252,7 @@ class _LbAvatar extends StatelessWidget {
     }
     return CircleAvatar(
       radius: radius,
-      backgroundColor: slate,
+      backgroundColor: kVelvetMuted,
       child: Text(name.isNotEmpty ? name[0].toUpperCase() : 'S',
           style: TextStyle(
               color: Colors.white,

@@ -10,24 +10,107 @@ import 'review_quiz_screen.dart';
 import 'leaderboard_screen.dart';
 import 'symbols_screen.dart';
 
+const Color _kShell = Color(0xFF141110); // deep velvet-charcoal page
+const Color _kSurface = Color(0xFF211B17); // raised card/surface
+
+/// A velvet-dark ThemeData for the Tools destinations, so every pushed tool —
+/// and all its Material states (pressed, selected, expanded, dialogs, inputs) —
+/// inherits the deep charcoal shell instead of the light app theme.
+ThemeData velvetToolsTheme(BuildContext context) {
+  final base = Theme.of(context);
+  return base.copyWith(
+    brightness: Brightness.dark,
+    scaffoldBackgroundColor: _kShell,
+    canvasColor: _kShell,
+    colorScheme: base.colorScheme.copyWith(
+      brightness: Brightness.dark,
+      surface: _kShell,
+      onSurface: kVelvetInk,
+      primary: kOchre,
+      onPrimary: const Color(0xFF17130F),
+    ),
+    textTheme: base.textTheme.apply(
+      bodyColor: kVelvetInk,
+      displayColor: kVelvetInk,
+    ),
+    iconTheme: const IconThemeData(color: kVelvetInk),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Color(0xFF17130F),
+      foregroundColor: kVelvetInk,
+      surfaceTintColor: Colors.transparent,
+      elevation: 0,
+    ),
+    cardTheme: base.cardTheme.copyWith(
+      color: _kSurface,
+      surfaceTintColor: Colors.transparent,
+    ),
+    listTileTheme: const ListTileThemeData(
+      textColor: kVelvetInk,
+      iconColor: kVelvetMuted,
+    ),
+    dividerColor: Colors.white12,
+    dividerTheme: const DividerThemeData(color: Colors.white12, thickness: 1),
+    expansionTileTheme: const ExpansionTileThemeData(
+      textColor: kVelvetInk,
+      collapsedTextColor: kVelvetInk,
+      iconColor: kOchre,
+      collapsedIconColor: kVelvetMuted,
+    ),
+    chipTheme: base.chipTheme.copyWith(
+      backgroundColor: const Color(0xFF2A211C),
+      selectedColor: kOchre,
+      labelStyle: const TextStyle(color: kVelvetInk),
+      secondaryLabelStyle: const TextStyle(color: Color(0xFF17130F)),
+      side: const BorderSide(color: Colors.white24),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: kVelvetInk,
+        side: const BorderSide(color: Colors.white24),
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(foregroundColor: kOchre),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: const Color(0xFF2A211C),
+      hintStyle: const TextStyle(color: kVelvetMuted),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: Colors.white24),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: Colors.white24),
+      ),
+    ),
+  );
+}
+
 /// "Tools" tab — a hub for the secondary destinations that don't belong in the
 /// daily learn → practice loop. Each opens as its own page with a back button.
 class ToolsHubScreen extends StatelessWidget {
   const ToolsHubScreen({super.key});
 
   /// Body-only screens (no Scaffold of their own) get wrapped so they have an
-  /// app bar + back button when pushed.
+  /// app bar + back button when pushed — under the velvet-dark tools theme.
   void _openWrapped(BuildContext c, String title, Widget body) {
     Navigator.of(c).push(MaterialPageRoute(
-      builder: (_) => Scaffold(
-        appBar: AppBar(title: Text(title)),
-        body: SafeArea(child: body),
+      builder: (ctx) => Theme(
+        data: velvetToolsTheme(ctx),
+        child: Scaffold(
+          appBar: AppBar(title: Text(title)),
+          body: SafeArea(child: body),
+        ),
       ),
     ));
   }
 
   void _openPage(BuildContext c, Widget page) {
-    Navigator.of(c).push(MaterialPageRoute(builder: (_) => page));
+    Navigator.of(c).push(MaterialPageRoute(
+      builder: (ctx) => Theme(data: velvetToolsTheme(ctx), child: page),
+    ));
   }
 
   @override

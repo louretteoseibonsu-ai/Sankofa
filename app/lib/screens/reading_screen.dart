@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../data/reading_passages.dart';
 import '../services/progress_service.dart';
 import '../theme.dart';
+import '../widgets/velvet.dart';
 import '../widgets/challenge_quiz.dart';
 import '../widgets/floating_card.dart';
 import '../widgets/mascot.dart';
@@ -95,7 +96,7 @@ class _ReadingListScreenState extends State<ReadingListScreen> {
                       '${_passages.length} stories to explore.'
                   : '${_passed.length} / ${_passages.length} passages passed. '
                       'Score 60% or more to pass and unlock the next.',
-              style: const TextStyle(color: slate, fontSize: 13.5, height: 1.5)),
+              style: const TextStyle(color: kVelvetMuted, fontSize: 13.5, height: 1.5)),
           const SizedBox(height: 16),
           for (int i = 0; i < _passages.length; i++)
             _PassageRow(
@@ -154,12 +155,12 @@ class _PassageRow extends StatelessWidget {
                       style: TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 16,
-                          color: unlocked ? ink : slate)),
+                          color: unlocked ? kVelvetInk : kVelvetMuted)),
                   Text(
                       unlocked
                           ? '${passage.level}  ·  pass ${passage.passMark}/${passage.questions.length}'
                           : 'Locked — pass the previous passage',
-                      style: const TextStyle(color: slate, fontSize: 12.5)),
+                      style: const TextStyle(color: kVelvetMuted, fontSize: 12.5)),
                 ],
               ),
             ),
@@ -226,13 +227,13 @@ class _ReadingDetailScreenState extends State<ReadingDetailScreen> {
             children: [
               for (int i = 0; i < p.lines.length; i++) ...[
                 if (i > 0)
-                  const Divider(height: 1, color: silverLight),
+                  const Divider(height: 1, color: const Color(0x1FFFFFFF)),
                 Row(
                   children: [
                     Expanded(
                       child: Text(p.lines[i],
                           style: const TextStyle(
-                              fontSize: 18, height: 1.5, color: ink)),
+                              fontSize: 18, height: 1.5, color: kVelvetInk)),
                     ),
                     SpeakButton(text: p.lines[i], size: 22),
                   ],
@@ -243,7 +244,7 @@ class _ReadingDetailScreenState extends State<ReadingDetailScreen> {
         ),
         const SizedBox(height: 4),
         const Text('Tap 🔊 to hear each line.',
-            style: TextStyle(color: slate, fontSize: 12)),
+            style: TextStyle(color: kVelvetMuted, fontSize: 12)),
         const SizedBox(height: 10),
         Align(
           alignment: Alignment.centerLeft,
@@ -261,7 +262,7 @@ class _ReadingDetailScreenState extends State<ReadingDetailScreen> {
           FloatingCard(
             child: Text(p.english,
                 style: const TextStyle(
-                    fontSize: 15, height: 1.6, color: slate)),
+                    fontSize: 15, height: 1.6, color: kVelvetMuted)),
           ),
         ],
         // ── Folklore framework: cultural note + key words ──
@@ -276,7 +277,7 @@ class _ReadingDetailScreenState extends State<ReadingDetailScreen> {
           const SizedBox(height: 6),
           FloatingCard(
             child: Text(p.culturalContext,
-                style: const TextStyle(fontSize: 14, height: 1.55, color: ink)),
+                style: const TextStyle(fontSize: 14, height: 1.55, color: kVelvetInk)),
           ),
         ],
         if (p.vocab.isNotEmpty) ...[
@@ -292,22 +293,22 @@ class _ReadingDetailScreenState extends State<ReadingDetailScreen> {
             child: Column(
               children: [
                 for (int i = 0; i < p.vocab.length; i++) ...[
-                  if (i > 0) const Divider(height: 14, color: silverLight),
+                  if (i > 0) const Divider(height: 14, color: const Color(0x1FFFFFFF)),
                   Row(
                     children: [
                       Expanded(
                         child: RichText(
                           text: TextSpan(
                             style: const TextStyle(
-                                fontSize: 14, color: ink, height: 1.4),
+                                fontSize: 14, color: kVelvetInk, height: 1.4),
                             children: [
                               TextSpan(
                                   text: p.vocab[i].key,
                                   style: const TextStyle(
-                                      fontWeight: FontWeight.w800, color: ink)),
+                                      fontWeight: FontWeight.w800, color: kVelvetInk)),
                               TextSpan(
                                   text: '  —  ${p.vocab[i].value}',
-                                  style: const TextStyle(color: slate)),
+                                  style: const TextStyle(color: kVelvetMuted)),
                             ],
                           ),
                         ),
@@ -368,19 +369,19 @@ class _PassLegend extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: glyphTile,
+        color: const Color(0xFF2A211C),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
-          const Icon(Icons.emoji_events_outlined, size: 18, color: slate),
+          const Icon(Icons.emoji_events_outlined, size: 18, color: kVelvetMuted),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               'Pass mark: $passMark of $total correct (60%). '
               'Below that, you can retry.',
               style: const TextStyle(
-                  color: slate, fontSize: 12.5, fontWeight: FontWeight.w600),
+                  color: kVelvetMuted, fontSize: 12.5, fontWeight: FontWeight.w600),
             ),
           ),
         ],
@@ -400,13 +401,13 @@ class _ListenStrip extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(16, 10, 8, 6),
-      color: const Color(0xFFF7F5F0),
+      color: const Color(0xFF2A211C),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Listen again',
               style: TextStyle(
-                  color: slate, fontSize: 11.5, fontWeight: FontWeight.w800)),
+                  color: kVelvetMuted, fontSize: 11.5, fontWeight: FontWeight.w800)),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -417,7 +418,7 @@ class _ListenStrip extends StatelessWidget {
                     children: [
                       Text('${i + 1}',
                           style: const TextStyle(
-                              color: slate,
+                              color: kVelvetMuted,
                               fontSize: 12,
                               fontWeight: FontWeight.w700)),
                       SpeakButton(text: lines[i], size: 18),

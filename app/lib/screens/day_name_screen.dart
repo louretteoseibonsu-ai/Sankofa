@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../data/akan_day_names.dart';
 import '../services/auth_service.dart';
 import '../theme.dart';
+import '../widgets/velvet.dart';
 import '../widgets/adinkra_glyph.dart';
 import '../data/adinkra_symbols.dart';
 import '../widgets/floating_card.dart';
@@ -118,7 +119,7 @@ class _DayNameScreenState extends State<DayNameScreen> {
                     height: 88,
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: glyphTile,
+                      color: const Color(0xFF2A211C),
                       borderRadius: BorderRadius.circular(24),
                     ),
                     child: AdinkraGlyph(svg: sankofaSvg, size: 64),
@@ -139,7 +140,7 @@ class _DayNameScreenState extends State<DayNameScreen> {
                     style: const TextStyle(
                         color: plantainGreen, fontWeight: FontWeight.w700, fontSize: 12)),
                 const SizedBox(height: 6),
-                Text(day.meaning, style: const TextStyle(height: 1.5, color: ink)),
+                Text(day.meaning, style: const TextStyle(height: 1.5, color: kVelvetInk)),
                 const SizedBox(height: 16),
                 SizedBox(
                   width: double.infinity,

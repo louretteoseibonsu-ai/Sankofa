@@ -90,7 +90,7 @@ const List<Landmark> kLandmarks = [
     isUnlocked: false,
     descriptionText:
         'Built by the Portuguese in 1482 on the Gulf of Guinea, Elmina Castle '
-        'is among the oldest European structures in sub-Saharan Africa. A '
+        'is among the oldest surviving European structures in West Africa. A '
         'UNESCO World Heritage Site, its white walls hold a solemn history as a '
         'hub of the transatlantic slave trade — a place of remembrance, '
         'reflection and return.',

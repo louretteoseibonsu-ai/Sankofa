@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../data/lesson_catalog.dart';
 import '../data/lesson_content.dart';
 import '../theme.dart';
+import '../widgets/velvet.dart';
 import '../widgets/challenge_quiz.dart';
 import '../widgets/floating_card.dart';
 
@@ -24,7 +25,7 @@ class ReviewPickerScreen extends StatelessWidget {
         const SizedBox(height: 4),
         const Text('Mixed practice from the lessons you’ve studied. '
             'No pressure — this doesn’t affect your XP.',
-            style: TextStyle(color: slate, fontSize: 13.5, height: 1.5)),
+            style: TextStyle(color: kVelvetMuted, fontSize: 13.5, height: 1.5)),
         const SizedBox(height: 16),
         _PickRow(
           icon: Icons.shuffle,
@@ -64,7 +65,7 @@ class _PickRow extends StatelessWidget {
         onTap: onTap,
         child: Row(
           children: [
-            Icon(icon, color: charcoal, size: 22),
+            Icon(icon, color: kVelvetInk, size: 22),
             const SizedBox(width: 14),
             Expanded(
               child: Column(
@@ -74,9 +75,9 @@ class _PickRow extends StatelessWidget {
                       style: const TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 16,
-                          color: ink)),
+                          color: kVelvetInk)),
                   Text(subtitle,
-                      style: const TextStyle(color: slate, fontSize: 12.5)),
+                      style: const TextStyle(color: kVelvetMuted, fontSize: 12.5)),
                 ],
               ),
             ),

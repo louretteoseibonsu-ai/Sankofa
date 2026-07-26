@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../data/lesson_catalog.dart';
 import '../services/progress_service.dart';
 import '../theme.dart';
+import '../widgets/velvet.dart';
 import '../widgets/floating_card.dart';
 import 'lesson_quiz_screen.dart';
 
@@ -56,7 +57,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
           const SizedBox(height: 4),
           const Text('Structured tracks that take you from your first word to '
               'real conversation.',
-              style: TextStyle(color: slate, fontSize: 13.5, height: 1.5)),
+              style: TextStyle(color: kVelvetMuted, fontSize: 13.5, height: 1.5)),
           const SizedBox(height: 16),
           for (final course in kCourses) ...[
             _CourseCard(
@@ -101,10 +102,10 @@ class _CourseCard extends StatelessWidget {
                 height: 42,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: glyphTile,
+                  color: const Color(0xFF2A211C),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(course.icon, color: charcoal, size: 22),
+                child: Icon(course.icon, color: kVelvetInk, size: 22),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -115,9 +116,9 @@ class _CourseCard extends StatelessWidget {
                         style: const TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 17,
-                            color: ink)),
+                            color: kVelvetInk)),
                     Text('$passed / ${lessons.length} lessons passed',
-                        style: const TextStyle(color: slate, fontSize: 12.5)),
+                        style: const TextStyle(color: kVelvetMuted, fontSize: 12.5)),
                   ],
                 ),
               ),
@@ -126,19 +127,19 @@ class _CourseCard extends StatelessWidget {
                       fontWeight: FontWeight.w800,
                       fontSize: 14,
                       color:
-                          complete ? const Color(0xFF2E6B3B) : slate)),
+                          complete ? const Color(0xFF2E6B3B) : kVelvetMuted)),
             ],
           ),
           const SizedBox(height: 8),
           Text(course.blurb,
-              style: const TextStyle(color: slate, fontSize: 13)),
+              style: const TextStyle(color: kVelvetMuted, fontSize: 13)),
           const SizedBox(height: 10),
           ClipRRect(
             borderRadius: BorderRadius.circular(6),
             child: LinearProgressIndicator(
               value: mastery.clamp(0.0, 1.0),
               minHeight: 6,
-              backgroundColor: silverLight,
+              backgroundColor: const Color(0x1FFFFFFF),
               valueColor: AlwaysStoppedAnimation(
                   complete ? const Color(0xFF2E6B3B) : terracotta),
             ),
@@ -210,7 +211,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                     children: [
                       Text(course.blurb,
                           style: const TextStyle(
-                              color: slate, fontSize: 14, height: 1.5)),
+                              color: kVelvetMuted, fontSize: 14, height: 1.5)),
                       const SizedBox(height: 16),
                       for (final cat in course.categories) ...[
                         _CategorySection(
@@ -258,14 +259,14 @@ class _CategorySection extends StatelessWidget {
               if (category.emoji.isNotEmpty)
                 Text(category.emoji, style: const TextStyle(fontSize: 18))
               else
-                Icon(category.icon, color: charcoal, size: 18),
+                Icon(category.icon, color: kVelvetInk, size: 18),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(category.name,
                     style: const TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 15,
-                        color: ink)),
+                        color: kVelvetInk)),
               ),
             ],
           ),
@@ -315,7 +316,7 @@ class _LessonRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 8),
       child: Material(
-        color: Colors.white,
+        color: const Color(0xFF211B17),
         borderRadius: BorderRadius.circular(14),
         child: InkWell(
           borderRadius: BorderRadius.circular(14),
@@ -324,7 +325,7 @@ class _LessonRow extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: silverLight, width: 1.2),
+              border: Border.all(color: const Color(0x1FFFFFFF), width: 1.2),
             ),
             child: Row(
               children: [
@@ -338,14 +339,14 @@ class _LessonRow extends StatelessWidget {
                           style: TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: 15,
-                              color: unlocked ? ink : slate)),
+                              color: unlocked ? kVelvetInk : kVelvetMuted)),
                       Text(
                           passed
                               ? '${lesson.subtitle}  ·  best $best/10'
                               : unlocked
                                   ? lesson.subtitle
                                   : 'Locked — finish the previous lesson',
-                          style: const TextStyle(color: slate, fontSize: 12)),
+                          style: const TextStyle(color: kVelvetMuted, fontSize: 12)),
                     ],
                   ),
                 ),

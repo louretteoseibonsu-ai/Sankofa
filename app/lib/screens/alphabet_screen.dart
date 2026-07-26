@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme.dart';
+import '../widgets/velvet.dart';
 import '../widgets/floating_card.dart';
 import '../widgets/speak_button.dart';
 
@@ -58,7 +59,7 @@ class AlphabetScreen extends StatelessWidget {
         SizedBox(height: 4),
         Text('Tap any example to hear the sound. Twi drops c, j, q, v, x, z '
             'and adds two special vowels: ɛ and ɔ.',
-            style: TextStyle(color: slate, fontSize: 13.5, height: 1.5)),
+            style: TextStyle(color: kVelvetMuted, fontSize: 13.5, height: 1.5)),
         SizedBox(height: 18),
         _Section(title: 'Vowels', subtitle: 'Seven in total — master ɛ and ɔ.', rows: _vowels),
         SizedBox(height: 16),
@@ -88,15 +89,15 @@ class _Section extends StatelessWidget {
         children: [
           Text(title,
               style: const TextStyle(
-                  fontWeight: FontWeight.w800, fontSize: 17, color: ink)),
+                  fontWeight: FontWeight.w800, fontSize: 17, color: kVelvetInk)),
           if (subtitle != null) ...[
             const SizedBox(height: 2),
             Text(subtitle!,
-                style: const TextStyle(color: slate, fontSize: 12.5)),
+                style: const TextStyle(color: kVelvetMuted, fontSize: 12.5)),
           ],
           const SizedBox(height: 6),
           for (int i = 0; i < rows.length; i++) ...[
-            if (i > 0) const Divider(height: 1, color: silverLight),
+            if (i > 0) const Divider(height: 1, color: const Color(0x1FFFFFFF)),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: Row(
@@ -117,10 +118,10 @@ class _Section extends StatelessWidget {
                             style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
-                                color: ink)),
+                                color: kVelvetInk)),
                         Text(rows[i][2],
                             style: const TextStyle(
-                                fontSize: 12.5, color: slate)),
+                                fontSize: 12.5, color: kVelvetMuted)),
                       ],
                     ),
                   ),
