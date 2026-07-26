@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../data/avatar.dart';
+import '../data/journey_state.dart';
 import '../data/lesson_catalog.dart';
 import '../data/lesson_content.dart';
 import '../data/quiz_master.dart';
@@ -11,12 +13,14 @@ import '../services/twi_speech.dart';
 import '../theme.dart';
 import '../widgets/animations.dart';
 import '../widgets/celebration.dart';
+import '../widgets/checkpoint_travel.dart';
 import '../widgets/composable_trotro.dart';
 import '../widgets/continue_button.dart';
 import '../widgets/floating_card.dart';
 import '../widgets/floating_reward.dart';
 import '../widgets/stage_clear.dart';
 import '../widgets/tappable_scale.dart';
+import '../widgets/tintable_trotro.dart';
 
 const Color _correctGreen = Color(0xFF2E6B3B);
 const Color _wrongRed = Color(0xFF9B2D2A);
@@ -157,6 +161,19 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
         skin: TroTroSkin.fromEquipped(equipped),
       );
       if (!mounted) return;
+
+      // Region/Act clear → travel cinematic to the Act's landmark.
+      final landmark = landmarkForActBoss(widget.lesson);
+      if (landmark != null && o.starsGained > 0) {
+        await CheckpointTravel.play(
+          context,
+          destination: landmark,
+          avatar: avatarById(equipped['avatar']),
+          bodyColor: troTroBodyColorFor(equipped),
+          equipped: equipped,
+        );
+        if (!mounted) return;
+      }
     }
 
     // Reveal the summary + Mastery Report after the drive.

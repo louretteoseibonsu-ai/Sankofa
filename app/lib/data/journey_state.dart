@@ -1,4 +1,18 @@
 import 'landmark.dart';
+import 'lesson_catalog.dart';
+
+/// Region/Act → landmark mapping (by order). If [lesson] is the final milestone
+/// (boss) of its Act, returns the landmark that Act unlocks — otherwise null.
+/// Clearing an Act's boss triggers the checkpoint-travel cinematic to it.
+Landmark? landmarkForActBoss(Lesson lesson) {
+  for (var i = 0; i < kCategories.length; i++) {
+    final c = kCategories[i];
+    if (c.lessons.isNotEmpty && c.lessons.last.id == lesson.id) {
+      return kLandmarks[i.clamp(0, kLandmarks.length - 1)];
+    }
+  }
+  return null;
+}
 
 /// Journey progression state — the Flutter equivalent of the requested
 /// JourneyState / ViewModel flag. Held by the map screen; when
