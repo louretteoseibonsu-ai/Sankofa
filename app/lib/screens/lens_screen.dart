@@ -499,6 +499,7 @@ class _LensScreenState extends State<LensScreen> {
             'Point your camera at anything and learn — and say — its Twi name. '
             'Unlock Lens with Premium, plus every lesson, symbol, and AI tool.',
         icon: Icons.center_focus_strong,
+        dark: true,
       );
     }
     return Theme(
@@ -577,7 +578,8 @@ class _LensScreenState extends State<LensScreen> {
           CreditsBar(
               status: _creditStatus!,
               unit: 'AI credits',
-              onBuy: _openBuyFromBar),
+              onBuy: _openBuyFromBar,
+              dark: true),
         const SizedBox(height: 14),
 
         // Capture buttons

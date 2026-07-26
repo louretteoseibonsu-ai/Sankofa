@@ -261,7 +261,10 @@ class _TranslateScreenState extends State<TranslateScreen> {
         const SizedBox(height: 10),
         if (_status != null)
           CreditsBar(
-              status: _status!, unit: 'AI credits', onBuy: _openBuyFromBar),
+              status: _status!,
+              unit: 'AI credits',
+              onBuy: _openBuyFromBar,
+              dark: true),
         // Gentle upgrade nudge — only for free users who are running low.
         if (_status != null && !_status!.premium && _status!.remaining <= 5) ...[
           const SizedBox(height: 10),
