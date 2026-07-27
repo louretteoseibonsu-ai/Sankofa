@@ -7,6 +7,7 @@ import '../services/sound_service.dart';
 import '../theme.dart';
 import 'animations.dart' show celebrateBurst;
 import 'avatar_badge.dart';
+import 'kente_pattern.dart';
 import 'tappable_scale.dart';
 import 'velvet.dart';
 
@@ -184,19 +185,24 @@ class _FamilyCelebrationViewState extends State<_FamilyCelebrationView>
                     ],
                   ),
                   const SizedBox(height: 12),
-                  // Headline sits ABOVE the hero as the title of the moment.
-                  Text('Ayɛkoo!',
+                  // Headline (Option C): heavy stacked caps underlined with the
+                  // signature 5-colour Kente accent rule.
+                  Text('AYƐKOO',
                       style: displayFont(
-                          fontSize: 40,
-                          fontWeight: FontWeight.w700,
-                          color: kVelvetInk)),
-                  const SizedBox(height: 2),
-                  Text('Well done',
-                      style: TextStyle(
-                          color: kVelvetMuted,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          decoration: TextDecoration.none)),
+                          fontSize: 34,
+                          fontWeight: FontWeight.w800,
+                          color: kVelvetInk,
+                          letterSpacing: 1.5)),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: 120,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(2),
+                      child: const KenteAccentLine(height: 3, blockWidth: 24),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text('WELL DONE', style: microLabel(color: kOchre)),
                   const SizedBox(height: 16),
                   // Celebration clip (or portrait fallback) in a glowing frame.
                   Transform.scale(
