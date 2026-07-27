@@ -14,11 +14,10 @@ import '../theme.dart';
 import '../widgets/animations.dart';
 import '../widgets/celebration.dart';
 import '../widgets/checkpoint_travel.dart';
-import '../widgets/composable_trotro.dart';
 import '../widgets/continue_button.dart';
 import '../widgets/floating_card.dart';
 import '../widgets/floating_reward.dart';
-import '../widgets/stage_clear.dart';
+import '../widgets/family_celebration.dart';
 import '../widgets/tappable_scale.dart';
 import '../widgets/tintable_trotro.dart';
 
@@ -155,10 +154,10 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
         // Cosmetics unavailable — celebrate with the default skin.
       }
       if (!mounted) return;
-      await StageClear.run(
+      await FamilyCelebration.play(
         context,
+        avatar: avatarById(equipped['avatar']),
         stars: o.stars < 1 ? 1 : o.stars,
-        skin: TroTroSkin.fromEquipped(equipped),
       );
       if (!mounted) return;
 
