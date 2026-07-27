@@ -14,13 +14,11 @@ import '../widgets/avatar_badge.dart';
 import '../widgets/campaign_banner.dart';
 import '../widgets/greeting.dart';
 import '../widgets/landmark_sheet.dart';
-import '../widgets/mascot.dart';
 import '../widgets/motion.dart';
 import '../widgets/overlay_flight.dart';
 import '../widgets/skeleton.dart';
 import '../widgets/state_message.dart';
 import '../widgets/tappable_scale.dart';
-import '../widgets/tintable_trotro.dart';
 import '../widgets/velvet.dart';
 import '../widgets/trotro_mascot.dart';
 import 'customization_shop_screen.dart';
@@ -65,14 +63,12 @@ class _JourneyScreenState extends State<JourneyScreen>
   int _displayIndex = 0;
   TroTroState _troState = TroTroState.idle;
   TroTroSkin _skin = const TroTroSkin(); // kept for the equipped horn sound
-  Color _bodyColor = kTroTroBodyColors.first;
   Map<String, String> _equipped = const {}; // cosmetics for the layered avatar
   bool _firstLoad = true;
   bool _error = false; // set when the initial load fails (offline / no cache)
 
-  // Continuous engine-idle bob for the parked map bus — grows into a bigger bob
-  // + forward lean + light motion blur while driving between stops. Feeds a live
-  // MascotPose so the canonical bus reads as alive without swapping art.
+  // Continuous engine-idle bob for the player avatar — grows into a bigger bob
+  // + forward lean while "driving" between stops so it reads as alive.
   late final AnimationController _driveBob;
 
   // Boss = last stop of each region; region name keyed by category id.
@@ -121,7 +117,6 @@ class _JourneyScreenState extends State<JourneyScreen>
       _p = p;
       _stats = stats;
       _skin = TroTroSkin.fromEquipped(cos.equipped);
-      _bodyColor = troTroBodyColorFor(cos.equipped);
       _equipped = cos.equipped;
       _loading = false;
       _error = false;
