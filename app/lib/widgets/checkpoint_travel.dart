@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:video_player/video_player.dart';
 import '../data/avatar.dart';
 import '../data/landmark.dart';
 import '../theme.dart';
 import 'avatar_badge.dart';
-import 'mascot.dart';
 import 'tappable_scale.dart';
 import 'velvet.dart';
 
@@ -17,8 +17,7 @@ import 'velvet.dart';
 ///
 /// ```dart
 /// await CheckpointTravel.play(context,
-///   destination: journey.nextLandmark!, avatar: myAvatar,
-///   bodyColor: myColor, equipped: myEquipped);
+///   destination: journey.nextLandmark!, avatar: myAvatar);
 /// ```
 class CheckpointTravel {
   const CheckpointTravel._();
@@ -27,8 +26,6 @@ class CheckpointTravel {
     BuildContext context, {
     required Landmark destination,
     required Avatar avatar,
-    required Color bodyColor,
-    Map<String, String> equipped = const {},
   }) {
     final overlay = Overlay.of(context);
     final completer = Completer<void>();
@@ -37,8 +34,6 @@ class CheckpointTravel {
       builder: (_) => _CheckpointTravelView(
         destination: destination,
         avatar: avatar,
-        bodyColor: bodyColor,
-        equipped: equipped,
         onDone: () {
           entry.remove();
           if (!completer.isCompleted) completer.complete();
@@ -53,15 +48,11 @@ class CheckpointTravel {
 class _CheckpointTravelView extends StatefulWidget {
   final Landmark destination;
   final Avatar avatar;
-  final Color bodyColor;
-  final Map<String, String> equipped;
   final VoidCallback onDone;
 
   const _CheckpointTravelView({
     required this.destination,
     required this.avatar,
-    required this.bodyColor,
-    required this.equipped,
     required this.onDone,
   });
 
@@ -88,8 +79,86 @@ class _CheckpointTravelViewState extends State<_CheckpointTravelView>
     ..repeat(reverse: true);
   bool _arrived = false;
 
+  // The equipped character's looping celebration clip — travels as the hero and
+  // reappears on the arrival card.
+  VideoPlayerController? _clip;
+  bool _clipReady = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initClip();
+  }
+
+  Future<void> _initClip() async {
+    final c = VideoPlayerController.asset(
+        'assets/celebrations/celebrate_${widget.avatar.id}.mp4');
+    _clip = c;
+    try {
+      await c.initialize();
+      await c.setLooping(true);
+      await c.setVolume(0);
+      await c.play();
+      if (mounted) setState(() => _clipReady = true);
+    } catch (_) {
+      if (mounted) setState(() {});
+    }
+  }
+
+  /// The clip in a gold-glow rounded frame, sized to fit within [maxW]×[maxH]
+  /// (falls back to the sculpted portrait if the clip can't load).
+  Widget _clipFrame(double maxW, double maxH) {
+    final v = _clip;
+    final aspect = (_clipReady && v != null) ? v.value.aspectRatio : (480 / 556);
+    double w = maxW, h = w / aspect;
+    if (h > maxH) {
+      h = maxH;
+      w = h * aspect;
+    }
+    return SizedBox(
+      width: w,
+      height: h,
+      child: DecoratedBox(
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(18)),
+          boxShadow: [
+            BoxShadow(
+                color: Color(0x55E3A92C), blurRadius: 36, spreadRadius: 2),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(18),
+          child: (_clipReady && v != null)
+              ? FittedBox(
+                  fit: BoxFit.cover,
+                  clipBehavior: Clip.hardEdge,
+                  child: SizedBox(
+                    width: v.value.size.width,
+                    height: v.value.size.height,
+                    child: VideoPlayer(v),
+                  ),
+                )
+              : ColoredBox(
+                  color: const Color(0xFF1B1613),
+                  child: Center(
+                    child: Image.asset(
+                      widget.avatar.assetReference,
+                      fit: BoxFit.contain,
+                      errorBuilder: (_, __, ___) => AvatarBadge(
+                          avatar: widget.avatar,
+                          size: maxH * 0.7,
+                          selected: true),
+                    ),
+                  ),
+                ),
+        ),
+      ),
+    );
+  }
+
   @override
   void dispose() {
+    _clip?.dispose();
     _scroll.dispose();
     _drive.dispose();
     _breathe.dispose();
@@ -148,28 +217,15 @@ class _CheckpointTravelViewState extends State<_CheckpointTravelView>
                   fontWeight: FontWeight.w700,
                   color: kVelvetInk)),
           const Spacer(),
-          // The tro tro cruising (world scrolls; bus bobs centre-stage).
+          // The chosen family member celebrates as they travel (world scrolls;
+          // the hero bobs centre-stage).
           AnimatedBuilder(
-            animation: Listenable.merge([_scroll, _drive]),
+            animation: _scroll,
             builder: (_, __) {
-              final bob = 5.0 * math.sin(2 * math.pi * _scroll.value);
-              return Stack(
-                clipBehavior: Clip.none,
-                alignment: Alignment.center,
-                children: [
-                  Mascot(
-                    bodyColor: widget.bodyColor,
-                    equipped: widget.equipped,
-                    width: 190,
-                    pose: MascotPose(bob: bob, tilt: -0.03),
-                  ),
-                  Positioned(
-                    top: 20,
-                    right: 40,
-                    child: AvatarBadge(
-                        avatar: widget.avatar, size: 40, selected: true),
-                  ),
-                ],
+              final bob = 6.0 * math.sin(2 * math.pi * _scroll.value);
+              return Transform.translate(
+                offset: Offset(0, -bob),
+                child: _clipFrame(210, 250),
               );
             },
           ),
@@ -212,10 +268,13 @@ class _CheckpointTravelViewState extends State<_CheckpointTravelView>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                // The character celebrating the arrival.
+                _clipFrame(240, 96),
+                const SizedBox(height: 14),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(18),
                   child: SizedBox(
-                    height: 150,
+                    height: 124,
                     width: double.infinity,
                     child: Image.asset(
                       widget.destination.imageAsset,
@@ -228,7 +287,7 @@ class _CheckpointTravelViewState extends State<_CheckpointTravelView>
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 14),
                 Text('NEW LANDMARK', style: microLabel(color: kOchre)),
                 const SizedBox(height: 6),
                 Text(widget.destination.name,

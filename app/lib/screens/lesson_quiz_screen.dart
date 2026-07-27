@@ -19,7 +19,6 @@ import '../widgets/floating_card.dart';
 import '../widgets/floating_reward.dart';
 import '../widgets/family_celebration.dart';
 import '../widgets/tappable_scale.dart';
-import '../widgets/tintable_trotro.dart';
 
 const Color _correctGreen = Color(0xFF2E6B3B);
 const Color _wrongRed = Color(0xFF9B2D2A);
@@ -169,8 +168,6 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
           context,
           destination: landmark,
           avatar: avatarById(equipped['avatar']),
-          bodyColor: troTroBodyColorFor(equipped),
-          equipped: equipped,
         );
         if (!mounted) return;
       }
