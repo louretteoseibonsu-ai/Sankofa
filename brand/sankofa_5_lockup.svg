@@ -1,0 +1,16 @@
+<svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" width="900" height="300">
+  <defs><linearGradient id="v" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1B1714"/><stop offset="1" stop-color="#121011"/></linearGradient></defs>
+  <rect width="900" height="300" rx="40" fill="url(#v)"/>
+  <g transform="translate(70,58) scale(0.36)">
+    <ellipse cx="286" cy="322" rx="74" ry="55" fill="#D4A373"/>
+    <path d="M348 300 L400 250 L366 320 Z" fill="#D4A373"/>
+    <path d="M304 282 C 326 224 302 188 256 188 C 220 188 205 206 206 228" stroke="#D4A373" stroke-width="42" fill="none" stroke-linecap="round"/>
+    <circle cx="206" cy="228" r="31" fill="#D4A373"/>
+    <path d="M196 250 L186 274 L220 262 Z" fill="#E2725B"/>
+    <ellipse cx="272" cy="262" rx="18" ry="22" fill="#E3A92C"/>
+    <circle cx="199" cy="220" r="5.5" fill="#141416"/>
+  </g>
+  <text x="300" y="150" font-family="Space Grotesk, Arial, sans-serif" font-weight="700" font-size="86" fill="#F3ECE4" letter-spacing="-2">Sankofa</text>
+  <text x="302" y="212" font-family="Space Grotesk, Arial, sans-serif" font-weight="500" font-size="40" fill="#D4A373" letter-spacing="10">TWI</text>
+  <rect x="302" y="232" width="150" height="6" fill="#F4B400"/><rect x="452" y="232" width="30" height="6" fill="#9B2D2A"/><rect x="482" y="232" width="30" height="6" fill="#2E6B3B"/><rect x="512" y="232" width="30" height="6" fill="#1A1512"/><rect x="542" y="232" width="30" height="6" fill="#E07A3E"/>
+</svg>
