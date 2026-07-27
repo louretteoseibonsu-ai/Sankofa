@@ -162,9 +162,10 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
       );
       if (!mounted) return;
 
-      // Region/Act clear → travel cinematic to the Act's landmark.
+      // Region/Act clear → travel cinematic to the Act's landmark. Fires on
+      // every boss clear (a re-clear replays it), not only when new stars land.
       final landmark = landmarkForActBoss(widget.lesson);
-      if (landmark != null && o.starsGained > 0) {
+      if (landmark != null) {
         await CheckpointTravel.play(
           context,
           destination: landmark,
