@@ -53,8 +53,10 @@ class CampaignBanner extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(kicker.toUpperCase(), style: microLabel(color: kOchre)),
-                    const SizedBox(height: 3),
+                    if (kicker.isNotEmpty) ...[
+                      Text(kicker.toUpperCase(), style: microLabel(color: kOchre)),
+                      const SizedBox(height: 3),
+                    ],
                     Text(title,
                         style: displayFont(
                             fontSize: 24,

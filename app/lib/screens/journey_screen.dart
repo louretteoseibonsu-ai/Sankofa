@@ -391,7 +391,7 @@ class _JourneyScreenState extends State<JourneyScreen>
       ),
       child: Column(
         children: [
-          const CampaignBanner(),
+          const CampaignBanner(kicker: ''),
         // ── HUD overlay ──────────────────────────────────────────────
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
