@@ -1,5 +1,54 @@
 import 'package:flutter/material.dart';
 
+/// The signature Kente accent line — a thin multi-colour block rule in the
+/// canonical sequence: bright yellow · rich red · deep green · matte black ·
+/// warm orange (as on the Sankofa raffle page). Used as the top accent token
+/// beneath the header across the velvet-dark shell.
+class KenteAccentLine extends StatelessWidget {
+  final double height;
+  final double blockWidth;
+  const KenteAccentLine({super.key, this.height = 3, this.blockWidth = 13});
+
+  /// Canonical block sequence.
+  static const List<Color> kSequence = [
+    Color(0xFFF4B400), // bright yellow
+    Color(0xFF9B2D2A), // rich red
+    Color(0xFF2E6B3B), // deep green
+    Color(0xFF1A1512), // matte black
+    Color(0xFFE07A3E), // warm orange
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: height,
+      width: double.infinity,
+      child: CustomPaint(painter: _KenteLinePainter(blockWidth)),
+    );
+  }
+}
+
+class _KenteLinePainter extends CustomPainter {
+  final double block;
+  const _KenteLinePainter(this.block);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final seq = KenteAccentLine.kSequence;
+    int i = 0;
+    for (double x = 0; x < size.width; x += block) {
+      canvas.drawRect(
+        Rect.fromLTWH(x, 0, block + 0.5, size.height),
+        Paint()..color = seq[i % seq.length],
+      );
+      i++;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _KenteLinePainter old) => old.block != block;
+}
+
 /// Kente header weave — "warp stripes" (Version 3, matches the design preview):
 /// a green field woven with vertical gold/red bars, fine black weave-lines and
 /// cream hairlines. Used as the app-wide header strip behind the greeting.

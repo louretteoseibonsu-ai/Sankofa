@@ -59,27 +59,31 @@ class _AppShellState extends State<AppShell> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         titleSpacing: 16,
-        // The Kente warp-stripe weave spans the full header (Version 3).
-        flexibleSpace: const KenteHeaderBackground(),
-        // Home (Journey) greets the user by name; other tabs show their label.
-        // A dark pill lifts the text off the busy weave for legibility.
-        title: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        // Clean velvet header (#141416 shell) — the signature Kente accent line
+        // is the only ornament, sitting as the top-accent rule beneath it.
+        flexibleSpace: const DecoratedBox(
           decoration: BoxDecoration(
-            color: const Color(0xE6120E0C),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0x59D4A373)),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFF17130F), Color(0xFF1E1A17)],
+            ),
           ),
-          child: _index == 0
-              ? const GreetingTitle()
-              : Text(
-                  _dest[_index].label,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 20,
-                      color: Color(0xFFF3ECE4)),
-                ),
         ),
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(3),
+          child: KenteAccentLine(),
+        ),
+        // Home (Journey) greets the user by name; other tabs show their label.
+        title: _index == 0
+            ? const GreetingTitle()
+            : Text(
+                _dest[_index].label,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 20,
+                    color: Color(0xFFF3ECE4)),
+              ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16),
