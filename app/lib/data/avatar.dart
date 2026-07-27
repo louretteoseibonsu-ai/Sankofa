@@ -70,7 +70,7 @@ const List<Avatar> kAvatars = [
     id: 'auntie',
     name: 'Super Auntie',
     title: 'The Trendsetter',
-    assetReference: 'assets/avatars/super_auntie.png',
+    assetReference: 'assets/avatars/avatar_auntie.png',
     accent: Color(0xFFE2725B), // terracotta
     unlockKind: AvatarUnlock.free,
   ),
@@ -78,7 +78,7 @@ const List<Avatar> kAvatars = [
     id: 'uncle',
     name: 'Super Uncle',
     title: 'The Cool Head',
-    assetReference: 'assets/avatars/super_uncle.png',
+    assetReference: 'assets/avatars/avatar_uncle.png',
     accent: Color(0xFF2E86C1), // blue
     unlockKind: AvatarUnlock.level,
     unlockValue: 5,
@@ -87,7 +87,7 @@ const List<Avatar> kAvatars = [
     id: 'grandma',
     name: 'Super Grandma',
     title: 'The Wise One',
-    assetReference: 'assets/avatars/super_grandma.png',
+    assetReference: 'assets/avatars/avatar_grandma.png',
     accent: Color(0xFFD4A373), // ochre
     unlockKind: AvatarUnlock.streak,
     unlockValue: 7,
@@ -96,7 +96,7 @@ const List<Avatar> kAvatars = [
     id: 'grandpa',
     name: 'Super Grandpa',
     title: 'The Storyteller',
-    assetReference: 'assets/avatars/super_grandpa.png',
+    assetReference: 'assets/avatars/avatar_grandpa.png',
     accent: Color(0xFF2E9E5B), // green
     unlockKind: AvatarUnlock.mastery,
     unlockValue: 5,

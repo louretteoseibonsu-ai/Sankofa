@@ -180,8 +180,7 @@ class _JourneyScreenState extends State<JourneyScreen>
       endScale: 1.0,
       arcHeight: 46,
       duration: const Duration(milliseconds: 650),
-      builder: (w) =>
-          Mascot(bodyColor: _bodyColor, equipped: _equipped, width: w),
+      builder: (w) => _avatarFigure(w),
       onStart: () {
         HapticFeedback.selectionClick();
         setState(() => _flying = true); // hide the parked bus during flight
@@ -289,8 +288,7 @@ class _JourneyScreenState extends State<JourneyScreen>
       toKey: _anansesemKey,
       endScale: 0.3,
       arcHeight: 80,
-      builder: (w) =>
-          Mascot(bodyColor: _bodyColor, equipped: _equipped, width: w),
+      builder: (w) => _avatarFigure(w),
       onStart: () {
         HapticFeedback.selectionClick();
         setState(() => _flying = true);
@@ -322,8 +320,7 @@ class _JourneyScreenState extends State<JourneyScreen>
       toKey: _garageKey,
       endScale: 0.28, // shrink into the garage button
       arcHeight: 90,
-      builder: (w) =>
-          Mascot(bodyColor: _bodyColor, equipped: _equipped, width: w),
+      builder: (w) => _avatarFigure(w),
       onStart: () {
         HapticFeedback.selectionClick();
         setState(() => _flying = true); // hide the real bus during the flight
@@ -351,6 +348,48 @@ class _JourneyScreenState extends State<JourneyScreen>
   }
 
   int get _currentIndex => _currentIndexFor(_p);
+
+  /// The equipped family avatar rendered as a matte figure at [width] — used for
+  /// the map player marker and the region-warp / garage / campfire flight clones
+  /// (the tro tro bus art is retired).
+  Widget _avatarFigure(double width) {
+    final avatar = avatarById(_equipped['avatar']);
+    return Image.asset(
+      avatar.assetReference,
+      width: width,
+      fit: BoxFit.contain,
+      errorBuilder: (_, __, ___) =>
+          AvatarBadge(avatar: avatar, size: width, selected: true),
+    );
+  }
+
+  /// The unlocked family members, in roster order — who the player can pick.
+  List<Avatar> get _unlockedAvatars {
+    final level = _stats.progress.level;
+    final streak = _stats.streak;
+    final mastered = _stats.progress.best.values.where((v) => v >= 10).length;
+    return kAvatars
+        .where((a) =>
+            a.unlockedBy(level: level, streak: streak, mastered: mastered))
+        .toList();
+  }
+
+  /// Cycle the map player to the next unlocked family member (persisted).
+  Future<void> _cycleAvatar() async {
+    final unlocked = _unlockedAvatars;
+    if (unlocked.length < 2) return; // nothing else unlocked yet
+    final currentId = _equipped['avatar'] ?? kDefaultAvatarId;
+    final idx = unlocked.indexWhere((a) => a.id == currentId);
+    final next = unlocked[(idx + 1) % unlocked.length];
+    HapticFeedback.selectionClick();
+    setState(() => _equipped = {..._equipped, 'avatar': next.id});
+    await _service.equipAvatar(next.id);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      duration: const Duration(milliseconds: 1100),
+      content: Text('You are now ${next.name}'),
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -435,6 +474,15 @@ class _JourneyScreenState extends State<JourneyScreen>
                           ),
                         ]),
                       ),
+                    ),
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      padding: const EdgeInsets.all(6),
+                      constraints: const BoxConstraints(),
+                      onPressed: _cycleAvatar,
+                      icon: const Icon(Icons.groups_rounded),
+                      color: kVelvetInk,
+                      tooltip: 'Change character',
                     ),
                     IconButton(
                       key: _anansesemKey,
@@ -567,25 +615,21 @@ class _JourneyScreenState extends State<JourneyScreen>
                                   : null,
                             ),
                           ),
-                      // The tro tro avatar
+                      // The player avatar — the chosen family character stands
+                      // on the active checkpoint (the tro tro bus is retired).
                       if (n > 0)
                         Positioned(
                           left: 0,
                           top: 0,
-                          width: 108,
-                          height: 108 * 250 / 380,
+                          width: 96,
+                          height: 118,
                           child: Spring2DBuilder(
-                            target: Offset(points[_displayIndex].dx - 54,
-                                points[_displayIndex].dy - 46),
+                            target: Offset(points[_displayIndex].dx - 48,
+                                points[_displayIndex].dy - 90),
                             builder: (context, pos, child) =>
                                 Transform.translate(offset: pos, child: child),
                             child: GestureDetector(
-                            onTap: () => _open(lessons[current]),
-                            // Always the illustrated bus (parked, driving, or
-                            // arriving) — it just leans forward while driving so
-                            // the motion reads without swapping to a different
-                            // art style.
-                            child: Center(
+                              onTap: () => _open(lessons[current]),
                               child: Opacity(
                                 opacity: _flying ? 0.0 : 1.0,
                                 child: AnimatedBuilder(
@@ -595,38 +639,50 @@ class _JourneyScreenState extends State<JourneyScreen>
                                         _troState == TroTroState.drive;
                                     final wave = Curves.easeInOut
                                         .transform(_driveBob.value);
-                                    final pose = MascotPose(
-                                      bob: (driving ? 6.0 : 2.5) * wave,
-                                      tilt: driving ? -0.05 : 0.0,
-                                      blur: driving ? 1.2 : 0.0,
-                                    );
+                                    final bob = (driving ? 6.0 : 2.5) * wave;
+                                    final avatar =
+                                        avatarById(_equipped['avatar']);
                                     return Stack(
                                       clipBehavior: Clip.none,
                                       alignment: Alignment.bottomCenter,
                                       children: [
+                                        // Grounding contact shadow.
+                                        const Positioned(
+                                          bottom: 8,
+                                          child: DecoratedBox(
+                                            decoration: BoxDecoration(
+                                              color: Color(0x55000000),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.elliptical(27, 6.5)),
+                                            ),
+                                            child: SizedBox(
+                                                width: 54, height: 13),
+                                          ),
+                                        ),
                                         if (driving)
                                           Positioned(
                                             left: 2,
-                                            bottom: 6,
+                                            bottom: 8,
                                             child:
                                                 _DriveDust(t: _driveBob.value),
                                           ),
-                                        Mascot(
-                                          key: _troKey,
-                                          bodyColor: _bodyColor,
-                                          equipped: _equipped,
-                                          width: 104,
-                                          pose: pose,
-                                        ),
-                                        // The chosen avatar rides up front.
-                                        Positioned(
-                                          top: 12,
-                                          right: 18,
-                                          child: AvatarBadge(
-                                            avatar: avatarById(
-                                                _equipped['avatar']),
-                                            size: 26,
-                                            selected: true,
+                                        Transform.translate(
+                                          offset: Offset(0, -bob),
+                                          child: Transform.rotate(
+                                            angle: driving ? -0.04 : 0.0,
+                                            alignment: Alignment.bottomCenter,
+                                            child: Image.asset(
+                                              avatar.assetReference,
+                                              key: _troKey,
+                                              height: 106,
+                                              fit: BoxFit.contain,
+                                              errorBuilder: (_, __, ___) =>
+                                                  AvatarBadge(
+                                                avatar: avatar,
+                                                size: 72,
+                                                selected: true,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -635,7 +691,6 @@ class _JourneyScreenState extends State<JourneyScreen>
                                 ),
                               ),
                             ),
-                          ),
                           ),
                         ),
                     ],
