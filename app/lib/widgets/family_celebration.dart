@@ -125,128 +125,158 @@ class _FamilyCelebrationViewState extends State<_FamilyCelebrationView>
     final aspect =
         (_videoReady && v != null) ? v.value.aspectRatio : (480 / 556);
 
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: Opacity(
-            opacity: t,
-            child: const DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [kVelvetTop, kVelvetBottom],
+    // Size the clip to fit — cap height so the headline + CTA are never pushed
+    // off-screen (portrait clips are tall).
+    final screen = MediaQuery.of(context).size;
+    final maxH = screen.height * 0.44;
+    double vw = 300, vh = vw / aspect;
+    if (vh > maxH) {
+      vh = maxH;
+      vw = vh * aspect;
+    }
+
+    // A Material ancestor gives the overlay proper text styling (and removes the
+    // debug yellow underline you get from bare Text in an Overlay).
+    return Material(
+      type: MaterialType.transparency,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Opacity(
+              opacity: t,
+              child: const DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [kVelvetTop, kVelvetBottom],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        Positioned.fill(
-          child: IgnorePointer(child: FocalGlow(color: kOchre)),
-        ),
-        Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Stars earned.
-              Row(
+          Positioned.fill(
+            child: IgnorePointer(child: FocalGlow(color: kOchre)),
+          ),
+          SafeArea(
+            child: Center(
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  for (var i = 0; i < widget.stars; i++)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                      child: TweenAnimationBuilder<double>(
-                        tween: Tween(begin: 0.3, end: 1.0),
-                        duration: Duration(milliseconds: 420 + i * 170),
-                        curve: Curves.elasticOut,
-                        builder: (_, s, child) =>
-                            Transform.scale(scale: s, child: child),
-                        child: Icon(Icons.star_rounded,
-                            size: i == 1 ? 56 : 44,
-                            color: const Color(0xFFFFC02E)),
-                      ),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 18),
-              // Celebration clip (or portrait fallback) in a glowing frame.
-              Transform.scale(
-                scale: 0.7 + 0.3 * bloom.clamp(0.0, 1.2),
-                child: SizedBox(
-                  width: 300,
-                  child: AspectRatio(
-                    aspectRatio: aspect,
-                    child: DecoratedBox(
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(22)),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Color(0x66E3A92C),
-                              blurRadius: 48,
-                              spreadRadius: 4),
-                        ],
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(22),
-                        child: (_videoReady && v != null)
-                            ? VideoPlayer(v)
-                            : ColoredBox(
-                                color: const Color(0xFF1B1613),
-                                child: Center(
-                                  child: Image.asset(
-                                    widget.avatar.assetReference,
-                                    fit: BoxFit.contain,
-                                    errorBuilder: (_, __, ___) => AvatarBadge(
-                                        avatar: widget.avatar,
-                                        size: 150,
-                                        selected: true),
+                  // Stars earned.
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      for (var i = 0; i < widget.stars; i++)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: TweenAnimationBuilder<double>(
+                            tween: Tween(begin: 0.3, end: 1.0),
+                            duration: Duration(milliseconds: 420 + i * 170),
+                            curve: Curves.elasticOut,
+                            builder: (_, s, child) =>
+                                Transform.scale(scale: s, child: child),
+                            child: Icon(Icons.star_rounded,
+                                size: i == 1 ? 52 : 40,
+                                color: const Color(0xFFFFC02E)),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  // Headline sits ABOVE the hero as the title of the moment.
+                  Text('Ayɛkoo!',
+                      style: displayFont(
+                          fontSize: 40,
+                          fontWeight: FontWeight.w700,
+                          color: kVelvetInk)),
+                  const SizedBox(height: 2),
+                  Text('Well done',
+                      style: TextStyle(
+                          color: kVelvetMuted,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          decoration: TextDecoration.none)),
+                  const SizedBox(height: 16),
+                  // Celebration clip (or portrait fallback) in a glowing frame.
+                  Transform.scale(
+                    scale: 0.72 + 0.28 * bloom.clamp(0.0, 1.2),
+                    child: SizedBox(
+                      width: vw,
+                      height: vh,
+                      child: DecoratedBox(
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(22)),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Color(0x66E3A92C),
+                                blurRadius: 48,
+                                spreadRadius: 4),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(22),
+                          child: (_videoReady && v != null)
+                              ? FittedBox(
+                                  fit: BoxFit.cover,
+                                  clipBehavior: Clip.hardEdge,
+                                  child: SizedBox(
+                                    width: v.value.size.width,
+                                    height: v.value.size.height,
+                                    child: VideoPlayer(v),
+                                  ),
+                                )
+                              : ColoredBox(
+                                  color: const Color(0xFF1B1613),
+                                  child: Center(
+                                    child: Image.asset(
+                                      widget.avatar.assetReference,
+                                      fit: BoxFit.contain,
+                                      errorBuilder: (_, __, ___) => AvatarBadge(
+                                          avatar: widget.avatar,
+                                          size: 150,
+                                          selected: true),
+                                    ),
                                   ),
                                 ),
-                              ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text('Ayɛkoo!',
-                  style: displayFont(
-                      fontSize: 40,
-                      fontWeight: FontWeight.w700,
-                      color: kVelvetInk)),
-              const SizedBox(height: 4),
-              Text('WELL DONE · STAGE CLEAR',
-                  style: microLabel(color: kOchre)),
-              const SizedBox(height: 26),
-              AnimatedBuilder(
-                animation: _breathe,
-                builder: (_, child) => Transform.scale(
-                    scale: 1.0 + 0.05 * _breathe.value, child: child),
-                child: TappableScale(
-                  onTap: () {
-                    HapticFeedback.mediumImpact();
-                    SoundService.instance.tap();
-                    widget.onFinished();
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 54, vertical: 15),
-                    decoration: BoxDecoration(
-                      color: terracotta,
-                      borderRadius: BorderRadius.circular(28),
+                  const SizedBox(height: 24),
+                  // Continue — the clear bottom CTA.
+                  AnimatedBuilder(
+                    animation: _breathe,
+                    builder: (_, child) => Transform.scale(
+                        scale: 1.0 + 0.05 * _breathe.value, child: child),
+                    child: TappableScale(
+                      onTap: () {
+                        HapticFeedback.mediumImpact();
+                        SoundService.instance.tap();
+                        widget.onFinished();
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 54, vertical: 15),
+                        decoration: BoxDecoration(
+                          color: terracotta,
+                          borderRadius: BorderRadius.circular(28),
+                        ),
+                        child: const Text('Continue',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 17,
+                                decoration: TextDecoration.none)),
+                      ),
                     ),
-                    child: const Text('Continue',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 17)),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
