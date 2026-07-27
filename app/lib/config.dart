@@ -20,7 +20,7 @@ const bool kBillingEnabled = false;
 /// the Nana Line + Drum & Tone Trainer) are marketed as Premium but unlocked
 /// for everyone during the test launch so users can try them. Flip to FALSE
 /// once billing is live to enforce the paywall.
-const bool kLensFreeDuringTesting = true;
+const bool kLensFreeDuringTesting = false;
 
 // ── Unified AI credits (Khaya calls) ────────────────────────────────────────
 // AI Translate, Sankofa Lens scans, AND audio (TTS) all draw from ONE monthly
