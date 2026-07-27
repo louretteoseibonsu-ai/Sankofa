@@ -56,7 +56,11 @@ class _AppShellState extends State<AppShell> {
       appBar: AppBar(
         toolbarHeight: 60,
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
+        // Explicit velvet fill (+ no M3 surface tint) so the app bar can never
+        // fall back to the theme's light surface behind the greeting.
+        backgroundColor: const Color(0xFF17130F),
+        surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
         elevation: 0,
         titleSpacing: 16,
         // Clean velvet header (#141416 shell) — the signature Kente accent line
