@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../data/avatar.dart';
 import '../data/reading_passages.dart';
 import '../services/progress_service.dart';
 import '../theme.dart';
@@ -472,9 +473,9 @@ class _ListenStrip extends StatelessWidget {
   }
 }
 
-/// Evening "Story Stop" header for folklore passages: the Storyteller elder
-/// walks up and settles by a campfire under a starry velvet sky, framing the
-/// tale like an Anansesɛm told at night.
+/// Evening "Story Stop" header for folklore passages: your equipped family
+/// member walks up and settles by a campfire under a starry velvet sky, framing
+/// the tale like an Anansesɛm told at night.
 class _StoryStopHeader extends StatefulWidget {
   const _StoryStopHeader();
 
@@ -484,8 +485,9 @@ class _StoryStopHeader extends StatefulWidget {
 
 class _StoryStopHeaderState extends State<_StoryStopHeader>
     with TickerProviderStateMixin {
-  late final AnimationController _c; // one-shot pull-up (drive in from the left)
-  late final AnimationController _bob; // gentle idle bob once parked at the fire
+  late final AnimationController _c; // one-shot walk-up (from the left)
+  late final AnimationController _bob; // gentle idle bob once by the fire
+  Avatar _avatar = avatarById(kDefaultAvatarId); // your equipped family member
 
   @override
   void initState() {
@@ -496,6 +498,17 @@ class _StoryStopHeaderState extends State<_StoryStopHeader>
     _bob = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 2200))
       ..repeat(reverse: true);
+    _loadAvatar();
+  }
+
+  Future<void> _loadAvatar() async {
+    try {
+      final cos = await ProgressService().loadCosmetics();
+      final a = avatarById(cos.equipped['avatar']);
+      if (mounted) setState(() => _avatar = a);
+    } catch (_) {
+      // Keep the default storyteller if cosmetics can't load.
+    }
   }
 
   @override
@@ -569,9 +582,9 @@ class _StoryStopHeaderState extends State<_StoryStopHeader>
               right: 40,
               child: _Campfire(),
             ),
-            // Anansesɛm are the spider-tales elders tell round the evening fire,
-            // so the Storyteller (Super Grandpa) walks up and settles by the
-            // campfire with a gentle idle bob to open the tale.
+            // Anansesɛm are the spider-tales told round the evening fire, so your
+            // equipped family member walks up and settles by the campfire with a
+            // gentle idle bob to open the tale.
             AnimatedBuilder(
               animation: Listenable.merge([_c, _bob]),
               builder: (_, __) {
@@ -584,9 +597,11 @@ class _StoryStopHeaderState extends State<_StoryStopHeader>
                   child: Transform.translate(
                     offset: Offset(0, -bob),
                     child: Image.asset(
-                      'assets/avatars/avatar_grandpa.png',
+                      _avatar.assetReference,
                       height: 128,
                       fit: BoxFit.contain,
+                      errorBuilder: (_, __, ___) => const SizedBox(
+                          width: 90, height: 128),
                     ),
                   ),
                 );
