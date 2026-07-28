@@ -5,11 +5,9 @@ import '../theme.dart';
 import '../widgets/velvet.dart';
 import '../widgets/challenge_quiz.dart';
 import '../widgets/floating_card.dart';
-import '../widgets/mascot.dart';
 import '../widgets/skeleton.dart';
 import '../widgets/speak_button.dart';
 import '../widgets/state_message.dart';
-import '../widgets/tintable_trotro.dart';
 import 'tools_hub_screen.dart' show velvetToolsTheme;
 
 /// Progressive list of reading passages — pass one to unlock the next.
@@ -474,9 +472,9 @@ class _ListenStrip extends StatelessWidget {
   }
 }
 
-/// Evening "Story Stop" header for folklore passages: the celebratory tro tro
-/// drives in and parks by a campfire under a starry sky, framing the tale like
-/// an Anansesɛm told at night.
+/// Evening "Story Stop" header for folklore passages: the Storyteller elder
+/// walks up and settles by a campfire under a starry velvet sky, framing the
+/// tale like an Anansesɛm told at night.
 class _StoryStopHeader extends StatefulWidget {
   const _StoryStopHeader();
 
@@ -523,9 +521,9 @@ class _StoryStopHeaderState extends State<_StoryStopHeader>
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Color(0xFF241B3A),
-                      Color(0xFF3D2A4D),
-                      Color(0xFF7A3F36),
+                      Color(0xFF141110), // velvet night sky
+                      Color(0xFF1E1712),
+                      Color(0xFF3A241A), // warm ember glow toward the ground
                     ],
                   ),
                 ),
@@ -564,29 +562,32 @@ class _StoryStopHeaderState extends State<_StoryStopHeader>
               bottom: 0,
               left: 0,
               right: 0,
-              child: Container(height: 42, color: const Color(0xFF2C1D24)),
+              child: Container(height: 42, color: const Color(0xFF17130F)),
             ),
             const Positioned(
               bottom: 12,
               right: 40,
               child: _Campfire(),
             ),
-            // The canonical mascot pulls up from the left and parks by the fire
-            // with a gentle idle bob — the same bus that drives the map/rally,
-            // so the world stays visually consistent (Commit 2).
+            // Anansesɛm are the spider-tales elders tell round the evening fire,
+            // so the Storyteller (Super Grandpa) walks up and settles by the
+            // campfire with a gentle idle bob to open the tale.
             AnimatedBuilder(
               animation: Listenable.merge([_c, _bob]),
               builder: (_, __) {
                 final t = Curves.easeOutCubic.transform(_c.value);
-                final x = -160 + 260 * t;
-                final bob = 5.0 * Curves.easeInOut.transform(_bob.value);
+                final x = -150 + 235 * t;
+                final bob = 4.0 * Curves.easeInOut.transform(_bob.value);
                 return Positioned(
-                  bottom: 16,
+                  bottom: 8,
                   left: x,
-                  child: Mascot(
-                    bodyColor: kTroTroBodyColors.first,
-                    width: 118,
-                    pose: MascotPose(bob: bob),
+                  child: Transform.translate(
+                    offset: Offset(0, -bob),
+                    child: Image.asset(
+                      'assets/avatars/avatar_grandpa.png',
+                      height: 128,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 );
               },
