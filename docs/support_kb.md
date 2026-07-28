@@ -238,8 +238,9 @@ go (great when travelling in Ghana).
 
 - **Premium** unlocks all lessons, all Adinkra symbols, AI Translate, the full
   Lens experience, the Ananse avatar, and removes ads.
-- **Pricing:** €4.99/month or €50/year (≈16% saving), with a **7-day free trial**.
-  Prices localise to your region; you're charged in your app-store currency.
+- **Pricing:** €6.99/month or €59.99/year (~28% saving), with a **7-day free
+  trial**. Prices localise to your region; you're charged in your app-store
+  currency.
 - **Upgrade / change plan:** Profile → Subscription → **Upgrade / Change plan**.
 - **Cancel:** Manage and cancel in your **App Store** (iPhone) or **Google Play**
   (Android) subscription settings; access continues to the end of the paid period.

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../data/avatar.dart';
+import '../data/family_lines.dart';
 import '../data/landmark.dart';
 import '../data/lesson_catalog.dart';
 import '../data/trotro_cosmetics.dart';
@@ -65,6 +66,7 @@ class _JourneyScreenState extends State<JourneyScreen>
   TroTroSkin _skin = const TroTroSkin(); // kept for the equipped horn sound
   Map<String, String> _equipped = const {}; // cosmetics for the layered avatar
   Set<String> _avatarsUnlocked = const {}; // family bought early with shards
+  String? _familyLine; // a greeting nudge in the equipped guide's voice
   bool _firstLoad = true;
   bool _error = false; // set when the initial load fails (offline / no cache)
 
@@ -120,6 +122,7 @@ class _JourneyScreenState extends State<JourneyScreen>
       _skin = TroTroSkin.fromEquipped(cos.equipped);
       _equipped = cos.equipped;
       _avatarsUnlocked = cos.avatarsUnlocked;
+      _familyLine = FamilyLines.greeting(cos.equipped['avatar']);
       _loading = false;
       _error = false;
     });
@@ -428,6 +431,31 @@ class _JourneyScreenState extends State<JourneyScreen>
       ),
       child: Column(
         children: [
+          // A warm nudge from your equipped family guide.
+          if (_familyLine != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+              child: RichText(
+                text: TextSpan(children: [
+                  TextSpan(
+                    text:
+                        '${avatarById(_equipped['avatar']).name.replaceFirst('Super ', '')}  ',
+                    style: const TextStyle(
+                        color: kOchre,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13),
+                  ),
+                  TextSpan(
+                    text: _familyLine,
+                    style: const TextStyle(
+                        color: kVelvetMuted,
+                        fontSize: 13,
+                        height: 1.3,
+                        fontStyle: FontStyle.italic),
+                  ),
+                ]),
+              ),
+            ),
           const CampaignBanner(kicker: ''),
         // ── HUD overlay ──────────────────────────────────────────────
         Padding(

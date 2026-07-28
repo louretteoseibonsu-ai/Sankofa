@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 import '../data/avatar.dart';
+import '../data/family_lines.dart';
 import '../services/sound_service.dart';
 import '../theme.dart';
 import 'animations.dart' show celebrateBurst;
@@ -67,6 +68,8 @@ class _FamilyCelebrationViewState extends State<_FamilyCelebrationView>
   VideoPlayerController? _video;
   bool _videoReady = false;
   bool _burst = false;
+  // A rotating in-character line, picked once so it stays put across rebuilds.
+  late final String _line = FamilyLines.celebrate(widget.avatar.id);
 
   @override
   void initState() {
@@ -202,7 +205,17 @@ class _FamilyCelebrationViewState extends State<_FamilyCelebrationView>
                     ),
                   ),
                   const SizedBox(height: 12),
-                  Text('WELL DONE', style: microLabel(color: kOchre)),
+                  // In-character line (rotates per pass) in the guide's voice.
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 300),
+                    child: Text(_line,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            color: kVelvetInk,
+                            fontSize: 15,
+                            height: 1.35,
+                            fontWeight: FontWeight.w500)),
+                  ),
                   const SizedBox(height: 16),
                   // Celebration clip (or portrait fallback) in a glowing frame.
                   Transform.scale(
