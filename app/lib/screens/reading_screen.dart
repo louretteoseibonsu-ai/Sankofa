@@ -10,6 +10,7 @@ import '../widgets/skeleton.dart';
 import '../widgets/speak_button.dart';
 import '../widgets/state_message.dart';
 import '../widgets/tintable_trotro.dart';
+import 'tools_hub_screen.dart' show velvetToolsTheme;
 
 /// Progressive list of reading passages — pass one to unlock the next.
 class ReadingListScreen extends StatefulWidget {
@@ -88,7 +89,8 @@ class _ReadingListScreenState extends State<ReadingListScreen> {
               widget.folkloreOnly
                   ? 'Anansesɛm — Spider Tales'
                   : 'Reading & Comprehension',
-              style: displayFont(fontSize: 26, fontWeight: FontWeight.w800)),
+              style: displayFont(
+                  fontSize: 26, fontWeight: FontWeight.w800, color: kVelvetInk)),
           const SizedBox(height: 4),
           Text(
               widget.folkloreOnly
@@ -165,7 +167,7 @@ class _PassageRow extends StatelessWidget {
               ),
             ),
             if (unlocked)
-              const Icon(Icons.chevron_right, color: Colors.black26),
+              const Icon(Icons.chevron_right, color: Colors.white30),
           ],
         ),
       ),
@@ -196,10 +198,14 @@ class _ReadingDetailScreenState extends State<ReadingDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final p = widget.passage;
-    return Scaffold(
-      appBar: AppBar(title: Text(p.title)),
-      body: SafeArea(
-        child: _started ? _buildQuiz(p) : _buildReading(p),
+    // Pushed as its own route, so re-apply the Tools dark theme here.
+    return Theme(
+      data: velvetToolsTheme(context),
+      child: Scaffold(
+        appBar: AppBar(title: Text(p.title)),
+        body: SafeArea(
+          child: _started ? _buildQuiz(p) : _buildReading(p),
+        ),
       ),
     );
   }
