@@ -34,9 +34,24 @@ class _DayNameScreenState extends State<DayNameScreen> {
       initialDate: _date ?? DateTime(now.year - 20),
       firstDate: DateTime(1900),
       lastDate: now,
+      builder: _velvetCalendar,
     );
     if (picked != null) setState(() => _date = picked);
   }
+
+  /// A coherent velvet-dark calendar so the picker isn't rendered with the
+  /// half-dark Tools colour scheme (which broke it).
+  static Widget _velvetCalendar(BuildContext context, Widget? child) => Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: const ColorScheme.dark(
+            primary: kOchre,
+            onPrimary: Color(0xFF17130F),
+            surface: Color(0xFF211B17),
+            onSurface: kVelvetInk,
+          ),
+        ),
+        child: child!,
+      );
 
   Future<void> _useAsDisplayName(String name) async {
     if (FirebaseAuth.instance.currentUser == null) {
@@ -79,10 +94,11 @@ class _DayNameScreenState extends State<DayNameScreen> {
       padding: const EdgeInsets.all(20),
       children: [
         Text('Akan Day Name',
-            style: displayFont(fontSize: 26, fontWeight: FontWeight.w800)),
+            style: displayFont(
+                fontSize: 26, fontWeight: FontWeight.w800, color: kVelvetInk)),
         const SizedBox(height: 4),
         const Text('Your name is given by the day you were born.',
-            style: TextStyle(color: inkSoft, fontSize: 14.5)),
+            style: TextStyle(color: kVelvetMuted, fontSize: 14.5)),
         const SizedBox(height: 16),
         FloatingCard(
           child: Column(
@@ -99,7 +115,7 @@ class _DayNameScreenState extends State<DayNameScreen> {
               const SizedBox(height: 12),
               OutlinedButton.icon(
                 onPressed: _pickDate,
-                icon: const Icon(Icons.calendar_today, color: plantainGreen),
+                icon: const Icon(Icons.calendar_today, color: kOchre),
                 label: Text(_date == null
                     ? 'Pick your birth date'
                     : '${_date!.year}-${_date!.month.toString().padLeft(2, '0')}-${_date!.day.toString().padLeft(2, '0')}'),
@@ -129,16 +145,16 @@ class _DayNameScreenState extends State<DayNameScreen> {
                 Center(
                   child: Text(_male ? day.maleName : day.femaleName,
                       style: const TextStyle(
-                          fontWeight: FontWeight.w800, fontSize: 30, color: plantainDeep)),
+                          fontWeight: FontWeight.w800, fontSize: 30, color: kVelvetInk)),
                 ),
                 Center(
                   child: Text('Born on ${day.dayTwi}',
-                      style: const TextStyle(color: Colors.black54)),
+                      style: const TextStyle(color: kVelvetMuted)),
                 ),
                 const SizedBox(height: 10),
                 Text('Soul name: ${day.attribute}',
                     style: const TextStyle(
-                        color: plantainGreen, fontWeight: FontWeight.w700, fontSize: 12)),
+                        color: kOchre, fontWeight: FontWeight.w700, fontSize: 12)),
                 const SizedBox(height: 6),
                 Text(day.meaning, style: const TextStyle(height: 1.5, color: kVelvetInk)),
                 const SizedBox(height: 16),

@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import '../config.dart';
 import '../data/adinkra_symbols.dart';
+import '../data/akan_day_names.dart';
 import '../data/special_avatars.dart';
 import '../services/auth_service.dart';
 import '../theme.dart';
@@ -57,6 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _loading = false;
 
   DateTime? _dob;
+  String? _assignedDayName; // set when the user assigns their Akan day name
   String _gender = '';
   bool _premium = false;
   bool _isAdmin = false;
@@ -114,6 +116,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String _formatDob(DateTime d) => '${d.day} ${_months[d.month - 1]} ${d.year}';
 
+  /// Once a birth date is set, offer the matching Akan day name(s) to assign as
+  /// the display name. Shows the male + female name until a gender is chosen.
+  Widget _dayNameSuggestion() {
+    final dob = _dob;
+    if (dob == null) return const SizedBox.shrink();
+    // Dart weekday Mon=1..Sun=7 → Akan table Sun=0..Sat=6.
+    final day = kAkanDayNames[dob.weekday % 7];
+    final names = _gender == 'Man'
+        ? [day.maleName]
+        : _gender == 'Woman'
+            ? [day.femaleName]
+            : [day.maleName, day.femaleName];
+    return Container(
+      margin: const EdgeInsets.only(top: 12),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF7F3EC),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: silverLight),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: const [
+            Icon(Icons.auto_awesome, size: 16, color: terracotta),
+            SizedBox(width: 6),
+            Text('Your Akan day name',
+                style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    color: charcoal,
+                    fontSize: 13)),
+          ]),
+          const SizedBox(height: 4),
+          Text('Born on ${day.dayTwi} · ${day.attribute}',
+              style: const TextStyle(color: slate, fontSize: 12.5)),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [for (final n in names) _dayNameChip(n)],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dayNameChip(String name) {
+    final selected = _assignedDayName == name;
+    return OutlinedButton.icon(
+      onPressed: () {
+        setState(() {
+          _assignedDayName = name;
+          _name.text = name;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Day name "$name" set as your display name')),
+        );
+      },
+      icon: Icon(selected ? Icons.check_circle : Icons.add, size: 16),
+      label: Text('Use "$name"'),
+    );
+  }
+
   Future<void> _pickDob() async {
     final now = DateTime.now();
     final picked = await showDatePicker(
@@ -165,8 +230,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           : '${_dob!.year.toString().padLeft(4, '0')}-'
               '${_dob!.month.toString().padLeft(2, '0')}-'
               '${_dob!.day.toString().padLeft(2, '0')}';
-      if (genderToSave != null || dobToSave != null) {
-        await _auth.saveProfile(dob: dobToSave, gender: genderToSave);
+      if (genderToSave != null ||
+          dobToSave != null ||
+          _assignedDayName != null) {
+        await _auth.saveProfile(
+            dob: dobToSave, gender: genderToSave, dayName: _assignedDayName);
       }
       if (mounted) {
         ScaffoldMessenger.of(context)
@@ -412,6 +480,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
+          _dayNameSuggestion(),
           const SizedBox(height: 22),
           const Text('Gender',
               style: TextStyle(
