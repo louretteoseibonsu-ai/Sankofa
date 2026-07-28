@@ -1,0 +1,19 @@
+default_platform(:android)
+
+platform :android do
+  desc "Build the Flutter release APK and distribute to Firebase testers"
+  lane :beta do |options|
+    Dir.chdir("../..") do            # run from the Flutter app/ dir
+      sh("flutter pub get")
+      sh("dart run flutter_launcher_icons")
+      sh("flutter build apk --release")
+    end
+    firebase_app_distribution(
+      app: "1:401880298696:android:e59d2583f059183b1ee1fd",
+      android_artifact_type: "APK",
+      android_artifact_path: "../build/app/outputs/flutter-apk/app-release.apk",
+      groups: options[:groups] || "testers",
+      release_notes: options[:notes] || sh("git log -1 --pretty=%s").strip
+    )
+  end
+end

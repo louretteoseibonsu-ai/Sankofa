@@ -1,0 +1,2 @@
+json_key_file("")           # not needed for App Distribution
+package_name("com.sankofatwi.sankofa_twi")
