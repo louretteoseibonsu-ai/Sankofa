@@ -213,6 +213,10 @@ class _ReadingDetailScreenState extends State<ReadingDetailScreen> {
   // ── Reading view ──
   Widget _buildReading(ReadingPassage p) {
     final folklore = p.culturalContext.isNotEmpty;
+    // Beginner/Elementary read best line-by-line (interlinear); higher levels
+    // and folklore graduate to a flowing paragraph to build reading fluency.
+    final interlinear = (p.level == 'Beginner' || p.level == 'Elementary') &&
+        p.lineGloss.length == p.lines.length;
     return ListView(
       padding: EdgeInsets.fromLTRB(20, folklore ? 12 : 20, 20, 20),
       children: [
@@ -228,48 +232,79 @@ class _ReadingDetailScreenState extends State<ReadingDetailScreen> {
                   letterSpacing: 1.2)),
           const SizedBox(height: 10),
         ],
-        FloatingCard(
-          child: Column(
-            children: [
-              for (int i = 0; i < p.lines.length; i++) ...[
-                if (i > 0)
-                  const Divider(height: 1, color: const Color(0x1FFFFFFF)),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(p.lines[i],
-                          style: const TextStyle(
-                              fontSize: 18, height: 1.5, color: kVelvetInk)),
-                    ),
-                    SpeakButton(text: p.lines[i], size: 22),
-                  ],
-                ),
-              ],
-            ],
-          ),
-        ),
-        const SizedBox(height: 4),
-        const Text('Tap 🔊 to hear each line.',
-            style: TextStyle(color: kVelvetMuted, fontSize: 12)),
-        const SizedBox(height: 10),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: TextButton.icon(
-            onPressed: () => setState(() => _showEnglish = !_showEnglish),
-            icon: Icon(
-                _showEnglish ? Icons.visibility_off_outlined : Icons.translate,
-                size: 18),
-            label:
-                Text(_showEnglish ? 'Hide translation' : 'Show translation'),
-          ),
-        ),
-        if (_showEnglish) ...[
-          const SizedBox(height: 4),
+        if (interlinear) ...[
+          // ── A · Interlinear: each Twi line with its English beneath ──
           FloatingCard(
-            child: Text(p.english,
-                style: const TextStyle(
-                    fontSize: 15, height: 1.6, color: kVelvetMuted)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (int i = 0; i < p.lines.length; i++) ...[
+                  if (i > 0)
+                    const Divider(height: 22, color: Color(0x14FFFFFF)),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(p.lines[i],
+                                style: const TextStyle(
+                                    fontSize: 18,
+                                    height: 1.4,
+                                    fontWeight: FontWeight.w600,
+                                    color: kVelvetInk)),
+                            const SizedBox(height: 3),
+                            Text(p.lineGloss[i],
+                                style: const TextStyle(
+                                    fontSize: 13.5,
+                                    height: 1.35,
+                                    color: kVelvetMuted)),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      SpeakButton(text: p.lines[i], size: 22),
+                    ],
+                  ),
+                ],
+              ],
+            ),
           ),
+          const SizedBox(height: 6),
+          const Text('English sits under each line · tap 🔊 to hear it.',
+              style: TextStyle(color: kVelvetMuted, fontSize: 12)),
+        ] else ...[
+          // ── C · Flowing paragraph: read the whole passage as continuous Twi ──
+          FloatingCard(
+            child: Text(p.lines.join(' '),
+                style: const TextStyle(
+                    fontSize: 18, height: 1.7, color: kVelvetInk)),
+          ),
+          const SizedBox(height: 10),
+          _ListenStrip(lines: p.lines),
+          const SizedBox(height: 10),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              onPressed: () => setState(() => _showEnglish = !_showEnglish),
+              icon: Icon(
+                  _showEnglish
+                      ? Icons.visibility_off_outlined
+                      : Icons.translate,
+                  size: 18),
+              label:
+                  Text(_showEnglish ? 'Hide translation' : 'Show translation'),
+            ),
+          ),
+          if (_showEnglish) ...[
+            const SizedBox(height: 4),
+            FloatingCard(
+              child: Text(p.english,
+                  style: const TextStyle(
+                      fontSize: 15, height: 1.6, color: kVelvetMuted)),
+            ),
+          ],
         ],
         // ── Folklore framework: cultural note + key words ──
         if (p.culturalContext.isNotEmpty) ...[

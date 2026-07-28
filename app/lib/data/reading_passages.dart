@@ -10,6 +10,10 @@ class ReadingPassage {
   final String level; // Beginner / Elementary / …
   final List<String> lines;
   final String english;
+  /// Per-line English, aligned 1:1 with [lines]. When present (and the level is
+  /// Beginner/Elementary), the reader shows an interlinear layout — each Twi
+  /// line with its English directly beneath. Empty ⇒ flowing-paragraph reader.
+  final List<String> lineGloss;
   final List<Challenge> questions;
 
   /// Folklore framework extras (optional): a short "why this matters" note and
@@ -24,6 +28,7 @@ class ReadingPassage {
     required this.lines,
     required this.english,
     required this.questions,
+    this.lineGloss = const [],
     this.culturalContext = '',
     this.vocab = const [],
   });
@@ -45,6 +50,15 @@ const List<ReadingPassage> kReadingPassages = [
       "Me na ne m'agya wɔ fie.",
       'Onua baa baako wɔ me.',
       'Me abusua mu nnipa dɔɔso.',
+    ],
+    lineGloss: [
+      'Welcome! We welcome you.',
+      'How are you?',
+      'I am fine.',
+      'Thank you.',
+      'My mother and my father are at home.',
+      'I have one sister.',
+      'There are many people in my family.',
     ],
     english: 'Welcome! We welcome you. How are you? I am fine. Thank you. '
         'My mother and my father are at home. I have one sister. '
@@ -82,6 +96,12 @@ const List<ReadingPassage> kReadingPassages = [
       'enum',
       'Me wɔ nnipa baako.',
     ],
+    lineGloss: [
+      'One, two, three.',
+      'Four.',
+      'Five.',
+      'I have one person.',
+    ],
     english: 'One, two, three. Four. Five. I have one person.',
     questions: [
       Challenge(
@@ -115,6 +135,11 @@ const List<ReadingPassage> kReadingPassages = [
       'Maaha',
       'Maadwo',
     ],
+    lineGloss: [
+      'Good morning.',
+      'Good afternoon.',
+      'Good evening.',
+    ],
     english: 'Good morning. Good afternoon. Good evening. '
         '(At every time of day, we greet one another.)',
     questions: [
@@ -146,6 +171,14 @@ const List<ReadingPassage> kReadingPassages = [
       'Me ho yɛ',
       'Medaase',
       'Aane',
+    ],
+    lineGloss: [
+      'Welcome, come in.',
+      'Please. / Excuse me.',
+      'How are you?',
+      'I am fine.',
+      'Thank you.',
+      'Yes.',
     ],
     english: 'Welcome, come in. Please. How are you? I am fine. Thank you. Yes.',
     questions: [
