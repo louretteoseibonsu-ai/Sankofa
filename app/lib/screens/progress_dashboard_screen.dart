@@ -150,7 +150,7 @@ class _ProgressDashboardScreenState extends State<ProgressDashboardScreen> {
                         builder: (_) => const CustomizationShopScreen()));
                     _reload();
                   },
-                  child: _dashPill(Icons.directions_bus_rounded, 'Garage'),
+                  child: _dashPill(Icons.groups_rounded, 'Compound'),
                 ),
               ),
             ],

@@ -497,7 +497,7 @@ class _JourneyScreenState extends State<JourneyScreen>
                       onPressed: _openGarage,
                       icon: const Icon(Icons.garage_rounded),
                       color: kVelvetInk,
-                      tooltip: 'Garage',
+                      tooltip: 'The Compound',
                     ),
                   ],
                 ),

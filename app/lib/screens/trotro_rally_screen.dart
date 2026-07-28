@@ -1,85 +1,16 @@
-import 'dart:math' as math;
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../data/avatar.dart';
-import '../services/progress_service.dart';
 import '../theme.dart';
-import '../widgets/avatar_badge.dart';
-import '../widgets/mascot.dart';
-import '../widgets/motion.dart';
-import '../widgets/skeleton.dart';
-import '../widgets/surface.dart';
-import '../widgets/state_message.dart';
-import '../widgets/tintable_trotro.dart';
 import '../widgets/velvet.dart';
+import 'leaderboard_screen.dart' show LeaderboardView;
 
-const Color _gold = Color(0xFFE3A92C);
-
-// Distinct bus paintwork per racer (stable per uid, so it doesn't change weekly).
-const List<Color> _busPalette = [
-  Color(0xFFF3ECDD), // cream
-  Color(0xFFE3A92C), // gold
-  Color(0xFF7FB77E), // green
-  Color(0xFF6FA8DC), // blue
-  Color(0xFFD98CA6), // pink
-  Color(0xFFC9A0DC), // lavender
-  Color(0xFFE2725B), // terracotta
-  Color(0xFFB6BAC0), // grey
-];
-
-Color _busColorFor(String uid) =>
-    _busPalette[uid.hashCode.abs() % _busPalette.length];
-
-/// "Tro Tro Rally" — the weekly leaderboard as a race track. Each learner is a
-/// tro tro positioned by their weekly XP; yours is highlighted. Built on the
-/// existing weekly board, so no new backend.
-class TroTroRallyScreen extends StatefulWidget {
+/// Weekly Rally — the weekly leaderboard. Finish lessons to climb the board;
+/// the top learners promote on Sunday. Simplified from the old tro-tro race
+/// track now that the bus is retired — it reuses the shared [LeaderboardView].
+class TroTroRallyScreen extends StatelessWidget {
   const TroTroRallyScreen({super.key});
 
   @override
-  State<TroTroRallyScreen> createState() => _TroTroRallyScreenState();
-}
-
-class _TroTroRallyScreenState extends State<TroTroRallyScreen>
-    with SingleTickerProviderStateMixin {
-  final ProgressService service = ProgressService();
-  String? _myUid;
-  Color _myColor = kTroTroBodyColors.first; // equipped Garage body colour
-  Map<String, String> _myEquipped = const {}; // equipped cosmetics (kente…)
-  Avatar _myAvatar = avatarById(null); // selected driver avatar
-
-  // Shared engine-idle bob for every racer on the grid; each lane reads it with
-  // its own phase (via rank) so the buses breathe out of sync.
-  late final AnimationController _idle = AnimationController(
-      vsync: this, duration: const Duration(milliseconds: 1800))
-    ..repeat();
-
-  @override
-  void initState() {
-    super.initState();
-    _myUid = FirebaseAuth.instance.currentUser?.uid;
-    _loadCosmetics();
-  }
-
-  @override
-  void dispose() {
-    _idle.dispose();
-    super.dispose();
-  }
-
-  Future<void> _loadCosmetics() async {
-    final cos = await service.loadCosmetics();
-    if (!mounted) return;
-    setState(() {
-      _myColor = troTroBodyColorFor(cos.equipped);
-      _myEquipped = cos.equipped;
-      _myAvatar = avatarById(cos.equipped['avatar']);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final myUid = _myUid;
     return Scaffold(
       backgroundColor: kVelvetTop,
       appBar: AppBar(
@@ -87,202 +18,19 @@ class _TroTroRallyScreenState extends State<TroTroRallyScreen>
         foregroundColor: kVelvetInk,
         elevation: 0,
         scrolledUnderElevation: 0,
-        title: Text('Tro Tro Rally',
+        surfaceTintColor: Colors.transparent,
+        title: Text('Weekly Rally',
             style: displayFont(
                 fontSize: 19, fontWeight: FontWeight.w700, color: kVelvetInk)),
       ),
-      body: StreamBuilder<List<LeaderboardEntry>>(
-        stream: service.weeklyTop(limit: 12),
-        builder: (context, snap) {
-          if (snap.hasError) {
-            return StateMessage(
-              dark: true,
-              icon: Icons.wifi_off_rounded,
-              title: 'Couldn’t load the rally',
-              subtitle: 'Check your connection and try again.',
-              actionLabel: 'Retry',
-              onAction: () => setState(() {}),
-            );
-          }
-          if (!snap.hasData) {
-            return const SkeletonListView(rows: 6, header: false, dark: true);
-          }
-          final entries = snap.data!;
-          if (entries.isEmpty) {
-            return const StateMessage(
-              dark: true,
-              icon: Icons.directions_bus_rounded,
-              title: 'No racers yet this week',
-              subtitle: 'Finish a lesson to line up on the grid — '
-                  'be the first tro tro out.',
-            );
-          }
-          final topXp = entries
-              .map((e) => e.xp)
-              .fold<int>(1, (a, b) => math.max(a, b));
-          return ListView(
-            padding: const EdgeInsets.fromLTRB(14, 12, 14, 24),
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('THIS WEEK', style: microLabel(color: kOchre)),
-                  Text('${entries.length} racers',
-                      style: const TextStyle(color: kVelvetMuted, fontSize: 12)),
-                ],
-              ),
-              const SizedBox(height: 12),
-              for (int i = 0; i < entries.length; i++)
-                _Lane(
-                  rank: i + 1,
-                  entry: entries[i],
-                  progress: (entries[i].xp / topXp).clamp(0.05, 1.0),
-                  isMe: entries[i].uid == myUid,
-                  myColor: _myColor,
-                  myEquipped: _myEquipped,
-                  myAvatar: _myAvatar,
-                  idle: _idle,
-                ),
-              const SizedBox(height: 10),
-              const Center(
-                child: Text('Top racers promote on Sunday. Yɛn kɔ!',
-                    style: TextStyle(color: kVelvetMuted, fontSize: 12.5)),
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _Lane extends StatelessWidget {
-  final int rank;
-  final LeaderboardEntry entry;
-  final double progress;
-  final bool isMe;
-  final Color myColor;
-  final Map<String, String> myEquipped;
-  final Avatar myAvatar;
-  final Animation<double> idle;
-  const _Lane({
-    required this.rank,
-    required this.entry,
-    required this.progress,
-    required this.isMe,
-    required this.myColor,
-    required this.myEquipped,
-    required this.myAvatar,
-    required this.idle,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AppCard(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
-      radius: 16,
-      color: isMe ? const Color(0xFF2A211C) : const Color(0xFF211B17),
-      borderColor: isMe ? kOchre : Colors.white10,
-      borderWidth: isMe ? 2 : 1,
-      shadow: isMe ? kRaisedShadow : kAmbientShadow,
-      child: Row(
+      body: const Column(
         children: [
-          isMe
-              ? AvatarBadge(avatar: myAvatar, size: 30, selected: true)
-              : Container(
-                  width: 30,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    color: _busColorFor(entry.uid),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Text('$rank',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 13,
-                            color: Colors.white)),
-                  ),
-                ),
-          const SizedBox(width: 8),
-          SizedBox(
-            width: 68,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(isMe ? 'You' : entry.name.split(' ').first,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13,
-                        color: kVelvetInk)),
-                Text('${entry.xp} XP',
-                    style: const TextStyle(color: kVelvetMuted, fontSize: 11)),
-              ],
-            ),
-          ),
-          const SizedBox(width: 6),
-          Expanded(
-            child: LayoutBuilder(builder: (context, c) {
-              const busW = 44.0;
-              final travel = (c.maxWidth - busW - 16).clamp(0.0, double.infinity);
-              return SizedBox(
-                height: 34,
-                child: Stack(
-                  children: [
-                    Positioned(
-                      left: 0,
-                      right: 14,
-                      top: 16,
-                      child: Container(
-                        height: 3,
-                        decoration: BoxDecoration(
-                            color: Colors.white12,
-                            borderRadius: BorderRadius.circular(2)),
-                      ),
-                    ),
-                    const Positioned(
-                      right: 0,
-                      top: 6,
-                      child: Icon(Icons.sports_score_rounded,
-                          color: _gold, size: 20),
-                    ),
-                    Positioned(
-                      left: 0,
-                      top: 2,
-                      child: SpringBuilder(
-                        target: travel * progress,
-                        builder: (context, value, child) =>
-                            Transform.translate(
-                                offset: Offset(value, 0), child: child),
-                        child: AnimatedBuilder(
-                          animation: idle,
-                          builder: (_, __) {
-                            final bob = 2.0 *
-                                math.sin(2 * math.pi * idle.value +
-                                    rank.toDouble());
-                            final pose = MascotPose(bob: bob);
-                            return isMe
-                                ? Mascot(
-                                    bodyColor: myColor,
-                                    equipped: myEquipped,
-                                    width: busW,
-                                    pose: pose)
-                                : Mascot(
-                                    bodyColor: _busColorFor(entry.uid),
-                                    width: busW,
-                                    pose: pose);
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }),
+          Expanded(child: LeaderboardView()),
+          Padding(
+            padding: EdgeInsets.fromLTRB(16, 4, 16, 16),
+            child: Text('Top learners promote on Sunday. Yɛn kɔ!',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: kVelvetMuted, fontSize: 12.5)),
           ),
         ],
       ),

@@ -9,7 +9,6 @@ import '../widgets/avatar_carousel.dart';
 import '../widgets/blind_box.dart';
 import '../widgets/composable_trotro.dart';
 import '../widgets/kente_shard.dart';
-import '../widgets/mascot_stage.dart';
 import '../widgets/skeleton.dart';
 import '../widgets/state_message.dart';
 import '../widgets/surface.dart';
@@ -19,7 +18,8 @@ import '../widgets/tintable_trotro.dart';
 
 const Color _terra = Color(0xFFBE5235);
 
-/// "The Garage" — spend Golden Kente shards to customise the tro tro.
+/// "The Compound" — your family home: choose and unlock the Super Family
+/// characters, and spend Golden Kente shards on the Ananse blind box + collection.
 class CustomizationShopScreen extends StatefulWidget {
   /// The skin to show instantly (from the map) so the Hero flight has a
   /// destination before the async cosmetics load finishes.
@@ -71,12 +71,6 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
       _loading = false;
       _error = false;
     });
-  }
-
-  Future<void> _pickColor(int i) async {
-    setState(() => _bodyIndex = i);
-    SoundService.instance.tap();
-    await _service.equipBodyColor(i);
   }
 
   Future<void> _selectAvatar(Avatar a) async {
@@ -150,7 +144,7 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
         foregroundColor: kVelvetInk,
         elevation: 0,
         scrolledUnderElevation: 0,
-        title: Text('The Garage',
+        title: Text('The Compound',
             style: displayFont(
                 fontSize: 19, fontWeight: FontWeight.w700, color: kVelvetInk)),
         actions: [
@@ -175,17 +169,21 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
         child: ListView(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 28),
               children: [
-                // Live preview — always rendered so the Hero flight from the
-                // map has a destination during the push transition.
+                // Hero — the equipped family member (also the Hero-flight
+                // destination when arriving from the map).
                 AtmosphericPanel(
                   radius: 22,
                   glow: terracotta,
-                  padding: const EdgeInsets.symmetric(vertical: 22),
+                  padding: const EdgeInsets.symmetric(vertical: 18),
                   child: Center(
-                      child: MascotStage(
-                          bodyColor: kTroTroBodyColors[_bodyIndex],
-                          equipped: _cos.equipped,
-                          width: 240)),
+                    child: Image.asset(
+                      avatarById(_avatarId).assetReference,
+                      height: 208,
+                      fit: BoxFit.contain,
+                      errorBuilder: (_, __, ___) =>
+                          const SizedBox(height: 208),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 12),
                 Center(
@@ -194,7 +192,7 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(2, 16, 0, 6),
-                  child: Text('Driver', style: microLabel()),
+                  child: Text('Your Family', style: microLabel()),
                 ),
                 AvatarCarousel(
                   selectedId: _avatarId,
@@ -203,38 +201,6 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                 ),
                 const SizedBox(height: 10),
                 _BlindBoxCard(shards: _shards, onOpen: _openBlindBox),
-                // ── Body colour (free — swap any time) ──
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(2, 20, 0, 10),
-                  child: Text('Body Colour', style: microLabel()),
-                ),
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
-                  children: [
-                    for (int i = 0; i < kTroTroBodyColors.length; i++)
-                      TappableScale(
-                        onTap: () => _pickColor(i),
-                        child: Container(
-                          width: 42,
-                          height: 42,
-                          decoration: BoxDecoration(
-                            color: kTroTroBodyColors[i],
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                color: _bodyIndex == i
-                                    ? kOchre
-                                    : Colors.white24,
-                                width: _bodyIndex == i ? 3 : 2),
-                          ),
-                          child: _bodyIndex == i
-                              ? const Icon(Icons.check_rounded,
-                                  color: Colors.white, size: 22)
-                              : null,
-                        ),
-                      ),
-                  ],
-                ),
                 const SizedBox(height: 4),
                 if (_error)
                   Padding(

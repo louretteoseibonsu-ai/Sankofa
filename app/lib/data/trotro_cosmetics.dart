@@ -27,9 +27,9 @@ const Set<String> kDefaultOwned = {
 const List<String> kCosmeticCategories = ['kente', 'horn'];
 const Map<String, String> kCategoryLabel = {
   'rim': 'Rims',
-  'kente': 'Kente trim',
+  'kente': 'Kente Cloth',
   'roof': 'Roof rack',
-  'horn': 'Horn',
+  'horn': 'Celebration Sound',
 };
 
 /// The Garage catalog.
