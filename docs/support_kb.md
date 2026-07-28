@@ -2,7 +2,7 @@
 
 > **This file is the single source of truth for customer support.** Feed it to
 > the support assistant at the start of every session. When the app changes,
-> update this file. Last updated: 30 June 2026.
+> update this file. Last updated: 28 July 2026.
 
 > ✅ **Support email — settled:** the official support address is
 > **`sankofa@aparato.ai`**, used consistently across the app (Profile → Help &
@@ -12,8 +12,10 @@
 
 > ⚠️ **Maintainer note — launch status:** real payments are **not yet live**
 > (`kBillingEnabled = false`). Subscriptions and pedis purchases show as "coming
-> soon." During the test launch, premium features like Sankofa Lens are open to
-> everyone. Keep this section current — it's the most common source of confusion.
+> soon." **Sankofa Lens is now Premium-gated** (`kLensFreeDuringTesting = false`)
+> — non-Premium users see an upgrade gate. Because billing isn't live yet, a
+> tester's account must be flagged Premium to open Lens. Keep this section
+> current — it's the most common source of confusion.
 
 ---
 
@@ -54,9 +56,15 @@ study, AI translation, a camera "point-and-learn" tool, and gamified streaks and
 leaderboards. "Sankofa" means *go back and fetch it* — reclaiming language and
 heritage.
 
-**Where things live:** Tap the **Menu** dropdown (top-left) to switch between
-Progress, Journey, Symbols (home), Lessons, Translate, Lens, Day Name, Quiz, and
-Leaderboard. Tap your **avatar** (top-right) for Profile and settings.
+**Where things live:** the app uses a **bottom navigation bar** with five tabs —
+**Journey** (the world-map home), **Translate**, **Lens**, **Progress**, and
+**Tools**. Tap your **avatar** (top-right of the header) for Profile and settings.
+The **Tools** tab is a hub for everything else: **Courses, Twi Alphabet, Reading
+& Comprehension, Review Quizzes, Quick Practice, Adinkra Symbols, Day Name,** and
+the **Leaderboard**.
+
+The app is a **dark, velvet-themed** experience. The header carries a signature
+five-colour **Kente accent line** (yellow, red, green, black, orange).
 
 ---
 
@@ -99,6 +107,36 @@ email,"* tap **Sign in with this email** to log in instead.
   3 to open a chest (rewards streak freezes).
 - **Streak freeze:** Protects your streak on a day you miss. Earn them from
   chests or buy one for **50 pedis** (Progress → Pedis wallet).
+
+### The map, your family, and the journey
+- **Journey map:** lessons are laid out as a winding path across Ghana. Clearing
+  the last lesson of a region ("boss") plays a short **travel cinematic** that
+  drives you to a **cultural landmark** — Osu Night Market, Coco & Labadi Beaches,
+  Kakum Canopy Walk, Elmina Castle, and Mole National Park — which you can tap to
+  read about.
+- **Your family character:** you're represented on the map by one of four Super
+  Family members — **Auntie** (the Trendsetter), **Uncle** (the Cool Head),
+  **Grandma** (the Wise One), and **Grandpa** (the Storyteller). Tap **Change
+  character** on the map, or pick one in **The Compound**.
+- **Unlocking family:** Auntie is free; the others unlock by reaching a milestone
+  (**Uncle** at level 5, **Grandma** at a 7-day streak, **Grandpa** by mastering
+  5 lessons) — **or** buy them early with **Golden Kente shards** in The Compound.
+- **Celebrations:** pass a lesson and your chosen family member plays a short
+  **celebration animation** ("Ayɛkoo!"). Folklore reading opens with the
+  Storyteller by a campfire (**Anansesɛm** — Akan spider-tales).
+
+### The Compound (character home & shard shop)
+- Open **The Compound** from the map (people icon) or **Progress → Compound**.
+- Here you choose/unlock your family member, see your **Golden Kente shards**,
+  and open **Ananse's blind box** for collectible kente cloth & motifs.
+- **Golden Kente shards** are earned from **3-star (mastery) lessons** and are
+  separate from pedis. They're spent in The Compound (unlocking family early,
+  the blind box).
+
+### Weekly Rally
+- **Progress → Rally** (or Tools → Leaderboard) shows the **Weekly Rally** — a
+  weekly leaderboard of learners ranked by XP earned this week. Top learners
+  "promote" on Sunday. Finish lessons to climb.
 
 ---
 
@@ -151,7 +189,9 @@ go (great when travelling in Ghana).
 - A scan and each audio play use **1 AI credit** (see Section 8). Re-hearing a
   saved word is **free** after the first play.
 - Recognition runs **on your device** — your photos aren't uploaded for this.
-- During the test launch, Lens is open to everyone ("Premium · free in testing").
+- **Lens is a Premium tool.** Non-Premium users see an upgrade gate ("Sankofa
+  Lens is a Premium tool") instead of the camera. Since billing isn't live yet,
+  an account must be flagged Premium to use Lens during the beta.
 
 ---
 
@@ -169,7 +209,9 @@ go (great when travelling in Ghana).
 ### Pedis (soft currency)
 - **Earn** pedis by completing lessons, keeping streaks, and saving first finds
   in Lens.
-- **Spend** pedis on: AI credit top-ups, streak freezes (50), and avatars.
+- **Spend** pedis on: AI credit top-ups and streak freezes (50). *(Family
+  characters are unlocked by milestones or **Golden Kente shards**, not pedis —
+  see Section 4.)*
 - **Buy** pedis (coming soon, with paid plans): 100 for €0.99, 550 for €4.99,
   1,200 for €9.99. Prices show in your local currency; pedis have no cash value.
 - See your balance in **Profile → Pedis** or **Progress → Pedis wallet**.
@@ -182,8 +224,13 @@ go (great when travelling in Ghana).
   **Save profile**.
 - **Avatar:** pick an **Adinkra** symbol + accent colour, or upload a **photo**.
   The premium **Ananse** avatar unlocks with Premium.
-- **Day Name:** the **Day Name** tool tells you your Akan *kra din* (soul name)
-  from your date of birth.
+- **Day Name:** the **Day Name** tool (Tools → Day Name) tells you your Akan
+  *kra din* (soul name) from your date of birth. You can also set it straight
+  from **Profile** — when you pick your **date of birth**, the app offers your
+  matching day-name to use as your display name.
+- **Family character:** the avatar that represents you on the map/celebrations is
+  your chosen **Super Family** member (see Section 4) — separate from the
+  Adinkra/photo profile avatar above.
 
 ---
 
@@ -273,7 +320,15 @@ go (great when travelling in Ghana).
 - **Can I use it offline?** You need a connection for AI Translate, Lens
   translation, and audio.
 - **What's a "Day Name"?** Your Akan soul name based on the day you were born —
-  try the Day Name tool.
+  try the Day Name tool (or set your date of birth in Profile).
+- **How do I unlock the other family characters?** Auntie is free; Uncle unlocks
+  at level 5, Grandma at a 7-day streak, and Grandpa by mastering 5 lessons — or
+  buy any of them early with **Golden Kente shards** in **The Compound**.
+- **What are Golden Kente shards?** A mastery currency earned from **3-star
+  lessons**, spent in The Compound (unlock family early, open Ananse's blind box).
+  Different from pedis.
+- **Why can't I open Lens?** Lens is a **Premium** tool. During the beta your
+  account must be flagged Premium to use it.
 
 ---
 

@@ -43,8 +43,7 @@ const List<_Faq> _faqs = [
   _Faq(
     'How much is Premium?',
     'Premium is €6.99/month or €59.99/year (shown in your local currency), with '
-        'a 7-day free trial. Note: paid plans are launching soon — some Premium '
-        'features are open to everyone during testing.',
+        'a 7-day free trial. Note: paid plans are launching soon.',
   ),
   _Faq(
     'How do I use Sankofa Lens?',
