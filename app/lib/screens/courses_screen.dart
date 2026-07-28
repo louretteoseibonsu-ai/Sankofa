@@ -5,6 +5,7 @@ import '../theme.dart';
 import '../widgets/velvet.dart';
 import '../widgets/floating_card.dart';
 import 'lesson_quiz_screen.dart';
+import 'tools_hub_screen.dart' show velvetToolsTheme;
 
 double _courseMastery(Course c, Progress p) {
   final lessons = c.lessons;
@@ -53,7 +54,8 @@ class _CoursesScreenState extends State<CoursesScreen> {
         padding: const EdgeInsets.all(20),
         children: [
           Text('Courses',
-              style: displayFont(fontSize: 26, fontWeight: FontWeight.w800)),
+              style: displayFont(
+                  fontSize: 26, fontWeight: FontWeight.w800, color: kVelvetInk)),
           const SizedBox(height: 4),
           const Text('Structured tracks that take you from your first word to '
               'real conversation.',
@@ -189,7 +191,11 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final course = widget.course;
-    return Scaffold(
+    // Pushed as its own route, so it loses the Tools dark theme — re-apply it
+    // here so the detail matches the rest of the dark hub.
+    return Theme(
+      data: velvetToolsTheme(context),
+      child: Scaffold(
       appBar: AppBar(title: Text(course.name)),
       body: SafeArea(
         child: _loading
@@ -226,6 +232,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                   );
                 }),
               ),
+      ),
       ),
     );
   }
