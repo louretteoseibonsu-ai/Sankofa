@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import '../data/avatar.dart';
 import '../theme.dart';
 import 'avatar_badge.dart';
+import 'kente_shard.dart';
 import 'tappable_scale.dart';
 import 'velvet.dart';
 
@@ -15,11 +16,18 @@ class AvatarCarousel extends StatefulWidget {
   final Set<String> unlockedIds;
   final ValueChanged<Avatar> onSelect;
 
+  /// Current shard balance + a callback to buy a locked member early. When both
+  /// are provided, a locked avatar shows an "Unlock · N" shard button.
+  final int shards;
+  final ValueChanged<Avatar>? onUnlock;
+
   const AvatarCarousel({
     super.key,
     required this.selectedId,
     required this.unlockedIds,
     required this.onSelect,
+    this.shards = 0,
+    this.onUnlock,
   });
 
   @override
@@ -110,13 +118,65 @@ class _AvatarCarouselState extends State<AvatarCarousel> {
           style: microLabel(color: centreLocked ? kOchre : kVelvetMuted),
         ),
         const SizedBox(height: 12),
-        _StatusPill(
-          locked: centreLocked,
-          equipped: isEquipped,
-          accent: centre.accent,
-          onTap: centreLocked ? null : () => widget.onSelect(centre),
-        ),
+        if (!centreLocked)
+          _StatusPill(
+            locked: false,
+            equipped: isEquipped,
+            accent: centre.accent,
+            onTap: () => widget.onSelect(centre),
+          )
+        else if (widget.onUnlock != null && centre.shardCost > 0)
+          _UnlockPill(
+            cost: centre.shardCost,
+            affordable: widget.shards >= centre.shardCost,
+            onUnlock: () => widget.onUnlock!(centre),
+          )
+        else
+          const _StatusPill(locked: true, equipped: false, accent: kOchre),
       ],
+    );
+  }
+}
+
+/// Locked-avatar action: buy the family member early with shards. Reads active
+/// (terracotta) when affordable, dimmed otherwise — the parent shows a message
+/// if there aren't enough shards.
+class _UnlockPill extends StatelessWidget {
+  final int cost;
+  final bool affordable;
+  final VoidCallback onUnlock;
+  const _UnlockPill({
+    required this.cost,
+    required this.affordable,
+    required this.onUnlock,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TappableScale(
+      onTap: onUnlock,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        decoration: BoxDecoration(
+          color: affordable ? terracottaDeep : Colors.transparent,
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(
+              color: affordable ? terracottaDeep : Colors.white24, width: 1.5),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(affordable ? 'UNLOCK · $cost' : 'NEED $cost',
+                style: displayFont(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: affordable ? Colors.white : kVelvetMuted,
+                    letterSpacing: 1.2)),
+            const SizedBox(width: 6),
+            const KenteShard(size: 15),
+          ],
+        ),
+      ),
     );
   }
 }

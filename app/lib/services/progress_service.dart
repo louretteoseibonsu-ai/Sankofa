@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../data/avatar.dart';
 import '../data/blind_box_data.dart';
 import '../data/lesson_catalog.dart';
 import '../data/trotro_cosmetics.dart';
@@ -338,7 +339,27 @@ class ProgressService {
     final eqRaw =
         (data['cosmeticEquipped'] as Map?)?.cast<String, dynamic>() ?? {};
     final equipped = eqRaw.map((k, v) => MapEntry(k, v.toString()));
-    return CosmeticState(owned, equipped);
+    final unlocked =
+        ((data['avatarsUnlocked'] as List?)?.cast<String>() ?? const [])
+            .toSet();
+    return CosmeticState(owned, equipped, avatarsUnlocked: unlocked);
+  }
+
+  /// Spends shards to unlock a family member early (before its milestone) and
+  /// equips them. Returns false if the player can't afford [a.shardCost].
+  Future<bool> unlockAvatarWithShards(Avatar a) async {
+    final uid = _uid;
+    if (uid == null || a.shardCost <= 0) return false;
+    final ref = _db.collection('users').doc(uid);
+    final doc = await ref.get();
+    final shards = (doc.data()?['shards'] as num?)?.toInt() ?? 0;
+    if (shards < a.shardCost) return false;
+    await ref.set({
+      'shards': FieldValue.increment(-a.shardCost),
+      'avatarsUnlocked': FieldValue.arrayUnion([a.id]),
+      'cosmeticEquipped': {'avatar': a.id}, // auto-equip on unlock
+    }, SetOptions(merge: true));
+    return true;
   }
 
   /// Spends shards to buy [item], then auto-equips it. Returns false if the

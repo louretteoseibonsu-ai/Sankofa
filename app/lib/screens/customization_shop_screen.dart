@@ -73,6 +73,27 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
     });
   }
 
+  Future<void> _unlockAvatar(Avatar a) async {
+    if (_shards < a.shardCost) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('You need ${a.shardCost} shards to unlock '
+              '${a.name} — earn more with 3-star lessons.')));
+      return;
+    }
+    final ok = await _service.unlockAvatarWithShards(a);
+    if (!mounted) return;
+    if (ok) {
+      SoundService.instance.tap();
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${a.name} joined your family! 🎉')));
+      setState(() => _avatarId = a.id);
+      await _reload();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Couldn’t unlock — check your connection.')));
+    }
+  }
+
   Future<void> _selectAvatar(Avatar a) async {
     setState(() => _avatarId = a.id);
     SoundService.instance.tap();
@@ -135,7 +156,8 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
     final unlockedAvatars = <String>{
       for (final a in kAvatars)
         if (a.unlockedBy(level: level, streak: streak, mastered: mastered))
-          a.id
+          a.id,
+      ..._cos.avatarsUnlocked, // members bought early with shards
     };
     return Scaffold(
       backgroundColor: kVelvetTop,
@@ -198,6 +220,8 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                   selectedId: _avatarId,
                   unlockedIds: unlockedAvatars,
                   onSelect: _selectAvatar,
+                  shards: _shards,
+                  onUnlock: _unlockAvatar,
                 ),
                 const SizedBox(height: 10),
                 _BlindBoxCard(shards: _shards, onOpen: _openBlindBox),

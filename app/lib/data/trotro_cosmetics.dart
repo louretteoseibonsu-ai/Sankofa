@@ -77,7 +77,9 @@ String defaultForCategory(String category) => kCosmetics
 class CosmeticState {
   final Set<String> owned;
   final Map<String, String> equipped;
-  const CosmeticState(this.owned, this.equipped);
+  final Set<String> avatarsUnlocked; // family members bought early with shards
+  const CosmeticState(this.owned, this.equipped,
+      {this.avatarsUnlocked = const {}});
 
   static const empty = CosmeticState(kDefaultOwned, {});
 

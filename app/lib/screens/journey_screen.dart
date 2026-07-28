@@ -64,6 +64,7 @@ class _JourneyScreenState extends State<JourneyScreen>
   TroTroState _troState = TroTroState.idle;
   TroTroSkin _skin = const TroTroSkin(); // kept for the equipped horn sound
   Map<String, String> _equipped = const {}; // cosmetics for the layered avatar
+  Set<String> _avatarsUnlocked = const {}; // family bought early with shards
   bool _firstLoad = true;
   bool _error = false; // set when the initial load fails (offline / no cache)
 
@@ -118,6 +119,7 @@ class _JourneyScreenState extends State<JourneyScreen>
       _stats = stats;
       _skin = TroTroSkin.fromEquipped(cos.equipped);
       _equipped = cos.equipped;
+      _avatarsUnlocked = cos.avatarsUnlocked;
       _loading = false;
       _error = false;
     });
@@ -365,7 +367,8 @@ class _JourneyScreenState extends State<JourneyScreen>
     final mastered = _stats.progress.best.values.where((v) => v >= 10).length;
     return kAvatars
         .where((a) =>
-            a.unlockedBy(level: level, streak: streak, mastered: mastered))
+            a.unlockedBy(level: level, streak: streak, mastered: mastered) ||
+            _avatarsUnlocked.contains(a.id)) // bought early with shards
         .toList();
   }
 

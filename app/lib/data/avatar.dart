@@ -15,6 +15,7 @@ class Avatar {
   final AvatarUnlock unlockKind;
   final int unlockValue; // threshold for the criterion
   final Color accent; // placeholder tint + selection accent
+  final int shardCost; // Golden Kente shards to unlock early (0 = free/starter)
 
   const Avatar({
     required this.id,
@@ -24,6 +25,7 @@ class Avatar {
     required this.accent,
     this.unlockKind = AvatarUnlock.free,
     this.unlockValue = 0,
+    this.shardCost = 0,
   });
 
   /// Human-readable unlock requirement (the `unlockCriteria` field).
@@ -82,6 +84,7 @@ const List<Avatar> kAvatars = [
     accent: Color(0xFF2E86C1), // blue
     unlockKind: AvatarUnlock.level,
     unlockValue: 5,
+    shardCost: 40,
   ),
   Avatar(
     id: 'grandma',
@@ -91,6 +94,7 @@ const List<Avatar> kAvatars = [
     accent: Color(0xFFD4A373), // ochre
     unlockKind: AvatarUnlock.streak,
     unlockValue: 7,
+    shardCost: 60,
   ),
   Avatar(
     id: 'grandpa',
@@ -100,6 +104,7 @@ const List<Avatar> kAvatars = [
     accent: Color(0xFF2E9E5B), // green
     unlockKind: AvatarUnlock.mastery,
     unlockValue: 5,
+    shardCost: 80,
   ),
 ];
 
