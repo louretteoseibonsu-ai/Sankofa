@@ -75,14 +75,15 @@ class _SymbolsScreenState extends State<SymbolsScreen> {
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 4),
           child: Text(
             'Adinkra Symbols',
-            style: displayFont(fontSize: 26, fontWeight: FontWeight.w800),
+            style: displayFont(
+                fontSize: 26, fontWeight: FontWeight.w800, color: kVelvetInk),
           ),
         ),
         const Padding(
           padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
           child: Text(
             'Ancestral wisdom in visual form.',
-            style: TextStyle(color: inkSoft, fontSize: 14.5),
+            style: TextStyle(color: kVelvetMuted, fontSize: 14.5),
           ),
         ),
         Expanded(
@@ -115,10 +116,12 @@ class _SymbolsScreenState extends State<SymbolsScreen> {
                                     sigmaX: 6, sigmaY: 6),
                                 child: Opacity(
                                   opacity: 0.5,
-                                  child: AdinkraGlyph(svg: s.svg, size: 48),
+                                  child: AdinkraGlyph(
+                                      svg: s.svg, size: 48, color: kVelvetInk),
                                 ),
                               )
-                            : AdinkraGlyph(svg: s.svg, size: 48),
+                            : AdinkraGlyph(
+                                svg: s.svg, size: 48, color: kVelvetInk),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -138,13 +141,13 @@ class _SymbolsScreenState extends State<SymbolsScreen> {
                           Text(
                             locked ? 'Unlock with Premium' : s.value,
                             style: const TextStyle(
-                                color: plantainGreen, fontWeight: FontWeight.w600, fontSize: 12),
+                                color: kOchre, fontWeight: FontWeight.w600, fontSize: 12),
                           ),
                         ],
                       ),
                     ),
                     Icon(locked ? Icons.lock : Icons.chevron_right,
-                        color: locked ? const Color(0xFFE3A92C) : Colors.black26),
+                        color: locked ? const Color(0xFFE3A92C) : Colors.white30),
                   ],
                 ),
               );
@@ -186,7 +189,7 @@ class _SymbolsScreenState extends State<SymbolsScreen> {
                     color: const Color(0xFF2A211C),
                     borderRadius: BorderRadius.circular(24),
                   ),
-                  child: AdinkraGlyph(svg: s.svg, size: 88),
+                  child: AdinkraGlyph(svg: s.svg, size: 88, color: kVelvetInk),
                 ),
               ),
               const SizedBox(height: 16),
@@ -260,7 +263,7 @@ class _WeeklyTop3Strip extends StatelessWidget {
                             Text('Leaderboard',
                                 style: TextStyle(color: kVelvetMuted, fontSize: 12)),
                             Icon(Icons.chevron_right,
-                                size: 18, color: Colors.black26),
+                                size: 18, color: Colors.white30),
                           ],
                         ),
                       ],

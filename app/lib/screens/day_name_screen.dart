@@ -138,7 +138,7 @@ class _DayNameScreenState extends State<DayNameScreen> {
                       color: const Color(0xFF2A211C),
                       borderRadius: BorderRadius.circular(24),
                     ),
-                    child: AdinkraGlyph(svg: sankofaSvg, size: 64),
+                    child: AdinkraGlyph(svg: sankofaSvg, size: 64, color: kVelvetInk),
                   ),
                 ),
                 const SizedBox(height: 12),
