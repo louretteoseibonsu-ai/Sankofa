@@ -5,6 +5,7 @@ import '../data/lesson_content.dart';
 import '../services/sound_service.dart';
 import '../theme.dart';
 import 'continue_button.dart';
+import 'velvet.dart';
 
 /// A reusable multiple-choice quiz runner over a list of [Challenge]s.
 /// Used by Review Quizzes and Reading comprehension. Pure practice — it does
@@ -96,7 +97,7 @@ class _ChallengeQuizState extends State<ChallengeQuiz> {
           child: Text(
             'Nothing to review yet — complete a lesson first.',
             textAlign: TextAlign.center,
-            style: TextStyle(color: slate, fontSize: 14),
+            style: TextStyle(color: kVelvetMuted, fontSize: 14),
           ),
         ),
       );
@@ -122,17 +123,17 @@ class _ChallengeQuizState extends State<ChallengeQuiz> {
                     style: const TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 44,
-                        color: charcoal)),
+                        color: kVelvetInk)),
                 const SizedBox(height: 8),
                 Text(passed ? 'Passed! Yɛ wo adɛn!' : 'Not quite yet',
-                    style: const TextStyle(fontSize: 17, color: ink)),
+                    style: const TextStyle(fontSize: 17, color: kVelvetInk)),
                 const SizedBox(height: 4),
                 Text(
                     passed
                         ? 'You’ve unlocked the next passage.'
                         : 'You need $need correct to pass. Give it another go —',
                     textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 13, color: slate)),
+                    style: const TextStyle(fontSize: 13, color: kVelvetMuted)),
                 const SizedBox(height: 20),
                 FilledButton(
                   onPressed: passed
@@ -157,13 +158,13 @@ class _ChallengeQuizState extends State<ChallengeQuiz> {
                   style: const TextStyle(
                       fontWeight: FontWeight.w800,
                       fontSize: 44,
-                      color: charcoal)),
+                      color: kVelvetInk)),
               const SizedBox(height: 8),
               const Text('Yɛ wo adɛn! (Well done!)',
-                  style: TextStyle(fontSize: 16, color: ink)),
+                  style: TextStyle(fontSize: 16, color: kVelvetInk)),
               const SizedBox(height: 4),
               const Text('Practice makes it stick.',
-                  style: TextStyle(fontSize: 13, color: slate)),
+                  style: TextStyle(fontSize: 13, color: kVelvetMuted)),
               const SizedBox(height: 20),
               FilledButton(
                 onPressed: () => setState(_newSession),
@@ -186,28 +187,28 @@ class _ChallengeQuizState extends State<ChallengeQuiz> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                      color: slate, fontWeight: FontWeight.w700, fontSize: 12)),
+                      color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 12)),
             ),
             const SizedBox(width: 8),
             Text('${_index + 1} / ${_session.length}',
-                style: const TextStyle(color: Colors.black54, fontSize: 12)),
+                style: const TextStyle(color: kVelvetMuted, fontSize: 12)),
           ],
         ),
         const SizedBox(height: 8),
         Text(c.prompt,
             style: const TextStyle(
-                fontWeight: FontWeight.w800, fontSize: 20, color: ink)),
+                fontWeight: FontWeight.w800, fontSize: 20, color: kVelvetInk)),
         const SizedBox(height: 16),
         ...c.options.map((opt) {
-          Color border = Colors.black12;
-          Color bg = Colors.white;
+          Color border = Colors.white12;
+          Color bg = const Color(0xFF211B17);
           if (_selected != null) {
             if (opt == c.correctLabel) {
-              border = const Color(0xFF2E6B3B);
-              bg = const Color(0xFFEAF3EC);
+              border = const Color(0xFF63C583);
+              bg = const Color(0xFF17281C);
             } else if (opt == _selected) {
               border = terracotta;
-              bg = const Color(0xFFFBEEEA);
+              bg = const Color(0xFF2C1D18);
             }
           }
           return Padding(
@@ -226,7 +227,7 @@ class _ChallengeQuizState extends State<ChallengeQuiz> {
                   ),
                   child: Text(opt,
                       style: const TextStyle(
-                          fontWeight: FontWeight.w600, color: ink)),
+                          fontWeight: FontWeight.w600, color: kVelvetInk)),
                 ),
               ),
             ),

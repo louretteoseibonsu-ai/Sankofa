@@ -318,7 +318,7 @@ class _LessonRow extends StatelessWidget {
       iconColor = terracotta;
     } else {
       icon = Icons.lock_outline;
-      iconColor = silver;
+      iconColor = Colors.white30;
     }
     return Padding(
       padding: const EdgeInsets.only(top: 8),
@@ -358,7 +358,7 @@ class _LessonRow extends StatelessWidget {
                   ),
                 ),
                 if (unlocked)
-                  const Icon(Icons.chevron_right, color: Colors.black26),
+                  const Icon(Icons.chevron_right, color: Colors.white30),
               ],
             ),
           ),

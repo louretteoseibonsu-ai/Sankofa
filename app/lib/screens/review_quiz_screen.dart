@@ -5,6 +5,7 @@ import '../theme.dart';
 import '../widgets/velvet.dart';
 import '../widgets/challenge_quiz.dart';
 import '../widgets/floating_card.dart';
+import 'tools_hub_screen.dart' show velvetToolsTheme;
 
 /// Pick what to review — a whole course, or everything.
 class ReviewPickerScreen extends StatelessWidget {
@@ -81,7 +82,7 @@ class _PickRow extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right, color: Colors.black26),
+            const Icon(Icons.chevron_right, color: Colors.white30),
           ],
         ),
       ),
@@ -116,7 +117,10 @@ class _ReviewQuizScreenState extends State<ReviewQuizScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    // Pushed as its own route — re-apply the Tools dark theme.
+    return Theme(
+      data: velvetToolsTheme(context),
+      child: Scaffold(
       appBar: AppBar(title: Text('Review · ${widget.title}')),
       body: SafeArea(
         child: FutureBuilder<List<Challenge>>(
@@ -132,6 +136,7 @@ class _ReviewQuizScreenState extends State<ReviewQuizScreen> {
             );
           },
         ),
+      ),
       ),
     );
   }
