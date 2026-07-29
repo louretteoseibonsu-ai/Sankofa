@@ -1,10 +1,10 @@
 {
   "unit_id": "unit_006",
-  "unit_title": "Akontaabuo: Numbers 21–30",
+  "unit_title": "Akontaabuo: Numbers 21–39",
   "review_required": true,
   "vocabulary_spotlight": {
     "headword": "aduonu baako",
-    "gloss": "The number 21. This unit covers 21 through 30.",
+    "gloss": "The number 21. This unit covers 21 through 39.",
     "phonetic_bridge": {
       "pronunciation": "aduonu baako"
     },
@@ -13,12 +13,13 @@
     ]
   },
   "grammar_mechanics": {
-    "focus": "Counting 21 to 30",
-    "explanation": "Tens are built on a base word (edu 10, aduonu 20, aduasa 30, aduanan 40, aduonum 50, aduosia 60, aduoson 70, aduowɔtwe 80, aduokron 90, ɔha 100). From 21 upward a number is the tens word plus the unit, e.g. 'aduonu baako' = 21.",
+    "focus": "Counting 21 to 39",
+    "explanation": "Tens are built on a base word (edu 10, aduonu 20, aduasa 30, aduanan 40, aduonum 50, aduosia 60, aduoson 70, aduowɔtwe 80, aduokron 90, ɔha 100). From 21 upward a number is the tens word plus the unit, e.g. 'aduonu baako' = 21, 'aduasa baako' = 31.",
     "patterns": [
       "aduonu baako = 21",
-      "aduonu enum = 25",
-      "aduasa = 30"
+      "aduasa = 30",
+      "aduasa baako = 31",
+      "aduasa nkron = 39"
     ]
   },
   "lineage_challenges": [
@@ -131,6 +132,105 @@
         "nwɔtwe"
       ],
       "correct_index": 0
+    },
+    {
+      "prompt": "How do you say '31' in Twi?",
+      "type": "recall",
+      "options": [
+        "aduasa baako",
+        "aduonu baako",
+        "aduasa nkron",
+        "aduanan baako"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "How do you say '32' in Twi?",
+      "type": "recall",
+      "options": [
+        "aduasa mmienu",
+        "aduonu mmienu",
+        "aduasa ɛnan",
+        "aduonum mmienu"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "How do you say '33' in Twi?",
+      "type": "recall",
+      "options": [
+        "aduasa mmiɛnsa",
+        "aduonu mmiɛnsa",
+        "aduanan mmiɛnsa",
+        "dumiɛnsa"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "How do you say '34' in Twi?",
+      "type": "recall",
+      "options": [
+        "aduasa ɛnan",
+        "aduonu ɛnan",
+        "aduasa enum",
+        "aduoson ɛnan"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "How do you say '35' in Twi?",
+      "type": "recall",
+      "options": [
+        "aduasa enum",
+        "aduonu enum",
+        "aduasa nsia",
+        "aduanan enum"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "How do you say '36' in Twi?",
+      "type": "recall",
+      "options": [
+        "aduasa nsia",
+        "aduonu nsia",
+        "aduasa nson",
+        "aduoson nsia"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "How do you say '37' in Twi?",
+      "type": "recall",
+      "options": [
+        "aduasa nson",
+        "aduonu nson",
+        "aduasa nsia",
+        "aduokron nson"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "How do you say '38' in Twi?",
+      "type": "recall",
+      "options": [
+        "aduasa nwɔtwe",
+        "aduonu nwɔtwe",
+        "aduasa nkron",
+        "aduowɔtwe nwɔtwe"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "How do you say '39' in Twi?",
+      "type": "recall",
+      "options": [
+        "aduasa nkron",
+        "aduonu nkron",
+        "aduasa nwɔtwe",
+        "aduokron mmienu"
+      ],
+      "correct_index": 0
     }
   ],
   "glossary": [
@@ -173,6 +273,42 @@
     {
       "twi": "aduasa",
       "en": "30"
+    },
+    {
+      "twi": "aduasa baako",
+      "en": "31"
+    },
+    {
+      "twi": "aduasa mmienu",
+      "en": "32"
+    },
+    {
+      "twi": "aduasa mmiɛnsa",
+      "en": "33"
+    },
+    {
+      "twi": "aduasa ɛnan",
+      "en": "34"
+    },
+    {
+      "twi": "aduasa enum",
+      "en": "35"
+    },
+    {
+      "twi": "aduasa nsia",
+      "en": "36"
+    },
+    {
+      "twi": "aduasa nson",
+      "en": "37"
+    },
+    {
+      "twi": "aduasa nwɔtwe",
+      "en": "38"
+    },
+    {
+      "twi": "aduasa nkron",
+      "en": "39"
     }
   ]
 }

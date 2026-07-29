@@ -100,7 +100,7 @@ const List<LessonCategory> kCategories = [
     lessons: [
       Lesson(id: 'unit_003', title: 'Numbers 1–10', subtitle: 'Akontaabuo', asset: 'assets/content/unit_003.json', categoryId: 'numbers'),
       Lesson(id: 'unit_005', title: 'Numbers 11–20', subtitle: 'Dubaako – Aduonu', asset: 'assets/content/unit_005.json', categoryId: 'numbers'),
-      Lesson(id: 'unit_006', title: 'Numbers 21–30', subtitle: 'Aduonu – Aduasa', asset: 'assets/content/unit_006.json', categoryId: 'numbers'),
+      Lesson(id: 'unit_006', title: 'Numbers 21–39', subtitle: 'Aduonu – Aduasa nkron', asset: 'assets/content/unit_006.json', categoryId: 'numbers'),
       // The tens (40–100) + the pattern to build any number — no need to drill
       // every value once 1–30 and the compounding rule are known.
       Lesson(id: 'unit_007', title: 'Tens: 40–100', subtitle: 'Aduanan – Ɔha', asset: 'assets/content/unit_007.json', categoryId: 'numbers'),
