@@ -5,6 +5,7 @@ import '../data/avatar.dart';
 import '../data/journey_state.dart';
 import '../data/lesson_catalog.dart';
 import '../data/lesson_content.dart';
+import '../data/lesson_drills.dart';
 import '../data/quiz_master.dart';
 import '../data/twi_phonetics.dart';
 import '../services/progress_service.dart';
@@ -17,6 +18,7 @@ import '../widgets/checkpoint_travel.dart';
 import '../widgets/continue_button.dart';
 import '../widgets/floating_card.dart';
 import '../widgets/floating_reward.dart';
+import '../widgets/lesson_drill_views.dart';
 import '../widgets/family_celebration.dart';
 import '../widgets/kente_shard.dart';
 import '../widgets/tappable_scale.dart';
@@ -37,9 +39,11 @@ class LessonQuizScreen extends StatefulWidget {
 class _LessonQuizScreenState extends State<LessonQuizScreen> {
   final _progress = ProgressService();
   UnitContent? _unit;
-  List<Challenge> _challenges = [];
-  final Map<int, int> _selected = {};
-  final Map<int, String> _feedback = {}; // punchy Quiz Master line per question
+  List<LessonDrill> _drills = [];
+  final Map<int, int> _selected = {}; // MCQ picks, keyed by drill index
+  final Map<int, String> _feedback = {}; // Quiz Master line (MCQ only)
+  final Set<int> _answered = {}; // drills the learner has completed
+  final Map<int, bool> _resultAt = {}; // per-drill correctness
   bool _recorded = false;
 
   int _combo = 0; // consecutive correct answers
@@ -64,54 +68,41 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
     if (!mounted) return;
     setState(() {
       _unit = u;
-      _challenges = _shuffle(u.challenges);
+      _drills = buildLessonDrills(u, Random());
     });
   }
 
-  List<Challenge> _shuffle(List<Challenge> source) {
-    final r = Random();
-    final list = [for (final c in source) c.shuffledOptions(r)]..shuffle(r);
-    return list;
-  }
-
-  int get _correct => _selected.entries
-      .where((e) => e.value == _challenges[e.key].correctIndex)
-      .length;
+  int get _correct => _resultAt.values.where((v) => v).length;
   bool get _allDone =>
-      _challenges.isNotEmpty && _selected.length == _challenges.length;
+      _drills.isNotEmpty && _answered.length == _drills.length;
 
-  void _choose(int i, int opt) {
-    if (_selected.containsKey(i)) return;
-    final correct = opt == _challenges[i].correctIndex;
-    setState(() {
-      _selected[i] = opt;
-      _feedback[i] = correct ? quizCheer() : quizNudge();
-      if (correct) {
-        _combo += 1;
-        if (_combo > _bestCombo) _bestCombo = _combo;
-        // Every 3-in-a-row: a level-up flourish + a wisdom key.
-        if (_combo % 3 == 0) {
-          _keysEarned += 1;
-          _flash = '🔥 ${_combo}x combo  ·  +1 🗝';
-          HapticFeedback.heavyImpact();
-          SoundService.instance.boxReveal();
-        } else {
-          HapticFeedback.selectionClick();
-          SoundService.instance.correct();
-          // A tick that rises in pitch as the combo climbs.
-          SoundService.instance.boxShakeTick(_combo.clamp(1, 6) / 6);
-        }
-      } else {
-        _combo = 0; // broken
+  /// Shared answer bookkeeping for every drill kind: records correctness,
+  /// updates the combo/keys/flash, plays sound + haptics. Call inside setState.
+  void _recordCore(int i, bool correct) {
+    _answered.add(i);
+    _resultAt[i] = correct;
+    if (correct) {
+      _combo += 1;
+      if (_combo > _bestCombo) _bestCombo = _combo;
+      // Every 3-in-a-row: a level-up flourish + a wisdom key + confetti.
+      if (_combo % 3 == 0) {
+        _keysEarned += 1;
+        _flash = '🔥 ${_combo}x combo  ·  +1 🗝';
         HapticFeedback.heavyImpact();
-        SoundService.instance.tap();
+        SoundService.instance.boxReveal();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) celebrateBurst(context);
+        });
+      } else {
+        HapticFeedback.selectionClick();
+        SoundService.instance.correct();
+        SoundService.instance.boxShakeTick(_combo.clamp(1, 6) / 6);
       }
-    });
-    // Celebrate a combo milestone with a confetti burst.
-    if (correct && _combo > 0 && _combo % 3 == 0) {
-      celebrateBurst(context);
+    } else {
+      _combo = 0; // broken
+      HapticFeedback.heavyImpact();
+      SoundService.instance.tap();
     }
-    // Clear the flash banner shortly after.
     if (_flash != null) {
       Future.delayed(const Duration(milliseconds: 1400), () {
         if (mounted) setState(() => _flash = null);
@@ -119,9 +110,54 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
     }
   }
 
+  void _answerMcq(int i, int opt) {
+    if (_answered.contains(i)) return;
+    final correct = opt == _drills[i].mcq!.correctIndex;
+    setState(() {
+      _selected[i] = opt;
+      _feedback[i] = correct ? quizCheer() : quizNudge();
+      _recordCore(i, correct);
+    });
+  }
+
+  void _answerDrill(int i, bool correct) {
+    if (_answered.contains(i)) return;
+    setState(() => _recordCore(i, correct));
+  }
+
+  Widget _drillView(int i) {
+    final d = _drills[i];
+    switch (d.kind) {
+      case DrillKind.mcq:
+        return _ChallengeCard(
+          key: ValueKey('mcq$i'),
+          index: i,
+          challenge: d.mcq!,
+          selected: _selected[i],
+          feedback: _feedback[i],
+          onChoose: (opt) => _answerMcq(i, opt),
+        );
+      case DrillKind.match:
+        return MatchDrillView(
+            key: ValueKey('match$i'),
+            data: d.match!,
+            onAnswered: (c) => _answerDrill(i, c));
+      case DrillKind.listen:
+        return ListenDrillView(
+            key: ValueKey('listen$i'),
+            data: d.listen!,
+            onAnswered: (c) => _answerDrill(i, c));
+      case DrillKind.build:
+        return BuildDrillView(
+            key: ValueKey('build$i'),
+            data: d.build!,
+            onAnswered: (c) => _answerDrill(i, c));
+    }
+  }
+
   /// Advance to the next question, or finish the run (record + summary).
   void _next() {
-    if (_i >= _challenges.length - 1) {
+    if (_i >= _drills.length - 1) {
       if (!_recorded) {
         _recorded = true;
         _finishRun();
@@ -203,6 +239,8 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
   void _restart() {
     setState(() {
       _selected.clear();
+      _answered.clear();
+      _resultAt.clear();
       _recorded = false;
       _combo = 0;
       _bestCombo = 0;
@@ -213,13 +251,13 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
       _feedback.clear();
       _i = 0;
       _done = false;
-      if (_unit != null) _challenges = _shuffle(_unit!.challenges);
+      if (_unit != null) _drills = buildLessonDrills(_unit!, Random());
     });
   }
 
   void _onContinue() {
     if (!_allDone) {
-      final left = _challenges.length - _selected.length;
+      final left = _drills.length - _answered.length;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Answer all questions to finish ($left left).')));
       return;
@@ -265,8 +303,8 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
       return ContinueButton(onPressed: _onContinue);
     }
     // Mid-run — advance once the current question is answered.
-    final answered = _selected.containsKey(_i);
-    final last = _i >= _challenges.length - 1;
+    final answered = _answered.contains(_i);
+    final last = _i >= _drills.length - 1;
     return SizedBox(
       width: double.infinity,
       child: FilledButton(
@@ -279,8 +317,8 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
   @override
   Widget build(BuildContext context) {
     final u = _unit;
-    final total = _challenges.length;
-    final progress = total == 0 ? 0.0 : _selected.length / total;
+    final total = _drills.length;
+    final progress = total == 0 ? 0.0 : _answered.length / total;
     return Theme(
       data: velvetToolsTheme(context),
       child: Scaffold(
@@ -368,7 +406,7 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                     const SizedBox(width: 10),
                     if (_combo >= 2) _ComboChip(combo: _combo),
                     const Spacer(),
-                    Text('${_done ? total : _i + 1} / ${_challenges.length}',
+                    Text('${_done ? total : _i + 1} / ${_drills.length}',
                         style: const TextStyle(
                             color: kVelvetMuted,
                             fontWeight: FontWeight.w700,
@@ -401,14 +439,7 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                   ),
                 ],
                 const SizedBox(height: 12),
-                if (!_done && _challenges.isNotEmpty)
-                  _ChallengeCard(
-                    index: _i,
-                    challenge: _challenges[_i],
-                    selected: _selected[_i],
-                    feedback: _feedback[_i],
-                    onChoose: (opt) => _choose(_i, opt),
-                  ),
+                if (!_done && _drills.isNotEmpty) _drillView(_i),
                 const SizedBox(height: 8),
                 if (_done) ...[
                   if (_correct >= kPassScore)
@@ -421,7 +452,7 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                   else
                     Center(
                       child: Text(
-                          'You scored $_correct / ${_challenges.length}',
+                          'You scored $_correct / ${_drills.length}',
                           style: const TextStyle(
                               fontWeight: FontWeight.w800,
                               fontSize: 16,
@@ -430,9 +461,9 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                   const SizedBox(height: 12),
                   Center(
                     child: Builder(builder: (_) {
-                      final m = masteryTitleFor(_challenges.isEmpty
+                      final m = masteryTitleFor(_drills.isEmpty
                           ? 0
-                          : _correct / _challenges.length);
+                          : _correct / _drills.length);
                       return Column(children: [
                         Text(m.title,
                             textAlign: TextAlign.center,
@@ -725,6 +756,7 @@ class _ChallengeCard extends StatelessWidget {
   final String? feedback;
   final ValueChanged<int> onChoose;
   const _ChallengeCard({
+    super.key,
     required this.index,
     required this.challenge,
     required this.selected,
