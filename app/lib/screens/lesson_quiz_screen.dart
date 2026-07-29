@@ -261,7 +261,7 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
       width: double.infinity,
       child: FilledButton(
         onPressed: answered ? _next : null,
-        child: Text(last ? 'Finish the lesson' : 'Drive on  →'),
+        child: Text(last ? 'Finish the lesson' : 'Continue  →'),
       ),
     );
   }
