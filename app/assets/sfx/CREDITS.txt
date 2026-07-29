@@ -1,0 +1,11 @@
+Sound effects credits
+=====================
+
+box_tap.wav   — Kenney "UI Audio" pack (click2), CC0 / public domain
+box_tick.wav  — Kenney "UI Audio" pack (click4), CC0 / public domain
+                https://kenney.nl/assets/ui-audio  (no attribution required)
+
+box_ignite.wav, box_burst.wav, box_reveal.wav, box_reveal_grand.wav,
+box_collect.wav — original synthesized cues (Sankofa Twi). Placeholders for
+                the musical/impact beats; swap for a licensed music/SFX pack
+                (e.g. a coin/level-up set) when available, same filenames.
