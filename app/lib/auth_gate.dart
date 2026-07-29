@@ -7,6 +7,7 @@ import 'screens/plan_picker_screen.dart';
 import 'services/auth_service.dart';
 import 'services/notification_service.dart';
 import 'theme.dart';
+import 'widgets/splash_screen.dart';
 
 /// Shows the login screen when signed out, the app when signed in —
 /// with a one-time plan picker after a new sign-up, and a block for
@@ -20,8 +21,7 @@ class AuthGate extends StatelessWidget {
       stream: AuthService().authState,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-              body: Center(child: CircularProgressIndicator()));
+          return const SplashScreen();
         }
         if (snapshot.data == null) return const LoginScreen();
         return const _SignedInRouter();
@@ -70,7 +70,7 @@ class _SignedInRouterState extends State<_SignedInRouter> {
   @override
   Widget build(BuildContext context) {
     if (!_ready) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const SplashScreen();
     }
     if (_disabled) return const _SuspendedScreen();
     if (_needsPlan == true) {

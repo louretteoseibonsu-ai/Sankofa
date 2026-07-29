@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#2E8B57</color>
+    <!-- Brand velvet — used for the launch/splash window so there is no white
+         flash before the Flutter UI draws. -->
+    <color name="velvet">#FF141416</color>
 </resources>
