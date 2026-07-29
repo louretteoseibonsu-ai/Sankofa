@@ -16,6 +16,65 @@ import '../widgets/velvet.dart';
 import '../widgets/tappable_scale.dart';
 import '../widgets/tintable_trotro.dart';
 
+/// A woven-Kente cloth backdrop for the Compound hero, coloured by the equipped
+/// `kente` cosmetic. 'None' (kente_classic) paints nothing.
+class _KenteBackdrop extends CustomPainter {
+  final String kenteId;
+  const _KenteBackdrop(this.kenteId);
+
+  static const _cream = Color(0xFFEFDCA6);
+
+  List<Color>? _bands() {
+    switch (kenteId) {
+      case 'kente_goldgreen':
+        return const [
+          Color(0xFFE3A92C),
+          _cream,
+          Color(0xFF2E6B3B),
+          Color(0xFF1A1512),
+        ];
+      case 'kente_redblack':
+        return const [
+          Color(0xFF9B2D2A),
+          Color(0xFFE3A92C),
+          Color(0xFF1A1512),
+          _cream,
+        ];
+      default:
+        return null; // 'None' → keep the plain velvet panel
+    }
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final bands = _bands();
+    if (bands == null) return;
+    const widths = [26.0, 5.0, 26.0, 5.0];
+    double x = 0;
+    int i = 0;
+    while (x < size.width) {
+      canvas.drawRect(
+        Rect.fromLTWH(x, 0, widths[i % 4] + 0.5, size.height),
+        Paint()..color = bands[i % 4].withValues(alpha: 0.5),
+      );
+      x += widths[i % 4];
+      i++;
+    }
+    // Centre vignette so the family member reads clearly on top of the cloth.
+    canvas.drawRect(
+      Offset.zero & size,
+      Paint()
+        ..shader = const RadialGradient(
+          radius: 0.95,
+          colors: [Color(0x00141110), Color(0xB3141110)],
+        ).createShader(Offset.zero & size),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _KenteBackdrop old) => old.kenteId != kenteId;
+}
+
 const Color _terra = Color(0xFFBE5235);
 
 /// "The Compound" — your family home: choose and unlock the Super Family
@@ -196,14 +255,29 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                 AtmosphericPanel(
                   radius: 22,
                   glow: terracotta,
-                  padding: const EdgeInsets.symmetric(vertical: 18),
-                  child: Center(
-                    child: Image.asset(
-                      avatarById(_avatarId).assetReference,
-                      height: 208,
-                      fit: BoxFit.contain,
-                      errorBuilder: (_, __, ___) =>
-                          const SizedBox(height: 208),
+                  padding: EdgeInsets.zero,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(22),
+                    child: SizedBox(
+                      height: 248,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // Equipped Kente cloth draped behind your family member.
+                          Positioned.fill(
+                            child: CustomPaint(
+                              painter: _KenteBackdrop(_cos.equippedIn('kente')),
+                            ),
+                          ),
+                          Image.asset(
+                            avatarById(_avatarId).assetReference,
+                            height: 208,
+                            fit: BoxFit.contain,
+                            errorBuilder: (_, __, ___) =>
+                                const SizedBox(height: 208),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
