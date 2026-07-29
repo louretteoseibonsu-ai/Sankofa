@@ -2,7 +2,7 @@
 
 > **This file is the single source of truth for customer support.** Feed it to
 > the support assistant at the start of every session. When the app changes,
-> update this file. Last updated: 28 July 2026.
+> update this file. Last updated: 29 July 2026.
 
 > ✅ **Support email — settled:** the official support address is
 > **`sankofa@aparato.ai`**, used consistently across the app (Profile → Help &
@@ -324,7 +324,8 @@ go (great when travelling in Ghana).
   try the Day Name tool (or set your date of birth in Profile).
 - **How do I unlock the other family characters?** Auntie is free; Uncle unlocks
   at level 5, Grandma at a 7-day streak, and Grandpa by mastering 5 lessons — or
-  buy any of them early with **Golden Kente shards** in **The Compound**.
+  buy any of them early with **Golden Kente shards** in **The Compound** (Uncle
+  40, Grandma 60, Grandpa 80 shards). Buying one also equips them.
 - **What are Golden Kente shards?** A mastery currency earned from **3-star
   lessons**, spent in The Compound (unlock family early, open Ananse's blind box).
   Different from pedis.
