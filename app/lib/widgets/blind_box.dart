@@ -184,11 +184,15 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
   Widget build(BuildContext context) {
     final p = _c.value;
     final accent = rarityColor(_rarity);
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: _skip,
-      child: Stack(
-        children: [
+    // Wrap in a transparent Material so overlay Text has a Material ancestor
+    // (otherwise Flutter paints the debug yellow double-underline).
+    return Material(
+      type: MaterialType.transparency,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: _skip,
+        child: Stack(
+          children: [
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -283,6 +287,7 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
               ),
             ),
         ],
+        ),
       ),
     );
   }
@@ -360,8 +365,13 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _RarityChip(rarity: _rarity, color: accent),
-              const SizedBox(height: 28),
+              // Only badge the lucky pulls — a "COMMON" tag on a streak freeze
+              // just reads as a letdown now that rewards are functional.
+              if (_rarity != Rarity.common) ...[
+                _RarityChip(rarity: _rarity, color: accent),
+                const SizedBox(height: 28),
+              ] else
+                const SizedBox(height: 8),
               // Hero — pops in with a spring overshoot.
               SizedBox(
                 height: 236,
