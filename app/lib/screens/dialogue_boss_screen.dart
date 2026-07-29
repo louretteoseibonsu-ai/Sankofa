@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../data/avatar.dart';
 import '../data/lesson_catalog.dart';
 import '../data/lesson_content.dart';
 import '../data/quiz_master.dart';
@@ -8,11 +9,15 @@ import '../services/progress_service.dart';
 import '../services/sound_service.dart';
 import '../theme.dart';
 import '../widgets/celebration.dart';
-import '../widgets/composable_trotro.dart';
 import '../widgets/tappable_scale.dart';
+import 'tools_hub_screen.dart' show velvetToolsTheme;
+
+// Dark answer-tile palette (matches the lesson quiz arcade tiles).
+const Color _tileBg = Color(0xFF211B17);
+const Color _tileCorrect = Color(0xFF63C583);
+const Color _tileWrong = Color(0xFFE0655A);
 
 const Color _green = Color(0xFF2E6B3B);
-const Color _red = Color(0xFF9B2D2A);
 const Color _terra = Color(0xFFBE5235);
 const Color _gold = Color(0xFFE3A92C);
 
@@ -32,7 +37,7 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
   final _progress = ProgressService();
   UnitContent? _unit;
   List<Challenge> _challenges = [];
-  TroTroSkin _skin = const TroTroSkin();
+  Avatar _avatar = avatarById(null); // the equipped family member (map marker)
 
   int _i = 0;
   int? _picked;
@@ -60,7 +65,7 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
       _unit = u;
       _challenges = [for (final c in u.challenges) c.shuffledOptions(r)]
         ..shuffle(r);
-      _skin = TroTroSkin.fromEquipped(cos.equipped);
+      _avatar = avatarById(cos.equipped['avatar']);
     });
   }
 
@@ -80,10 +85,11 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
         if (_combo % 3 == 0) {
           _keysEarned += 1;
           HapticFeedback.heavyImpact();
-          SoundService.instance.complete();
+          SoundService.instance.boxReveal();
         } else {
           HapticFeedback.selectionClick();
           SoundService.instance.correct();
+          SoundService.instance.boxShakeTick(_combo.clamp(1, 6) / 6);
         }
       } else {
         _combo = 0;
@@ -113,6 +119,7 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
         keysEarned: _keysEarned);
     if (!mounted) return;
     if (_correct >= kPassScore) {
+      SoundService.instance.boxReveal(grand: o.stars >= 3); // level-up jingle
       celebrateMilestone(context,
           headline: 'Boss defeated!',
           subline: o.leveledUp ? 'Level ${o.level} reached' : 'Region cleared');
@@ -141,23 +148,28 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
   @override
   Widget build(BuildContext context) {
     final u = _unit;
-    return Scaffold(
-      appBar: AppBar(title: Text('Boss · ${widget.lesson.title}')),
-      body: u == null
-          ? const Center(child: CircularProgressIndicator())
-          : SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: _done ? _result() : _battle(),
+    // Pushed as its own route — apply the velvet dark theme (it was rendering
+    // in the app's light theme, so the whole boss screen looked washed out).
+    return Theme(
+      data: velvetToolsTheme(context),
+      child: Scaffold(
+        appBar: AppBar(title: Text('Boss · ${widget.lesson.title}')),
+        body: u == null
+            ? const Center(child: CircularProgressIndicator())
+            : SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: _done ? _result() : _battle(),
+                ),
               ),
-            ),
+      ),
     );
   }
 
   Widget _track() {
     return LayoutBuilder(builder: (context, c) {
       final w = c.maxWidth;
-      const troW = 74.0;
+      const figW = 56.0;
       return SizedBox(
         height: 76,
         child: Stack(
@@ -179,12 +191,14 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
                   color: _done && _correct >= kPassScore ? _green : _terra,
                   size: 40),
             ),
+            // The equipped family member walks the road toward the landmark.
             AnimatedPositioned(
               duration: const Duration(milliseconds: 500),
               curve: Curves.easeInOut,
-              left: (w - troW - 44) * _troPos,
-              top: 10,
-              child: ComposableTroTro(skin: _skin, width: troW),
+              left: (w - figW - 44) * _troPos,
+              top: 4,
+              child: Image.asset(_avatar.assetReference,
+                  height: 66, fit: BoxFit.contain),
             ),
           ],
         ),
@@ -204,18 +218,28 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
           children: [
             Text('Line ${_i + 1} of ${_challenges.length}',
                 style: const TextStyle(
-                    color: slate, fontWeight: FontWeight.w700, fontSize: 13)),
+                    color: kVelvetMuted,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13)),
             const Spacer(),
             if (_combo >= 2)
               Container(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                    const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
                 decoration: BoxDecoration(
-                    color: const Color(0xFFFBEEEA),
-                    borderRadius: BorderRadius.circular(20)),
-                child: Text('${_combo}x combo',
+                  color: _gold.withValues(alpha: 0.18),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: _gold, width: 1.2),
+                  boxShadow: [
+                    BoxShadow(
+                        color: _gold.withValues(alpha: 0.4),
+                        blurRadius: 12,
+                        spreadRadius: -2),
+                  ],
+                ),
+                child: Text('🔥 ${_combo}x',
                     style: const TextStyle(
-                        color: _terra,
+                        color: _gold,
                         fontWeight: FontWeight.w800,
                         fontSize: 13)),
               ),
@@ -237,7 +261,7 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                 decoration: BoxDecoration(
-                  color: glyphTile,
+                  color: const Color(0xFF211B17),
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(4),
                     topRight: Radius.circular(14),
@@ -247,14 +271,14 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
                 ),
                 child: Text(ch.prompt,
                     style: const TextStyle(
-                        color: ink, fontSize: 15, height: 1.35)),
+                        color: kVelvetInk, fontSize: 15, height: 1.35)),
               ),
             ),
           ],
         ),
         const SizedBox(height: 16),
         const Text('Your response',
-            style: TextStyle(color: slate, fontSize: 12.5)),
+            style: TextStyle(color: kVelvetMuted, fontSize: 12.5)),
         const SizedBox(height: 8),
         Expanded(
           child: ListView(
@@ -283,7 +307,7 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
               style: TextStyle(
                   fontWeight: FontWeight.w800,
                   fontSize: 15,
-                  color: _picked == ch.correctIndex ? _green : _terra),
+                  color: _picked == ch.correctIndex ? _tileCorrect : _terra),
             ),
           ),
         SizedBox(
@@ -293,7 +317,8 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: terracottaDeep,
               foregroundColor: Colors.white,
-              disabledBackgroundColor: silverLight,
+              disabledBackgroundColor: const Color(0xFF2A211C),
+              disabledForegroundColor: kVelvetMuted,
               minimumSize: const Size.fromHeight(52),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16)),
@@ -321,11 +346,11 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ComposableTroTro(skin: _skin, width: 220),
+          Image.asset(_avatar.assetReference, height: 200, fit: BoxFit.contain),
           const SizedBox(height: 18),
           Text(won ? 'Boss defeated!' : 'The road is still blocked',
               style: const TextStyle(
-                  fontWeight: FontWeight.w800, fontSize: 24, color: ink)),
+                  fontWeight: FontWeight.w800, fontSize: 24, color: kVelvetInk)),
           const SizedBox(height: 8),
           if (won)
             Row(
@@ -346,12 +371,12 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
                 ? 'You scored $_correct/${_challenges.length}. The next region is open — Ayɛɛ!'
                 : 'You scored $_correct/${_challenges.length}. Answer $kPassScore+ correctly to clear the boss.',
             textAlign: TextAlign.center,
-            style: const TextStyle(color: slate, fontSize: 14, height: 1.4),
+            style: const TextStyle(color: kVelvetMuted, fontSize: 14, height: 1.4),
           ),
           const SizedBox(height: 14),
           const Text('MASTERY REPORT',
               style: TextStyle(
-                  color: slate,
+                  color: kVelvetMuted,
                   fontSize: 11,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 1)),
@@ -369,7 +394,7 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
               const SizedBox(height: 2),
               Text(m.blurb,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: slate, fontSize: 13)),
+                  style: const TextStyle(color: kVelvetMuted, fontSize: 13)),
             ]);
           }),
           const SizedBox(height: 24),
@@ -403,64 +428,107 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
 
 enum _RState { idle, correct, wrong, dimmed }
 
-class _Response extends StatelessWidget {
+class _Response extends StatefulWidget {
   final String label;
   final _RState state;
   final VoidCallback? onTap;
   const _Response({required this.label, required this.state, this.onTap});
 
   @override
+  State<_Response> createState() => _ResponseState();
+}
+
+class _ResponseState extends State<_Response> with TickerProviderStateMixin {
+  late final AnimationController _pop =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 340));
+  late final AnimationController _shake =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 440));
+
+  @override
+  void didUpdateWidget(covariant _Response old) {
+    super.didUpdateWidget(old);
+    if (old.state != widget.state) {
+      if (widget.state == _RState.correct) _pop.forward(from: 0);
+      if (widget.state == _RState.wrong) _shake.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _pop.dispose();
+    _shake.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    Color border = silver;
-    Color bg = Colors.white;
-    Color fg = ink;
+    Color border = const Color(0x3DFFFFFF);
+    Color bg = _tileBg;
+    Color fg = kVelvetInk;
     Widget? trailing;
-    switch (state) {
+    List<BoxShadow>? glow;
+    switch (widget.state) {
       case _RState.idle:
         break;
       case _RState.correct:
-        border = _green;
-        bg = const Color(0xFFEAF3EC);
-        fg = _green;
-        trailing = const Icon(Icons.check_circle, color: _green, size: 20);
+        border = _tileCorrect;
+        bg = const Color(0xFF17281C);
+        fg = _tileCorrect;
+        trailing = const Icon(Icons.check_circle, color: _tileCorrect, size: 20);
+        glow = [
+          BoxShadow(
+              color: _tileCorrect.withValues(alpha: 0.35),
+              blurRadius: 18,
+              spreadRadius: -4),
+        ];
         break;
       case _RState.wrong:
-        border = _red;
-        bg = const Color(0xFFF7EAE9);
-        fg = _red;
-        trailing = const Icon(Icons.cancel, color: _red, size: 20);
+        border = _tileWrong;
+        bg = const Color(0xFF2C1D18);
+        fg = _tileWrong;
+        trailing = const Icon(Icons.cancel, color: _tileWrong, size: 20);
         break;
       case _RState.dimmed:
-        border = silverLight;
-        fg = slate;
+        border = const Color(0x1FFFFFFF);
+        fg = kVelvetMuted;
         break;
     }
+    final tile = Container(
+      constraints: const BoxConstraints(minHeight: 52),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: border, width: 1.4),
+        boxShadow: glow,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(widget.label,
+                style: TextStyle(
+                    color: fg, fontWeight: FontWeight.w600, fontSize: 15)),
+          ),
+          if (trailing != null) trailing,
+        ],
+      ),
+    );
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
-      child: TappableScale(
-        onTap: onTap,
-        child: Container(
-            constraints: const BoxConstraints(minHeight: 52),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            decoration: BoxDecoration(
-              color: bg,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: border, width: 1.4),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(label,
-                      style: TextStyle(
-                          color: fg,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15)),
-                ),
-                if (trailing != null) trailing,
-              ],
-            ),
-          ),
-        ),
+      child: AnimatedBuilder(
+        animation: Listenable.merge([_pop, _shake]),
+        builder: (_, child) {
+          final pop = 1 + 0.06 * sin(pi * _pop.value);
+          final dx = _shake.value > 0
+              ? sin(_shake.value * pi * 8) * 7 * (1 - _shake.value)
+              : 0.0;
+          return Transform.translate(
+            offset: Offset(dx, 0),
+            child: Transform.scale(scale: pop, child: child),
+          );
+        },
+        child: TappableScale(onTap: widget.onTap, child: tile),
+      ),
     );
   }
 }
