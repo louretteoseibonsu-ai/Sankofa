@@ -73,7 +73,7 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
     with TickerProviderStateMixin {
   late final AnimationController _c; // coil → shake → burst → reveal
   late final AnimationController _glow; // bloom + ground-glow pulse
-  late final AnimationController _spin; // legendary rays + reward sway
+  late final AnimationController _spin; // gentle legendary reward sway
   bool _revealed = false;
   final Set<String> _fired = {};
 
@@ -289,30 +289,15 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
           SizedBox(
             width: 300,
             height: 250,
-            child: Stack(
-              alignment: Alignment.center,
-              clipBehavior: Clip.none,
-              children: [
-                // Legendary: slow gold rays behind the hero.
-                if (_isLegendary)
-                  AnimatedBuilder(
-                    animation: _spin,
-                    builder: (_, __) => Transform.rotate(
-                      angle: _spin.value * 2 * math.pi,
-                      child: CustomPaint(
-                          size: const Size(300, 300),
-                          painter: _RayPainter(accent)),
-                    ),
-                  ),
-                TweenAnimationBuilder<double>(
-                  tween: Tween(begin: 0.5, end: 1.0),
-                  duration: const Duration(milliseconds: 520),
-                  curve: Curves.elasticOut,
-                  builder: (_, s, child) =>
-                      Transform.scale(scale: s, child: child),
-                  child: hero,
-                ),
-              ],
+            child: Center(
+              child: TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0.5, end: 1.0),
+                duration: const Duration(milliseconds: 520),
+                curve: Curves.elasticOut,
+                builder: (_, s, child) =>
+                    Transform.scale(scale: s, child: child),
+                child: hero,
+              ),
             ),
           ),
           const SizedBox(height: 14),
@@ -430,33 +415,6 @@ class _PillButton extends StatelessWidget {
       ),
     );
   }
-}
-
-/// Slow radiating rays behind a legendary reward. Static shape; the caller
-/// rotates it with a [Transform].
-class _RayPainter extends CustomPainter {
-  final Color color;
-  _RayPainter(this.color);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final c = Offset(size.width / 2, size.height / 2);
-    final r = size.shortestSide / 2;
-    const n = 12;
-    final paint = Paint()..color = color.withValues(alpha: 0.13);
-    for (var i = 0; i < n; i++) {
-      final a = i * 2 * math.pi / n;
-      final path = Path()
-        ..moveTo(c.dx, c.dy)
-        ..lineTo(c.dx + math.cos(a - 0.05) * r, c.dy + math.sin(a - 0.05) * r)
-        ..lineTo(c.dx + math.cos(a + 0.05) * r, c.dy + math.sin(a + 0.05) * r)
-        ..close();
-      canvas.drawPath(path, paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _RayPainter old) => old.color != color;
 }
 
 /// A one-shot particle bloom from centre. [t] 0→1 drives expansion + fade.
