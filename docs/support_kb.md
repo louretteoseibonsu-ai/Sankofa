@@ -125,13 +125,17 @@ email,"* tap **Sign in with this email** to log in instead.
   **celebration animation** ("Ayɛkoo!"). Folklore reading opens with the
   Storyteller by a campfire (**Anansesɛm** — Akan spider-tales).
 
-### The Compound (character home & shard shop)
-- Open **The Compound** from the map (people icon) or **Progress → Compound**.
-- Here you choose/unlock your family member, see your **Golden Kente shards**,
-  and open **Ananse's blind box** for collectible kente cloth & motifs.
+### The Compound (family home & Makola market stall)
+- Open **The Compound** from the map (village icon) or **Progress → Compound**.
+- The top of the screen is your **family home**: choose or unlock your Super
+  Family member — the one you pick travels with you on the map.
+- Below that is the **Makola Market Stall**, where you spend your **Golden Kente
+  shards**: open **Ananse's blind box** for collectible kente cloth & motifs,
+  equip **Kente Cloth**, **Journey Glow** map themes, and **Celebration Sounds**,
+  and buy a **Streak Freeze**.
 - **Golden Kente shards** are earned from **3-star (mastery) lessons** and are
-  separate from pedis. They're spent in The Compound (unlocking family early,
-  the blind box).
+  separate from pedis. They're spent at the Makola Market Stall (unlocking
+  family early, the blind box, cosmetics, and streak freezes).
 
 ### Weekly Rally
 - **Progress → Rally** (or Tools → Leaderboard) shows the **Weekly Rally** — a
@@ -327,7 +331,8 @@ go (great when travelling in Ghana).
   buy any of them early with **Golden Kente shards** in **The Compound** (Uncle
   40, Grandma 60, Grandpa 80 shards). Buying one also equips them.
 - **What are Golden Kente shards?** A mastery currency earned from **3-star
-  lessons**, spent in The Compound (unlock family early, open Ananse's blind box).
+  lessons**, spent at the **Makola Market Stall** inside The Compound (unlock
+  family early, open Ananse's blind box, buy cosmetics and streak freezes).
   Different from pedis.
 - **Why can't I open Lens?** Lens is a **Premium** tool. During the beta your
   account must be flagged Premium to use it.
