@@ -1,25 +1,26 @@
 import 'dart:math';
 
 /// The "Sankofa Quiz Master" voice — punchy per-answer feedback that keeps the
-/// momentum high, plus a fun tro-tro-themed mastery title for the summary.
-/// Encouragement is always positive: a wrong answer is a detour, never a fail.
+/// momentum high, plus a mastery title for the summary. Framed around the
+/// Sankofa journey and the Super Family, not the retired tro-tro. Encouragement
+/// is always positive: a wrong answer is a step back to learn, never a fail.
 
 const List<String> _cheers = [
-  "Vroom! That's it!",
-  'Nice move!',
-  'Ayɛkoo — smooth driving!',
-  "Chale, you're flying!",
-  "That's the road!",
-  'Sharp! Keep cruising.',
-  'Straight ahead — yɛn kɔ!',
+  'Ayɛkoo!',
+  'Sharp — nice one!',
+  'Yɛn kɔ — keep going!',
+  "That's it, chale!",
+  'Wo ho yɛ — you’re shining!',
+  'Onward!',
+  'Beautiful — straight through!',
 ];
 
 const List<String> _nudges = [
-  "Bumpy road — let's pivot.",
+  'Sankofa — go back and get it.',
   'Almost there, keep going.',
-  "Small detour — you've got this.",
-  'Not that turn — shake it off.',
-  'Close! Back on the road.',
+  "Small miss — you've got this.",
+  'Not that one — shake it off.',
+  'Close! Try again.',
 ];
 
 final Random _r = Random();
@@ -33,19 +34,19 @@ class MasteryTitle {
   const MasteryTitle(this.title, this.blurb);
 }
 
-/// A fun mastery title from a 0..1 score fraction.
+/// A mastery title from a 0..1 score fraction — journey + family themed.
 MasteryTitle masteryTitleFor(double fraction) {
   if (fraction >= 1.0) {
-    return const MasteryTitle('Kente Road Master 🏆', 'Flawless run — Ayɛkoo!');
+    return const MasteryTitle('Kente Master 🏆', 'Flawless run — Ayɛkoo!');
   }
   if (fraction >= 0.8) {
-    return const MasteryTitle('Highway Hero 🛣️', 'Cruising with confidence.');
+    return const MasteryTitle("Nana's Pride 👑", 'Wisdom worthy of the elders.');
   }
   if (fraction >= 0.6) {
-    return const MasteryTitle('Steady Driver 🚐', 'On the road and rolling.');
+    return const MasteryTitle('Steady Traveller 🧭', 'On the journey, moving strong.');
   }
   if (fraction >= 0.4) {
-    return const MasteryTitle("Learner's Permit 🔰", 'Keep practising — Yɛbɛba bio!');
+    return const MasteryTitle('Growing Roots 🌿', 'Keep practising — Yɛbɛba bio!');
   }
   return const MasteryTitle('Just Getting Started 🌱', 'Every master started here.');
 }
