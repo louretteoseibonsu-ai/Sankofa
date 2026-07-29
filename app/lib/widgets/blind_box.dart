@@ -81,11 +81,17 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
   Rarity get _rarity => _reward.rarity;
   bool get _isLegendary => _rarity == Rarity.legendary;
 
-  // Timeline beats.
-  static const double _shakeStart = 0.10; // after the anticipation coil
-  static const double _burstAt = 0.55; // seal breaks — cut to the split render
-  static const double _glowAt = 0.64; // cut to the top-down glowing interior
-  static const double _revealAt = 0.72; // reward card lands
+  // Timeline beats — normalized positions on the 2.8s master controller.
+  // Re-balanced for a premium, tactile cadence: a longer settle + anticipation,
+  // a sharp break, a held glow of suspense, then the reward.
+  static const double _shakeStart = 0.12; // after the anticipation settle
+  static const double _burstAt = 0.52; // seal breaks — cut to the split render
+  static const double _glowAt = 0.62; // cut to the top-down glowing interior
+  static const double _revealAt = 0.70; // reward lands
+
+  // A controlled overshoot (easeOutBack) — reads as a critically-damped spring
+  // pop, more "tactile toy" than the jelly of elasticOut. Tuned overshoot ~1.5.
+  static const Cubic _springPop = Cubic(0.34, 1.56, 0.64, 1.0);
 
   // The four premium unboxing render beats.
   static const String _kBoxDir = 'assets/blindbox';
@@ -107,7 +113,7 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
         vsync: this, duration: const Duration(milliseconds: 9000))
       ..repeat();
     _c = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 2600))
+        vsync: this, duration: const Duration(milliseconds: 2800))
       ..addListener(_onTick)
       ..forward();
   }
@@ -212,19 +218,47 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
                 ),
               ),
             ),
-          // One-frame white flash at the crack for punch.
-          if (p >= _burstAt && p < 0.63)
+          // Warm golden crack-flare — replaces the old white-out. A radial amber
+          // bloom that flares from the seam then decays into the charcoal
+          // (#141416), so the punch reads as heat/light, never a harsh flash.
+          if (p >= _burstAt && p < _revealAt)
             Positioned.fill(
               child: IgnorePointer(
                 child: Opacity(
-                  opacity: (1 - (p - _burstAt) / 0.08).clamp(0.0, 1.0),
-                  child: const ColoredBox(color: Colors.white),
+                  opacity: _flareEnvelope(p),
+                  child: const DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: RadialGradient(
+                        center: Alignment(0, -0.12), // over the calabash seam
+                        radius: 0.85,
+                        colors: [
+                          Color(0xFFFBE3A6), // warm cream-gold core
+                          Color(0xFFF0A93E), // amber
+                          Color(0xFFE07A3E), // ember edge
+                          Color(0x00141416), // dissolves into charcoal
+                        ],
+                        stops: [0.0, 0.28, 0.5, 1.0],
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
         ],
       ),
     );
+  }
+
+  /// Attack-decay envelope for the crack flare: a fast warm swell just after the
+  /// seal breaks, then an eased fade before the reward lands. Capped below 1 so
+  /// the screen never fully blows out — premium, not blinding.
+  double _flareEnvelope(double p) {
+    final t = ((p - _burstAt) / (_revealAt - _burstAt)).clamp(0.0, 1.0);
+    const attack = 0.22; // quick swell to peak…
+    final env = t < attack
+        ? Curves.easeOutCubic.transform(t / attack)
+        : Curves.easeInOutCubic.transform(1 - (t - attack) / (1 - attack));
+    return 0.62 * env;
   }
 
   /// The pre-reveal unboxing: cross-fades the sealed → split → glow renders on
@@ -279,76 +313,97 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
       );
     }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _RarityChip(rarity: _rarity, color: accent),
-          const SizedBox(height: 12),
-          SizedBox(
-            width: 300,
-            height: 250,
-            child: Center(
-              child: TweenAnimationBuilder<double>(
-                tween: Tween(begin: 0.5, end: 1.0),
-                duration: const Duration(milliseconds: 520),
-                curve: Curves.elasticOut,
-                builder: (_, s, child) =>
-                    Transform.scale(scale: s, child: child),
-                child: hero,
-              ),
-            ),
-          ),
-          const SizedBox(height: 14),
-          // The real prize — a payout badge over the golden-stool hero.
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.06),
-              borderRadius: BorderRadius.circular(22),
-              border: Border.all(color: accent, width: 1.4),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (isFreeze)
-                  const Icon(Icons.ac_unit_rounded,
-                      color: Color(0xFF6FA8DC), size: 22)
-                else
-                  const KenteShard(size: 22),
-                const SizedBox(width: 10),
-                Text(
-                  isFreeze
-                      ? '${_reward.name}  ×${_reward.freezeAmount}'
-                      : '+${_reward.shardAmount} Golden Shards',
-                  style: displayFont(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white),
+    // 8pt vertical rhythm — generous, consistent gaps so nothing feels crammed.
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 340),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _RarityChip(rarity: _rarity, color: accent),
+              const SizedBox(height: 28),
+              // Hero — pops in with a spring overshoot.
+              SizedBox(
+                height: 236,
+                child: Center(
+                  child: TweenAnimationBuilder<double>(
+                    tween: Tween(begin: 0.6, end: 1.0),
+                    duration: const Duration(milliseconds: 460),
+                    curve: _springPop,
+                    builder: (_, s, child) =>
+                        Transform.scale(scale: s, child: child),
+                    child: hero,
+                  ),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 28),
+              // The real prize — a payout pill, settling in just after the hero.
+              _StaggerIn(
+                start: 0.28,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 18, vertical: 11),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.06),
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: accent, width: 1.4),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (isFreeze)
+                        const Icon(Icons.ac_unit_rounded,
+                            color: Color(0xFF6FA8DC), size: 22)
+                      else
+                        const KenteShard(size: 22),
+                      const SizedBox(width: 10),
+                      Text(
+                        isFreeze
+                            ? '${_reward.name}  ×${_reward.freezeAmount}'
+                            : '+${_reward.shardAmount} Golden Shards',
+                        style: displayFont(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              _StaggerIn(
+                start: 0.42,
+                child: Text(
+                    isFreeze
+                        ? 'Added to your streak freezes'
+                        : 'Added to your shard balance',
+                    style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.7),
+                        fontSize: 13)),
+              ),
+              const SizedBox(height: 36),
+              // Primary CTA — full-width, generous touch target.
+              _StaggerIn(
+                start: 0.55,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: _PillButton(
+                    label: 'Collect',
+                    filled: true,
+                    color: accent,
+                    onTap: () {
+                      HapticFeedback.mediumImpact();
+                      SoundService.instance.tap();
+                      widget.onKeep();
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-          Text(
-              isFreeze
-                  ? 'Added to your streak freezes'
-                  : 'Added to your shard balance',
-              style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.7), fontSize: 13)),
-          const SizedBox(height: 22),
-          _PillButton(
-            label: 'Collect',
-            filled: true,
-            color: accent,
-            onTap: () {
-              HapticFeedback.mediumImpact();
-              SoundService.instance.tap();
-              widget.onKeep();
-            },
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -398,21 +453,55 @@ class _PillButton extends StatelessWidget {
     return TappableScale(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 14),
+        constraints: const BoxConstraints(minHeight: 52), // comfy touch target
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
         decoration: BoxDecoration(
           color: filled ? color : Colors.transparent,
-          borderRadius: BorderRadius.circular(26),
+          borderRadius: BorderRadius.circular(28),
           border: Border.all(color: color, width: 1.6),
+          boxShadow: filled
+              ? [
+                  BoxShadow(
+                    color: color.withValues(alpha: 0.35),
+                    blurRadius: 18,
+                    offset: const Offset(0, 6),
+                  ),
+                ]
+              : null,
         ),
         child: Text(
           label,
           style: displayFont(
-              fontSize: 15,
+              fontSize: 16,
               fontWeight: FontWeight.w700,
               color: filled ? Colors.white : color,
-              letterSpacing: -0.2),
+              letterSpacing: 0.2),
         ),
       ),
+    );
+  }
+}
+
+/// A small fade + slide-up reveal used to stagger the reward details in after
+/// the hero pops. [start] is where this item begins on a shared 620ms curve
+/// (0.0–1.0), so the pill, subtitle and CTA cascade rather than snapping in.
+class _StaggerIn extends StatelessWidget {
+  final double start;
+  final Widget child;
+  const _StaggerIn({required this.start, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: const Duration(milliseconds: 620),
+      curve: Interval(start, 1.0, curve: Curves.easeOutCubic),
+      builder: (_, v, child) => Opacity(
+        opacity: v,
+        child: Transform.translate(offset: Offset(0, (1 - v) * 12), child: child),
+      ),
+      child: child,
     );
   }
 }
