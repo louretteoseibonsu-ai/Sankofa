@@ -83,8 +83,19 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
 
   // Timeline beats.
   static const double _shakeStart = 0.10; // after the anticipation coil
-  static const double _burstAt = 0.55;
-  static const double _revealAt = 0.72;
+  static const double _burstAt = 0.55; // seal breaks — cut to the split render
+  static const double _glowAt = 0.64; // cut to the top-down glowing interior
+  static const double _revealAt = 0.72; // reward card lands
+
+  // The four premium unboxing render beats.
+  static const String _kBoxDir = 'assets/blindbox';
+
+  /// The render for the current unboxing phase (pre-reveal).
+  String _beatAsset(double p) {
+    if (p < _burstAt) return '$_kBoxDir/sealed.png';
+    if (p < _glowAt) return '$_kBoxDir/crack.png';
+    return '$_kBoxDir/glow.png';
+  }
 
   @override
   void initState() {
@@ -183,7 +194,7 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
               ),
             ),
           Center(
-            child: _revealed ? _buildReveal(accent) : _buildBox(p, accent),
+            child: _revealed ? _buildReveal(accent) : _buildUnbox(p),
           ),
           // Particle bloom.
           if (p >= _burstAt && p < 0.92)
@@ -216,24 +227,36 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
     );
   }
 
-  Widget _buildBox(double p, Color accent) {
+  /// The pre-reveal unboxing: cross-fades the sealed → split → glow renders on
+  /// the timeline, with an anticipation coil and a rising shake while sealed.
+  Widget _buildUnbox(double p) {
     final coil = (p / _shakeStart).clamp(0.0, 1.0); // anticipation dip
-    final shakeP = ((p - _shakeStart) / (_burstAt - _shakeStart)).clamp(0.0, 1.0);
-    final burst = ((p - _burstAt) / 0.17).clamp(0.0, 1.0);
+    final shakeP =
+        ((p - _shakeStart) / (_burstAt - _shakeStart)).clamp(0.0, 1.0);
     final anticip = p < _shakeStart;
-    final scaleCoil = anticip ? 1.0 - 0.10 * Curves.easeOut.transform(coil) : 1.0;
+    final sealed = p < _burstAt; // only the sealed gourd shakes
+    final scaleCoil =
+        anticip ? 1.0 - 0.06 * Curves.easeOut.transform(coil) : 1.0;
     final dy = anticip ? 8.0 * Curves.easeOut.transform(coil) : 0.0;
-    final dx = math.sin(p * 90) * 6 * shakeP * (1 - burst);
-    final rot = math.sin(p * 78) * 0.06 * shakeP * (1 - burst);
-    return Opacity(
-      opacity: 1.0 - burst,
-      child: Transform.translate(
-        offset: Offset(dx, dy),
-        child: Transform.rotate(
-          angle: rot,
-          child: Transform.scale(
-            scale: scaleCoil * (1.0 + 0.5 * burst),
-            child: _Calabash(accent: accent),
+    final dx = sealed ? math.sin(p * 90) * 6 * shakeP : 0.0;
+    final rot = sealed ? math.sin(p * 78) * 0.05 * shakeP : 0.0;
+    final asset = _beatAsset(p);
+    return Transform.translate(
+      offset: Offset(dx, dy),
+      child: Transform.rotate(
+        angle: rot,
+        child: Transform.scale(
+          scale: scaleCoil,
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 260),
+            child: Image.asset(
+              asset,
+              key: ValueKey(asset),
+              width: 300,
+              height: 300,
+              fit: BoxFit.contain,
+              gaplessPlayback: true,
+            ),
           ),
         ),
       ),
@@ -241,17 +264,17 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
   }
 
   Widget _buildReveal(Color accent) {
-    // The reward, scaling in — with a gentle continuous sway for legendaries.
-    Widget reward = _RewardPreview(
-      reward: _reward,
-      accent: accent,
-    );
+    final isFreeze = _reward.kind == RewardKind.freeze;
+    // The opened calabash + golden stool hero render, scaling in — with a gentle
+    // continuous sway for legendaries.
+    Widget hero = Image.asset('$_kBoxDir/reward.png',
+        width: 268, height: 268, fit: BoxFit.contain);
     if (_isLegendary) {
-      final inner = reward;
-      reward = AnimatedBuilder(
+      final inner = hero;
+      hero = AnimatedBuilder(
         animation: _spin,
         builder: (_, child) => Transform.rotate(
-            angle: math.sin(_spin.value * 2 * math.pi) * 0.06, child: child),
+            angle: math.sin(_spin.value * 2 * math.pi) * 0.05, child: child),
         child: inner,
       );
     }
@@ -262,15 +285,15 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
         mainAxisSize: MainAxisSize.min,
         children: [
           _RarityChip(rarity: _rarity, color: accent),
-          const SizedBox(height: 24),
+          const SizedBox(height: 12),
           SizedBox(
             width: 300,
-            height: 196,
+            height: 250,
             child: Stack(
               alignment: Alignment.center,
               clipBehavior: Clip.none,
               children: [
-                // Legendary: slow gold rays behind the reward.
+                // Legendary: slow gold rays behind the hero.
                 if (_isLegendary)
                   AnimatedBuilder(
                     animation: _spin,
@@ -281,37 +304,55 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
                           painter: _RayPainter(accent)),
                     ),
                   ),
-                // Grounding glow disc — anchors the reward on the black stage.
-                AnimatedBuilder(
-                  animation: _glow,
-                  builder: (_, __) => _groundGlow(accent, _glow.value),
-                ),
                 TweenAnimationBuilder<double>(
-                  tween: Tween(begin: 0.4, end: 1.0),
+                  tween: Tween(begin: 0.5, end: 1.0),
                   duration: const Duration(milliseconds: 520),
                   curve: Curves.elasticOut,
                   builder: (_, s, child) =>
                       Transform.scale(scale: s, child: child),
-                  child: reward,
+                  child: hero,
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 22),
-          Text(
-            _reward.name,
-            textAlign: TextAlign.center,
-            style: displayFont(
-                fontSize: 25, fontWeight: FontWeight.w700, color: Colors.white),
+          const SizedBox(height: 14),
+          // The real prize — a payout badge over the golden-stool hero.
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.06),
+              borderRadius: BorderRadius.circular(22),
+              border: Border.all(color: accent, width: 1.4),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isFreeze)
+                  const Icon(Icons.ac_unit_rounded,
+                      color: Color(0xFF6FA8DC), size: 22)
+                else
+                  const KenteShard(size: 22),
+                const SizedBox(width: 10),
+                Text(
+                  isFreeze
+                      ? '${_reward.name}  ×${_reward.freezeAmount}'
+                      : '+${_reward.shardAmount} Golden Shards',
+                  style: displayFont(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           Text(
-              _reward.kind == RewardKind.freeze
+              isFreeze
                   ? 'Added to your streak freezes'
                   : 'Added to your shard balance',
               style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.7), fontSize: 13)),
-          const SizedBox(height: 28),
+          const SizedBox(height: 22),
           _PillButton(
             label: 'Collect',
             filled: true,
@@ -321,69 +362,6 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
               SoundService.instance.tap();
               widget.onKeep();
             },
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// A soft elliptical glow beneath the reward — the "pedestal".
-  Widget _groundGlow(Color accent, double pulse) => Transform.translate(
-        offset: const Offset(0, 64),
-        child: Transform.scale(
-          scaleY: 0.34,
-          child: Container(
-            width: 250,
-            height: 250,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: RadialGradient(
-                colors: [
-                  accent.withValues(alpha: 0.34 + 0.14 * pulse),
-                  accent.withValues(alpha: 0.0),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-}
-
-/// The reward preview — a functional prize badge (streak freezes or a shard
-/// haul) on a rarity-tinted disc.
-class _RewardPreview extends StatelessWidget {
-  final BoxReward reward;
-  final Color accent;
-  const _RewardPreview({
-    required this.reward,
-    required this.accent,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final isFreeze = reward.kind == RewardKind.freeze;
-    final amount = isFreeze ? reward.freezeAmount : reward.shardAmount;
-    return Container(
-      width: 158,
-      height: 158,
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: accent, width: 2),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (isFreeze)
-            const Icon(Icons.ac_unit_rounded,
-                color: Color(0xFF6FA8DC), size: 62)
-          else
-            const KenteShard(size: 60),
-          const SizedBox(height: 8),
-          Text(
-            isFreeze ? '×$amount' : '+$amount',
-            style: displayFont(
-                fontSize: 22, fontWeight: FontWeight.w800, color: Colors.white),
           ),
         ],
       ),
@@ -452,95 +430,6 @@ class _PillButton extends StatelessWidget {
       ),
     );
   }
-}
-
-/// A kente-wrapped calabash (gourd): a warm body, a woven band across the middle,
-/// and a mystery glyph.
-class _Calabash extends StatelessWidget {
-  final Color accent;
-  const _Calabash({required this.accent});
-
-  @override
-  Widget build(BuildContext context) =>
-      CustomPaint(size: const Size(150, 168), painter: _CalabashPainter(accent));
-}
-
-class _CalabashPainter extends CustomPainter {
-  final Color accent;
-  _CalabashPainter(this.accent);
-
-  static const Color _gourd = Color(0xFF9A5B33);
-  static const Color _gourdDark = Color(0xFF7A4526);
-  static const Color _gold = Color(0xFFE3A92C);
-  static const Color _cream = Color(0xFFF4F1EC);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final w = size.width, h = size.height;
-    final cx = w / 2;
-
-    // Neck.
-    final neck = RRect.fromRectAndRadius(
-        Rect.fromLTWH(cx - 14, h * 0.02, 28, h * 0.20),
-        const Radius.circular(8));
-    canvas.drawRRect(neck, Paint()..color = _gourdDark);
-
-    // Body (rounded gourd).
-    final body = Rect.fromCenter(
-        center: Offset(cx, h * 0.60), width: w * 0.86, height: h * 0.74);
-    canvas.drawOval(body, Paint()..color = _gourd);
-    // Soft top-light.
-    canvas.drawOval(
-      Rect.fromCenter(
-          center: Offset(cx - w * 0.10, h * 0.46),
-          width: w * 0.4,
-          height: h * 0.3),
-      Paint()..color = Colors.white.withValues(alpha: 0.10),
-    );
-
-    // Woven kente band — thin alternating warp threads over a dark weft base.
-    canvas.save();
-    canvas.clipPath(Path()..addOval(body));
-    final bandTop = h * 0.50;
-    const bandH = 30.0;
-    canvas.drawRect(
-        Rect.fromLTWH(0, bandTop, w, bandH), Paint()..color = _gourdDark);
-    const step = 9.0;
-    final threads = [accent, _gold, _cream];
-    for (var i = 0; i * step < w; i++) {
-      canvas.drawRect(
-        Rect.fromLTWH(i * step, bandTop + 2, step - 2.0, bandH - 4),
-        Paint()..color = threads[i % threads.length],
-      );
-    }
-    // Two horizontal weft lines binding the band.
-    final weft = Paint()
-      ..color = _gourdDark
-      ..strokeWidth = 2;
-    canvas.drawLine(
-        Offset(0, bandTop + bandH * 0.5), Offset(w, bandTop + bandH * 0.5), weft);
-    final edge = Paint()
-      ..color = _gold
-      ..strokeWidth = 2;
-    canvas.drawLine(Offset(0, bandTop - 3), Offset(w, bandTop - 3), edge);
-    canvas.drawLine(
-        Offset(0, bandTop + bandH + 3), Offset(w, bandTop + bandH + 3), edge);
-    canvas.restore();
-
-    // Mystery glyph (in the display face).
-    final tp = TextPainter(
-      text: TextSpan(
-        text: '?',
-        style: displayFont(
-            fontSize: 30, fontWeight: FontWeight.w800, color: Colors.white),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-    tp.paint(canvas, Offset(cx - tp.width / 2, h * 0.66));
-  }
-
-  @override
-  bool shouldRepaint(covariant _CalabashPainter old) => old.accent != accent;
 }
 
 /// Slow radiating rays behind a legendary reward. Static shape; the caller

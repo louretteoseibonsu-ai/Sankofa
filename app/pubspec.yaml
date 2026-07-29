@@ -47,6 +47,7 @@ flutter:
     # - assets/mascot/trotro_gameplay/roof/
     - assets/avatars/       # Super Family avatar portraits
     - assets/celebrations/  # per-character celebration video loops
+    - assets/blindbox/      # Ananse calabash unboxing render beats
     - assets/landmarks/     # cultural landmark icons
     - assets/hero/          # campaign hero / banner art
     - assets/icon/app_icon.png
