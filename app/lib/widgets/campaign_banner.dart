@@ -7,13 +7,15 @@ import 'velvet.dart';
 /// legibility gradient.
 class CampaignBanner extends StatelessWidget {
   final String title;
+  final String subtitle;
   final String kicker;
   final double height;
 
   const CampaignBanner({
     super.key,
-    this.title = 'Sankofa Journey',
-    this.kicker = 'The Campaign',
+    this.title = 'Sankofa',
+    this.subtitle = 'Go Back and Get It',
+    this.kicker = '',
     this.height = 148,
   });
 
@@ -62,6 +64,14 @@ class CampaignBanner extends StatelessWidget {
                             fontSize: 24,
                             fontWeight: FontWeight.w700,
                             color: kVelvetInk)),
+                    if (subtitle.isNotEmpty) ...[
+                      const SizedBox(height: 1),
+                      Text(subtitle,
+                          style: displayFont(
+                              fontSize: 13.5,
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFFE6D3A6))),
+                    ],
                   ],
                 ),
               ),

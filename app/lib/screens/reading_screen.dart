@@ -66,6 +66,25 @@ class _ReadingListScreenState extends State<ReadingListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final content = _body(context);
+    if (!widget.folkloreOnly) return content;
+    // Standalone campfire route: wrap in a velvet Scaffold so it has a Material
+    // ancestor + dark background + back button. Without one, a pushed route
+    // renders bare Text with the debug yellow double-underline on a black void.
+    return Theme(
+      data: velvetToolsTheme(context),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+        ),
+        body: content,
+      ),
+    );
+  }
+
+  Widget _body(BuildContext context) {
     if (_loading) return const SkeletonListView(rows: 5);
     if (_error) {
       return StateMessage(
