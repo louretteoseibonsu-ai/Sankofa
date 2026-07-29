@@ -9,12 +9,10 @@ import '../widgets/avatar_carousel.dart';
 import '../widgets/blind_box.dart';
 import '../widgets/composable_trotro.dart';
 import '../widgets/kente_shard.dart';
-import '../widgets/skeleton.dart';
 import '../widgets/state_message.dart';
 import '../widgets/surface.dart';
 import '../widgets/velvet.dart';
 import '../widgets/tappable_scale.dart';
-import '../widgets/tintable_trotro.dart';
 
 /// A woven-Kente cloth backdrop for the Compound hero, coloured by the equipped
 /// `kente` cosmetic. 'None' (kente_classic) paints nothing.
@@ -102,7 +100,6 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
   CosmeticState _cos = CosmeticState.empty;
   Stats _stats = Stats.empty;
   int _shards = 0;
-  int _bodyIndex = 0; // equipped body-colour palette index
   String _avatarId = kDefaultAvatarId;
   bool _loading = true;
   bool _error = false;
@@ -132,7 +129,6 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
       _stats = stats;
       _shards = stats.shards;
       _cos = cos;
-      _bodyIndex = troTroBodyIndexFor(cos.equipped);
       _avatarId = cos.equipped['avatar'] ?? kDefaultAvatarId;
       _loading = false;
       _error = false;
@@ -201,37 +197,29 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
       return;
     }
     SoundService.instance.complete();
-    final equip = await BlindBoxOpening.show(
-      context,
-      result: result,
-      bodyColor: kTroTroBodyColors[_bodyIndex],
-      equipped: _cos.equipped,
-    );
+    await BlindBoxOpening.show(context, result: result);
     if (!mounted) return;
-    // Persist the equip AFTER the overlay resolves (avoids racing the reload).
-    if (equip && result.reward.isBusCosmetic) {
-      await _service.equipCosmetic(result.reward.category, result.reward.id);
-    }
     await _reload();
   }
 
-  Future<void> _onTap(ShopItem item) async {
-    final owned = _cos.owned.contains(item.id) || item.isDefault;
-    if (owned) {
-      await _service.equipCosmetic(item.category, item.id);
-      SoundService.instance.tap();
-    } else {
-      final ok = await _service.buyCosmetic(item);
-      if (!ok) {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Not enough kente shards yet — earn more by '
-                'scoring 3 stars on lessons.')));
-        return;
-      }
-      SoundService.instance.complete();
+  Future<void> _repairStreak() async {
+    if (_shards < ProgressService.kRepairShardCost) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('You need ${ProgressService.kRepairShardCost} shards to '
+              'restore your streak — earn more with 3-star lessons.')));
+      return;
     }
-    await _reload();
+    final ok = await _service.repairStreakWithShards();
+    if (!mounted) return;
+    if (ok) {
+      SoundService.instance.complete();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Streak restored — finish a lesson today to keep it 🔥')));
+      await _reload();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Couldn’t restore — check your connection.')));
+    }
   }
 
   @override
@@ -292,9 +280,9 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                         children: [
                           // Equipped Kente cloth as a header strip above the
                           // family member (clear of the character).
-                          Positioned.fill(
+                          const Positioned.fill(
                             child: CustomPaint(
-                              painter: _KenteBackdrop(_cos.equippedIn('kente')),
+                              painter: _KenteBackdrop('kente_goldgreen'),
                             ),
                           ),
                           Image.asset(
@@ -344,9 +332,18 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(2, 0, 0, 10),
-                  child: Text('Spend your kente shards — cloth, glow, and charms',
+                  child: Text('Spend your kente shards to protect your streak',
                       style: microLabel()),
                 ),
+                if (_stats.repairableStreak > 0) ...[
+                  _SecondChanceCard(
+                    streak: _stats.repairableStreak,
+                    cost: ProgressService.kRepairShardCost,
+                    canAfford: _shards >= ProgressService.kRepairShardCost,
+                    onRepair: _repairStreak,
+                  ),
+                  const SizedBox(height: 10),
+                ],
                 _BlindBoxCard(shards: _shards, onOpen: _openBlindBox),
                 const SizedBox(height: 10),
                 // ── Utility: spend shards on a streak freeze ──
@@ -408,42 +405,6 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                       },
                     ),
                   ),
-                if (!_error && _loading)
-                  const SkeletonLoader(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 12),
-                      child: Column(
-                        children: [
-                          SkeletonCard(dark: true),
-                          SkeletonCard(dark: true),
-                          SkeletonCard(dark: true),
-                        ],
-                      ),
-                    ),
-                  ),
-                if (!_error && !_loading)
-                  for (final cat in kCosmeticCategories) ...[
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(2, 12, 0, 8),
-                    child: Text(kCategoryLabel[cat] ?? cat,
-                        style: microLabel()),
-                  ),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: [
-                      for (final item
-                          in kCosmetics.where((i) => i.category == cat))
-                        _ItemCard(
-                          item: item,
-                          owned: _cos.owned.contains(item.id) || item.isDefault,
-                          equipped: _cos.equippedIn(cat) == item.id,
-                          affordable: _shards >= item.costShards,
-                          onTap: () => _onTap(item),
-                        ),
-                    ],
-                  ),
-                ],
               ],
             ),
       ),
@@ -451,69 +412,72 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
   }
 }
 
-class _ItemCard extends StatelessWidget {
-  final ShopItem item;
-  final bool owned;
-  final bool equipped;
-  final bool affordable;
-  final VoidCallback onTap;
-  const _ItemCard({
-    required this.item,
-    required this.owned,
-    required this.equipped,
-    required this.affordable,
-    required this.onTap,
+/// Second Chance — restore a streak that lapsed in the last day or two. Only
+/// shown when [ProgressService] reports a repairable streak.
+class _SecondChanceCard extends StatelessWidget {
+  final int streak;
+  final int cost;
+  final bool canAfford;
+  final VoidCallback onRepair;
+  const _SecondChanceCard({
+    required this.streak,
+    required this.cost,
+    required this.canAfford,
+    required this.onRepair,
   });
 
   @override
   Widget build(BuildContext context) {
-    final Widget status;
-    if (equipped) {
-      status = Text('EQUIPPED',
-          style: displayFont(
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              color: kOchre,
-              letterSpacing: 1.2));
-    } else if (owned) {
-      status = Text('Equip',
-          style: displayFont(
-              fontSize: 12, fontWeight: FontWeight.w700, color: kVelvetInk));
-    } else {
-      status = Row(mainAxisSize: MainAxisSize.min, children: [
-        KenteShard(size: 14, muted: !affordable),
-        const SizedBox(width: 4),
-        Text('${item.costShards}',
-            style: displayFont(
-                fontSize: 13,
-                fontWeight: FontWeight.w700,
-                color: affordable ? kOchre : kVelvetMuted)),
-      ]);
-    }
-
-    final width = MediaQuery.of(context).size.width - 16 * 2;
-    return AppCard(
-      onTap: onTap,
-      width: width,
-      radius: 14,
-      color: const Color(0xFF211B17),
-      borderColor: equipped ? kOchre : Colors.white10,
-      borderWidth: equipped ? 2 : 1,
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(item.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: displayFont(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: kVelvetInk)),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF7A3F36), Color(0xFF2C1D18)],
+        ),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFFE07A3E), width: 1.4),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onRepair,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                const Icon(Icons.local_fire_department_rounded,
+                    color: Color(0xFFE07A3E), size: 30),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Second Chance',
+                          style: displayFont(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white)),
+                      const SizedBox(height: 2),
+                      Text('Restore your $streak-day streak — one lesson today keeps it',
+                          maxLines: 2,
+                          style: const TextStyle(
+                              color: Colors.white70, fontSize: 12)),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text('$cost',
+                    style: editorialNumber(
+                        fontSize: 15,
+                        color: canAfford ? Colors.white : Colors.white38)),
+                const SizedBox(width: 5),
+                KenteShard(size: 14, muted: !canAfford),
+              ],
+            ),
           ),
-          const SizedBox(width: 6),
-          status,
-        ],
+        ),
       ),
     );
   }
@@ -556,7 +520,7 @@ class _BlindBoxCard extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                         color: Colors.white)),
                 const SizedBox(height: 2),
-                const Text('A mystery calabash — rare cloth & motifs await.',
+                const Text('A mystery calabash — streak freezes & shards await.',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: Colors.white70, fontSize: 12)),

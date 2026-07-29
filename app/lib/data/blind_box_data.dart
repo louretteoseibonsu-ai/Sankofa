@@ -1,6 +1,7 @@
 import 'dart:math';
 
-/// Rarity tiers for Ananse's Folklore Blind Boxes. Weights drive the roll.
+/// Rarity tiers for Ananse's Folklore Blind Boxes. Weights drive the roll and
+/// tint the unboxing bloom.
 enum Rarity { common, rare, legendary }
 
 extension RarityMeta on Rarity {
@@ -26,80 +27,63 @@ extension RarityMeta on Rarity {
         return 5;
     }
   }
-
-  /// Shards refunded when a duplicate is rolled.
-  int get dupeRefund {
-    switch (this) {
-      case Rarity.common:
-        return 8;
-      case Rarity.rare:
-        return 20;
-      case Rarity.legendary:
-        return 30; // kept below kBlindBoxCost so a dupe never nets a profit
-    }
-  }
 }
 
-/// One possible drop. [category] maps to the layered-cosmetic slot
-/// (e.g. 'kente') so a bus reward composites straight onto the Mascot via
-/// `equipped`; 'figurine' rewards are dashboard collectibles (not bus layers).
+/// The kind of functional payout a box can drop. Cosmetics are retired — every
+/// reward now moves a real balance the learner cares about.
+enum RewardKind { freeze, shards }
+
+/// One possible drop from Ananse's calabash. A reward grants [freezeAmount]
+/// streak freezes and/or [shardAmount] Golden Kente shards (usually one is 0).
 class BoxReward {
-  final String id; // equip id, e.g. 'kente_royalblue'
-  final String category; // cosmetic slot, or 'figurine'
+  final String id;
   final String name; // display name
   final Rarity rarity;
+  final RewardKind kind; // drives the reveal icon
+  final int freezeAmount; // streak freezes granted
+  final int shardAmount; // shards granted (a cashback / jackpot)
   const BoxReward({
     required this.id,
-    required this.category,
     required this.name,
     required this.rarity,
+    required this.kind,
+    this.freezeAmount = 0,
+    this.shardAmount = 0,
   });
-
-  bool get isBusCosmetic => category != 'figurine';
 }
 
-/// Starter reward pool. The two kente ids already have art; the rest are hooks
-/// awaiting layered PNGs in trotro_gameplay/<category>/<id>.png (the reveal
-/// degrades gracefully until then — Mascot skips missing layers).
+/// The functional reward pool. Tuned so every outcome is a real prize (never
+/// "nothing"), with the legendary as a genuine jackpot. Expected value sits a
+/// touch below [kBlindBoxCost] so the box stays a shard *sink*, with the thrill
+/// in the variance.
 const List<BoxReward> kBlindBoxPool = [
   BoxReward(
-      id: 'kente_goldgreen',
-      category: 'kente',
-      name: 'Ashanti Gold Weave',
-      rarity: Rarity.common),
+    id: 'freeze1',
+    name: 'Streak Freeze',
+    rarity: Rarity.common,
+    kind: RewardKind.freeze,
+    freezeAmount: 1,
+  ),
   BoxReward(
-      id: 'kente_redblack',
-      category: 'kente',
-      name: 'Adinkra Red & Black',
-      rarity: Rarity.common),
+    id: 'shards45',
+    name: '45 Golden Shards',
+    rarity: Rarity.rare,
+    kind: RewardKind.shards,
+    shardAmount: 45,
+  ),
   BoxReward(
-      id: 'kente_bonwire',
-      category: 'kente',
-      name: 'Royal Bonwire Cloth',
-      rarity: Rarity.rare),
-  BoxReward(
-      id: 'kente_sankofa',
-      category: 'kente',
-      name: 'Sankofa Motif',
-      rarity: Rarity.rare),
-  BoxReward(
-      id: 'kente_chrome',
-      category: 'kente',
-      name: 'Midnight Chrome Finish',
-      rarity: Rarity.legendary),
-  BoxReward(
-      id: 'fig_ananse',
-      category: 'figurine',
-      name: 'Ananse the Weaver',
-      rarity: Rarity.legendary),
+    id: 'freeze3',
+    name: 'Triple Streak Freeze',
+    rarity: Rarity.legendary,
+    kind: RewardKind.freeze,
+    freezeAmount: 3,
+  ),
 ];
 
 /// The outcome of opening one box.
 class UnboxResult {
   final BoxReward reward;
-  final bool duplicate; // already owned → converted to a shard refund
-  final int refund; // shards returned on a duplicate (0 otherwise)
-  const UnboxResult(this.reward, {this.duplicate = false, this.refund = 0});
+  const UnboxResult(this.reward);
 }
 
 /// Weighted rarity roll.
@@ -113,17 +97,13 @@ Rarity rollRarity(Random r) {
   return Rarity.common;
 }
 
-/// Pure unbox roll: pick a rarity, then a reward of that rarity. If the id is
-/// already [owned], flag it as a duplicate and compute the shard refund. This is
-/// deliberately side-effect-free so it's testable and the server can mirror it.
-UnboxResult rollUnbox(Random r, {Set<String> owned = const {}}) {
+/// Pure unbox roll: pick a rarity, then a reward of that rarity. Side-effect
+/// free so it's testable and the server can mirror it.
+UnboxResult rollUnbox(Random r) {
   final rarity = rollRarity(r);
   final tier = kBlindBoxPool.where((b) => b.rarity == rarity).toList();
   final pool = tier.isEmpty ? kBlindBoxPool : tier;
-  final pick = pool[r.nextInt(pool.length)];
-  final dup = owned.contains(pick.id);
-  return UnboxResult(pick,
-      duplicate: dup, refund: dup ? rarity.dupeRefund : 0);
+  return UnboxResult(pool[r.nextInt(pool.length)]);
 }
 
 /// Shard price of a single blind box.

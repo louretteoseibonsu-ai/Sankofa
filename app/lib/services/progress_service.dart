@@ -95,6 +95,7 @@ int _starsFor(int score) {
 class Stats {
   final Progress progress;
   final int streak;
+  final int repairableStreak; // >0 when a recent lapse can be repaired
   final int freezes;
   final int dailyLessons;
   final int dailyXp;
@@ -108,6 +109,7 @@ class Stats {
   const Stats({
     required this.progress,
     required this.streak,
+    this.repairableStreak = 0,
     required this.freezes,
     required this.dailyLessons,
     required this.dailyXp,
@@ -236,18 +238,31 @@ class ProgressService {
     final raw = (data['lessonBest'] as Map?)?.cast<String, dynamic>() ?? {};
     final best = raw.map((k, v) => MapEntry(k, (v as num).toInt()));
 
-    final today = _dayKey(DateTime.now());
-    final yesterday =
-        _dayKey(DateTime.now().subtract(const Duration(days: 1)));
+    final now = DateTime.now();
+    final today = _dayKey(now);
+    final yesterday = _dayKey(now.subtract(const Duration(days: 1)));
+    final twoDaysAgo = _dayKey(now.subtract(const Duration(days: 2)));
+    final threeDaysAgo = _dayKey(now.subtract(const Duration(days: 3)));
     final lastActive = data['lastActive'] as String?;
-    var streak = (data['streak'] as num?)?.toInt() ?? 0;
+    final storedStreak = (data['streak'] as num?)?.toInt() ?? 0;
+    var streak = storedStreak;
     if (lastActive != today && lastActive != yesterday) streak = 0; // lapsed
     streakNotifier.value = streak; // keep the live fuel gauge in sync
+
+    // Second Chance: a lapsed streak is repairable if it was real (>0) and the
+    // break is recent — the last active day was 2 or 3 days ago (one or two
+    // missed days). Older lapses are gone for good.
+    final repairableStreak =
+        (streak == 0 && storedStreak > 0 &&
+                (lastActive == twoDaysAgo || lastActive == threeDaysAgo))
+            ? storedStreak
+            : 0;
 
     final isToday = (data['dailyDate'] as String?) == today;
     return Stats(
       progress: Progress(best),
       streak: streak,
+      repairableStreak: repairableStreak,
       freezes: (data['freezes'] as num?)?.toInt() ?? 1,
       dailyLessons: isToday ? (data['dailyLessons'] as num?)?.toInt() ?? 0 : 0,
       dailyXp: isToday ? (data['dailyXp'] as num?)?.toInt() ?? 0 : 0,
@@ -297,6 +312,42 @@ class ProgressService {
       'freezes': FieldValue.increment(1),
     }, SetOptions(merge: true));
     return true;
+  }
+
+  /// Golden Kente shards to repair a recently-broken streak (Second Chance).
+  static const int kRepairShardCost = 40;
+
+  /// Spends shards to restore a streak that lapsed within the last 1–2 days.
+  /// Re-stamps `lastActive` to yesterday so the stored streak is preserved; the
+  /// learner must finish a lesson today to bank it. Returns true on success.
+  Future<bool> repairStreakWithShards() async {
+    final uid = _uid;
+    if (uid == null) return false;
+    final ref = _db.collection('users').doc(uid);
+    final now = DateTime.now();
+    final yesterday = _dayKey(now.subtract(const Duration(days: 1)));
+    final twoDaysAgo = _dayKey(now.subtract(const Duration(days: 2)));
+    final threeDaysAgo = _dayKey(now.subtract(const Duration(days: 3)));
+    try {
+      return await _db.runTransaction<bool>((tx) async {
+        final snap = await tx.get(ref);
+        final data = snap.data() ?? {};
+        final shards = (data['shards'] as num?)?.toInt() ?? 0;
+        final storedStreak = (data['streak'] as num?)?.toInt() ?? 0;
+        final lastActive = data['lastActive'] as String?;
+        final repairable = storedStreak > 0 &&
+            (lastActive == twoDaysAgo || lastActive == threeDaysAgo);
+        if (!repairable || shards < kRepairShardCost) return false;
+        tx.set(ref, {
+          'shards': FieldValue.increment(-kRepairShardCost),
+          'lastActive': yesterday, // streak now continues from today
+        }, SetOptions(merge: true));
+        streakNotifier.value = storedStreak; // fuel gauge back to full
+        return true;
+      });
+    } catch (_) {
+      return false;
+    }
   }
 
   /// Golden Kente shards to buy a streak freeze in The Compound.
@@ -466,11 +517,10 @@ class ProgressService {
   }
 
   /// Opens one Ananse blind box for [kBlindBoxCost] shards. Atomic: reads the
-  /// balance + owned set, runs the weighted [rollUnbox], debits shards and adds
-  /// a NEW reward to `cosmeticsOwned` in a single transaction so rapid taps or a
-  /// stale (offline-cached) read can't double-spend. A duplicate roll refunds
-  /// shards instead of adding to owned. Returns the [UnboxResult], or null if
-  /// unaffordable / offline.
+  /// balance, runs the weighted [rollUnbox], debits the price and credits the
+  /// functional payout (streak freezes and/or shard cashback) in a single
+  /// transaction so rapid taps or a stale (offline-cached) read can't
+  /// double-spend. Returns the [UnboxResult], or null if unaffordable / offline.
   Future<UnboxResult?> buyBlindBox() async {
     final uid = _uid;
     if (uid == null) return null;
@@ -482,18 +532,15 @@ class ProgressService {
         final data = snap.data() ?? {};
         final shards = (data['shards'] as num?)?.toInt() ?? 0;
         if (shards < kBlindBoxCost) return null;
-        final owned = {
-          ...kDefaultOwned,
-          ...((data['cosmeticsOwned'] as List?)?.cast<String>() ?? const [])
-        };
-        final result = rollUnbox(rng, owned: owned);
-        final net = kBlindBoxCost - result.refund; // duplicates partly refund
+        final result = rollUnbox(rng);
+        // Net shard movement: pay the price, credit any shard payout.
+        final net = kBlindBoxCost - result.reward.shardAmount;
         final update = <String, dynamic>{
           'shards': FieldValue.increment(-net),
         };
-        if (!result.duplicate) {
-          update['cosmeticsOwned'] =
-              FieldValue.arrayUnion([result.reward.id]);
+        if (result.reward.freezeAmount > 0) {
+          update['freezes'] =
+              FieldValue.increment(result.reward.freezeAmount);
         }
         tx.set(ref, update, SetOptions(merge: true));
         return result;

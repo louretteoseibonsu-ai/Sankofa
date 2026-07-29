@@ -130,12 +130,17 @@ email,"* tap **Sign in with this email** to log in instead.
 - The top of the screen is your **family home**: choose or unlock your Super
   Family member — the one you pick travels with you on the map.
 - Below that is the **Makola Market Stall**, where you spend your **Golden Kente
-  shards**: open **Ananse's blind box** for collectible kente cloth & motifs,
-  equip **Kente Cloth**, **Journey Glow** map themes, and **Celebration Sounds**,
-  and buy a **Streak Freeze**.
+  shards** on things that protect and speed your progress:
+  - **Second Chance** — if your streak lapsed in the last day or two, restore it
+    for **40 shards** (then finish a lesson that day to keep it going). Only
+    shown when you actually have a streak to repair.
+  - **Ananse's Blind Box** (**40 shards**) — a mystery calabash that always pays
+    out something useful: a **Streak Freeze** (common), a **45-shard** haul
+    (rare), or a jackpot **Triple Streak Freeze** (legendary).
+  - **Streak Freeze** (**30 shards**) — protects your streak on a day you miss.
 - **Golden Kente shards** are earned from **3-star (mastery) lessons** and are
   separate from pedis. They're spent at the Makola Market Stall (unlocking
-  family early, the blind box, cosmetics, and streak freezes).
+  family early, Second Chance, the blind box, and streak freezes).
 
 ### Weekly Rally
 - **Progress → Rally** (or Tools → Leaderboard) shows the **Weekly Rally** — a
@@ -332,7 +337,8 @@ go (great when travelling in Ghana).
   40, Grandma 60, Grandpa 80 shards). Buying one also equips them.
 - **What are Golden Kente shards?** A mastery currency earned from **3-star
   lessons**, spent at the **Makola Market Stall** inside The Compound (unlock
-  family early, open Ananse's blind box, buy cosmetics and streak freezes).
+  family early, Second Chance streak repair, Ananse's blind box, and streak
+  freezes).
   Different from pedis.
 - **Why can't I open Lens?** Lens is a **Premium** tool. During the beta your
   account must be flagged Premium to use it.
