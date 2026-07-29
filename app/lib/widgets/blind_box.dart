@@ -74,6 +74,11 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
   late final AnimationController _c; // coil → shake → burst → reveal
   late final AnimationController _glow; // bloom + ground-glow pulse
   late final AnimationController _spin; // gentle legendary reward sway
+  // The internal amber glow's "ignition": a fade + subtle scale so it breathes
+  // into existence at the seal-break instead of snapping on. Derived from the
+  // master controller so it's perfectly locked to the burst beat.
+  late final Animation<double> _ignite; // 0→1 opacity ramp across the break
+  late final Animation<double> _igniteScale; // 0.82→1.0 gentle swell
   bool _revealed = false;
   final Set<String> _fired = {};
 
@@ -116,6 +121,15 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
         vsync: this, duration: const Duration(milliseconds: 2800))
       ..addListener(_onTick)
       ..forward();
+
+    // Ignition ramp: the amber glow eases in across the break window
+    // (_burstAt → just past _glowAt). easeIn gives it weight — it swells slowly
+    // then fills, like heat building inside the shell, rather than flicking on.
+    _ignite = CurvedAnimation(
+      parent: _c,
+      curve: const Interval(_burstAt, _glowAt + 0.04, curve: Curves.easeIn),
+    );
+    _igniteScale = Tween<double>(begin: 0.82, end: 1.0).animate(_ignite);
   }
 
   void _onTick() {
@@ -144,6 +158,7 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
 
   @override
   void dispose() {
+    (_ignite as CurvedAnimation).dispose();
     _c.dispose();
     _glow.dispose();
     _spin.dispose();
@@ -173,29 +188,37 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
               ),
             ),
           ),
-          // Rarity bloom (from the burst onward) — stronger + held for legendary.
+          // Internal amber glow (from the burst onward) — breathes into being via
+          // a fade + subtle scale so it never snaps on; held + pulsing after the
+          // reveal, stronger for legendary.
           if (p >= _burstAt)
             Positioned.fill(
               child: IgnorePointer(
-                child: AnimatedBuilder(
-                  animation: _glow,
-                  builder: (_, __) {
-                    final base = _isLegendary ? 0.30 : 0.18;
-                    return DecoratedBox(
-                      decoration: BoxDecoration(
-                        gradient: RadialGradient(
-                          radius: 0.95,
-                          colors: [
-                            accent.withValues(
-                                alpha: _revealed
-                                    ? base + 0.10 * _glow.value
-                                    : 0.34),
-                            Colors.transparent,
-                          ],
-                        ),
-                      ),
-                    );
-                  },
+                child: FadeTransition(
+                  opacity: _ignite,
+                  child: ScaleTransition(
+                    scale: _igniteScale,
+                    child: AnimatedBuilder(
+                      animation: _glow,
+                      builder: (_, __) {
+                        final base = _isLegendary ? 0.30 : 0.18;
+                        return DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: RadialGradient(
+                              radius: 0.95,
+                              colors: [
+                                accent.withValues(
+                                    alpha: _revealed
+                                        ? base + 0.10 * _glow.value
+                                        : 0.34),
+                                Colors.transparent,
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ),
               ),
             ),
