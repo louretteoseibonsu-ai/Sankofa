@@ -49,39 +49,35 @@ class _KenteBackdrop extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final bands = _bands();
     if (bands == null) return;
-    // Woven kente block grid: interlocking coloured squares offset every other
-    // row (the warp/weft "float"), separated by fine black weave lines.
-    const cell = 22.0;
+    // A woven kente STRIP along the bottom (a band the family member stands on),
+    // so the character stays fully visible above the velvet panel. Interlocking
+    // coloured squares offset every other row, with fine black weave lines.
+    const stripH = 54.0;
+    const cell = 17.0;
+    final top = size.height - stripH;
     final cols = (size.width / cell).ceil();
-    final rows = (size.height / cell).ceil();
+    final rows = (stripH / cell).ceil();
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
         final idx = (c + (r.isOdd ? 2 : 0)) % 4;
         canvas.drawRect(
-          Rect.fromLTWH(c * cell, r * cell, cell + 0.6, cell + 0.6),
-          Paint()..color = bands[idx].withValues(alpha: 0.72),
+          Rect.fromLTWH(c * cell, top + r * cell, cell + 0.6, cell + 0.6),
+          Paint()..color = bands[idx].withValues(alpha: 0.92),
         );
       }
     }
     final weave = Paint()
-      ..color = const Color(0x59000000)
-      ..strokeWidth = 1.1;
+      ..color = const Color(0x66000000)
+      ..strokeWidth = 1.0;
     for (double x = 0; x <= size.width; x += cell) {
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), weave);
+      canvas.drawLine(Offset(x, top), Offset(x, size.height), weave);
     }
-    for (double y = 0; y <= size.height; y += cell) {
+    for (double y = top; y <= size.height; y += cell) {
       canvas.drawLine(Offset(0, y), Offset(size.width, y), weave);
     }
-    // A dark pool in the centre so the family member always reads clearly on
-    // top of the cloth, which stays vivid toward the edges.
-    canvas.drawRect(
-      Offset.zero & size,
-      Paint()
-        ..shader = const RadialGradient(
-          radius: 0.85,
-          colors: [Color(0xCC141110), Color(0x22141110)],
-        ).createShader(Offset.zero & size),
-    );
+    // A thin gold thread finishes the top edge of the strip.
+    canvas.drawRect(Rect.fromLTWH(0, top, size.width, 2),
+        Paint()..color = const Color(0x88E3A92C));
   }
 
   @override
