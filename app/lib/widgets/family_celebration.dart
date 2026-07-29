@@ -108,13 +108,24 @@ class _FamilyCelebrationViewState extends State<_FamilyCelebrationView>
   void _celebrate() {
     if (_burst || !mounted) return;
     _burst = true;
-    SoundService.instance.complete();
+    // Kick off the Afrobeat groove (fades in) + entrance flourish + confetti.
+    SoundService.instance.startCelebrationLoop();
+    SoundService.instance.celebrationFanfare();
     HapticFeedback.mediumImpact();
     celebrateBurst(context, particles: 36);
+    // A bright pop as each star lands (matches the elastic star timings).
+    for (var i = 0; i < widget.stars; i++) {
+      Future.delayed(Duration(milliseconds: 360 + i * 170), () {
+        if (mounted) SoundService.instance.starPop();
+      });
+    }
   }
 
   @override
   void dispose() {
+    // Fade the music out cleanly as the screen leaves; the singleton keeps the
+    // ramp running after this widget is torn down, so it never cuts abruptly.
+    SoundService.instance.stopCelebrationLoop();
     _video?.dispose();
     _intro.dispose();
     _breathe.dispose();
