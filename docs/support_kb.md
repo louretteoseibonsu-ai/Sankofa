@@ -142,7 +142,7 @@ email,"* tap **Sign in with this email** to log in instead.
 
 ## 5. Adinkra symbols
 
-- Open **Symbols** from the Menu. Tap any symbol for its meaning, literal
+- Open **Adinkra Symbols** from the **Tools** tab. Tap any symbol for its meaning, literal
   translation, and the value it represents.
 - The **first 10 symbols are free.** The rest are **Premium** — they appear
   blurred with a lock until you upgrade. Tapping a locked symbol opens the
@@ -152,7 +152,7 @@ email,"* tap **Sign in with this email** to log in instead.
 
 ## 6. AI Translate
 
-- Open **Translate** from the Menu.
+- Open the **Translate** tab.
 - Choose direction: **English → Twi** or **Twi → English**.
 - Type your text and tap **Translate**.
 - Tap **Listen (Twi)** to hear the Twi audio.
@@ -172,7 +172,7 @@ Lens names real-world objects in Twi so you can learn — and communicate — on
 go (great when travelling in Ghana).
 
 **How to use it:**
-- Open **Lens** from the Menu and tap **Point & capture** (or **Gallery**).
+- Open the **Lens** tab and tap **Point & capture** (or **Gallery**).
 - Lens recognises the object and shows its **Twi name**.
 - Tap **Say it out loud** to play the Twi audio — show and speak it to a Twi
   speaker.
