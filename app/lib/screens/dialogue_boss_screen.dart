@@ -10,6 +10,7 @@ import '../services/sound_service.dart';
 import '../theme.dart';
 import '../widgets/celebration.dart';
 import '../widgets/tappable_scale.dart';
+import '../widgets/velvet.dart';
 import 'tools_hub_screen.dart' show velvetToolsTheme;
 
 // Dark answer-tile palette (matches the lesson quiz arcade tiles).

@@ -6,6 +6,7 @@ import '../services/twi_speech.dart';
 import '../theme.dart';
 import 'floating_card.dart';
 import 'tappable_scale.dart';
+import 'velvet.dart';
 
 const Color _tileBg = Color(0xFF211B17);
 const Color _green = Color(0xFF63C583);
