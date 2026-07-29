@@ -130,21 +130,36 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
       curve: const Interval(_burstAt, _glowAt + 0.04, curve: Curves.easeIn),
     );
     _igniteScale = Tween<double>(begin: 0.82, end: 1.0).animate(_ignite);
+
+    // Phase 1 — the box was tapped open: a crisp pickup pop.
+    SoundService.instance.boxTap();
   }
 
   void _onTick() {
     final p = _c.value;
     if (p >= _shakeStart && p < _burstAt) {
-      // rising shake — a haptic tick per beat, faster as it builds
+      // rising shake — a haptic + audible tick per beat, building in pitch and
+      // volume toward the break.
       final beat = (p * 16).floor();
-      if (_fired.add('s$beat')) HapticFeedback.selectionClick();
+      if (_fired.add('s$beat')) {
+        HapticFeedback.selectionClick();
+        final intensity =
+            ((p - _shakeStart) / (_burstAt - _shakeStart)).clamp(0.0, 1.0);
+        SoundService.instance.boxShakeTick(intensity);
+      }
+    }
+    // The warm glow igniting — a sustained riser started just before the break
+    // so it swells into the burst.
+    if (p >= _burstAt - 0.10 && _fired.add('ignite')) {
+      SoundService.instance.boxIgnite();
     }
     if (p >= _burstAt && _fired.add('burst')) {
       HapticFeedback.heavyImpact();
-      SoundService.instance.complete();
+      SoundService.instance.boxBurst(); // Phase 2 — seal cracks
     }
     if (p >= _revealAt && !_revealed) {
-      HapticFeedback.mediumImpact(); // the reward "lands"
+      HapticFeedback.mediumImpact(); // Phase 4 — the reward "lands"
+      SoundService.instance.boxReveal(grand: _isLegendary);
       setState(() => _revealed = true);
     } else {
       setState(() {});
@@ -418,7 +433,7 @@ class _BlindBoxOpeningState extends State<BlindBoxOpening>
                     color: accent,
                     onTap: () {
                       HapticFeedback.mediumImpact();
-                      SoundService.instance.tap();
+                      SoundService.instance.boxCollect();
                       widget.onKeep();
                     },
                   ),

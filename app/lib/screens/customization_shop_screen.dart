@@ -196,7 +196,7 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
           content: Text('Couldn’t open the box — check your connection.')));
       return;
     }
-    SoundService.instance.complete();
+    // The unboxing overlay plays its own timeline cues (boxTap → … → reveal).
     await BlindBoxOpening.show(context, result: result);
     if (!mounted) return;
     await _reload();
