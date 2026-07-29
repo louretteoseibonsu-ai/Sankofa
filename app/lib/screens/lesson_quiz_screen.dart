@@ -18,6 +18,7 @@ import '../widgets/continue_button.dart';
 import '../widgets/floating_card.dart';
 import '../widgets/floating_reward.dart';
 import '../widgets/family_celebration.dart';
+import '../widgets/kente_shard.dart';
 import '../widgets/tappable_scale.dart';
 import '../widgets/velvet.dart';
 import 'tools_hub_screen.dart' show velvetToolsTheme;
@@ -44,6 +45,8 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
   int _combo = 0; // consecutive correct answers
   int _bestCombo = 0;
   int _keysEarned = 0; // 1 wisdom key per 3-in-a-row
+  int _stars = 0; // stars earned on the finishing run (for the reward reveal)
+  int _finalShards = 0; // shards earned on the finishing run
   String? _flash; // transient combo banner text
   bool _showLearn = true; // collapse the teach cards to focus on practice
   int _i = 0; // current question — one at a time, boss-battle style
@@ -86,15 +89,17 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
       if (correct) {
         _combo += 1;
         if (_combo > _bestCombo) _bestCombo = _combo;
-        // Every 3-in-a-row: a drum flourish + a wisdom key.
+        // Every 3-in-a-row: a level-up flourish + a wisdom key.
         if (_combo % 3 == 0) {
           _keysEarned += 1;
           _flash = '🔥 ${_combo}x combo  ·  +1 🗝';
           HapticFeedback.heavyImpact();
-          SoundService.instance.complete();
+          SoundService.instance.boxReveal();
         } else {
           HapticFeedback.selectionClick();
           SoundService.instance.correct();
+          // A tick that rises in pitch as the combo climbs.
+          SoundService.instance.boxShakeTick(_combo.clamp(1, 6) / 6);
         }
       } else {
         _combo = 0; // broken
@@ -146,8 +151,11 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
     }
     if (!mounted) return;
 
+    _stars = o.stars;
+    _finalShards = o.shardsEarned;
     final passed = _correct >= kPassScore;
     if (passed) {
+      SoundService.instance.boxReveal(grand: o.stars >= 3); // level-up jingle
       Map<String, String> equipped = const {};
       try {
         equipped = (await _progress.loadCosmetics()).equipped;
@@ -199,6 +207,8 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
       _combo = 0;
       _bestCombo = 0;
       _keysEarned = 0;
+      _stars = 0;
+      _finalShards = 0;
       _flash = null;
       _feedback.clear();
       _i = 0;
@@ -261,7 +271,7 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
       width: double.infinity,
       child: FilledButton(
         onPressed: answered ? _next : null,
-        child: Text(last ? 'Finish the lesson' : 'Continue  →'),
+        child: Text(last ? 'Finish the lesson' : 'Kɔ so  →'),
       ),
     );
   }
@@ -356,19 +366,7 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                             fontSize: 16,
                             color: kVelvetInk)),
                     const SizedBox(width: 10),
-                    if (_combo >= 2)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 9, vertical: 4),
-                        decoration: BoxDecoration(
-                            color: const Color(0x33E2725B),
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Text('🔥 ${_combo}x',
-                            style: const TextStyle(
-                                color: terracotta,
-                                fontWeight: FontWeight.w800,
-                                fontSize: 13)),
-                      ),
+                    if (_combo >= 2) _ComboChip(combo: _combo),
                     const Spacer(),
                     Text('${_done ? total : _i + 1} / ${_challenges.length}',
                         style: const TextStyle(
@@ -382,16 +380,24 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 10),
+                        horizontal: 14, vertical: 11),
                     decoration: BoxDecoration(
-                        color: const Color(0xFF2B2B2D),
-                        borderRadius: BorderRadius.circular(14)),
+                      gradient: const LinearGradient(
+                          colors: [Color(0xFFE07A3E), Color(0xFFE3A92C)]),
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(
+                            color: const Color(0xFFE3A92C).withValues(alpha: 0.4),
+                            blurRadius: 16,
+                            offset: const Offset(0, 5)),
+                      ],
+                    ),
                     child: Text(_flash!,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
-                            color: Color(0xFFE3A92C),
+                            color: Color(0xFF1A1206),
                             fontWeight: FontWeight.w800,
-                            fontSize: 14)),
+                            fontSize: 14.5)),
                   ),
                 ],
                 const SizedBox(height: 12),
@@ -405,16 +411,23 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                   ),
                 const SizedBox(height: 8),
                 if (_done) ...[
-                  Center(
-                    child: Text(
-                        'You scored $_correct / ${_challenges.length}'
-                        '${_correct >= kPassScore ? '  ·  +${_correct * 10} XP' : ''}',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 16,
-                            color: kVelvetInk)),
-                  ),
-                  const SizedBox(height: 10),
+                  if (_correct >= kPassScore)
+                    _RewardReveal(
+                      stars: _stars,
+                      xp: _correct * 10,
+                      shards: _finalShards,
+                      bestCombo: _bestCombo,
+                    )
+                  else
+                    Center(
+                      child: Text(
+                          'You scored $_correct / ${_challenges.length}',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 16,
+                              color: kVelvetInk)),
+                    ),
+                  const SizedBox(height: 12),
                   Center(
                     child: Builder(builder: (_) {
                       final m = masteryTitleFor(_challenges.isEmpty
@@ -828,11 +841,38 @@ class _ChaleTip extends StatelessWidget {
 
 enum _OptState { idle, correct, wrong, dimmed }
 
-class _OptionTile extends StatelessWidget {
+class _OptionTile extends StatefulWidget {
   final String label;
   final _OptState state;
   final VoidCallback? onTap;
   const _OptionTile({required this.label, required this.state, this.onTap});
+
+  @override
+  State<_OptionTile> createState() => _OptionTileState();
+}
+
+class _OptionTileState extends State<_OptionTile>
+    with TickerProviderStateMixin {
+  late final AnimationController _pop =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 340));
+  late final AnimationController _shake =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 440));
+
+  @override
+  void didUpdateWidget(covariant _OptionTile old) {
+    super.didUpdateWidget(old);
+    if (old.state != widget.state) {
+      if (widget.state == _OptState.correct) _pop.forward(from: 0);
+      if (widget.state == _OptState.wrong) _shake.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _pop.dispose();
+    _shake.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -840,7 +880,8 @@ class _OptionTile extends StatelessWidget {
     Color bg = const Color(0xFF211B17);
     Color fg = kVelvetInk;
     Widget? trailing;
-    switch (state) {
+    List<BoxShadow>? glow;
+    switch (widget.state) {
       case _OptState.idle:
         break;
       case _OptState.correct:
@@ -849,6 +890,12 @@ class _OptionTile extends StatelessWidget {
         fg = _correctGreen;
         trailing =
             const Icon(Icons.check_circle, color: _correctGreen, size: 20);
+        glow = [
+          BoxShadow(
+              color: _correctGreen.withValues(alpha: 0.35),
+              blurRadius: 18,
+              spreadRadius: -4),
+        ];
         break;
       case _OptState.wrong:
         border = _wrongRed;
@@ -861,29 +908,233 @@ class _OptionTile extends StatelessWidget {
         fg = kVelvetMuted;
         break;
     }
+    final tile = Container(
+      constraints: const BoxConstraints(minHeight: 48),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: border, width: 1.4),
+        boxShadow: glow,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(widget.label,
+                style: TextStyle(
+                    color: fg, fontWeight: FontWeight.w600, fontSize: 15)),
+          ),
+          if (trailing != null) trailing,
+        ],
+      ),
+    );
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
-      child: TappableScale(
-        onTap: onTap,
-        child: Container(
-          constraints: const BoxConstraints(minHeight: 48),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-          decoration: BoxDecoration(
-            color: bg,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: border, width: 1.4),
+      child: AnimatedBuilder(
+        animation: Listenable.merge([_pop, _shake]),
+        builder: (_, child) {
+          final pop = 1 + 0.07 * sin(pi * _pop.value); // quick bump
+          final dx = _shake.value > 0
+              ? sin(_shake.value * pi * 8) * 7 * (1 - _shake.value)
+              : 0.0;
+          return Transform.translate(
+            offset: Offset(dx, 0),
+            child: Transform.scale(scale: pop, child: child),
+          );
+        },
+        child: TappableScale(onTap: widget.onTap, child: tile),
+      ),
+    );
+  }
+}
+
+/// A glowing, escalating combo chip — colour + glow intensify with the streak,
+/// and it pulses each time the combo climbs.
+class _ComboChip extends StatefulWidget {
+  final int combo;
+  const _ComboChip({required this.combo});
+
+  @override
+  State<_ComboChip> createState() => _ComboChipState();
+}
+
+class _ComboChipState extends State<_ComboChip>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pulse =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 260));
+
+  @override
+  void initState() {
+    super.initState();
+    _pulse.forward(from: 0);
+  }
+
+  @override
+  void didUpdateWidget(covariant _ComboChip old) {
+    super.didUpdateWidget(old);
+    if (widget.combo != old.combo) _pulse.forward(from: 0);
+  }
+
+  @override
+  void dispose() {
+    _pulse.dispose();
+    super.dispose();
+  }
+
+  Color get _tier {
+    if (widget.combo >= 6) return const Color(0xFFF4B646); // gold
+    if (widget.combo >= 4) return const Color(0xFFF0A93E); // amber
+    return const Color(0xFFE07A3E); // ember
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = _tier;
+    return AnimatedBuilder(
+      animation: _pulse,
+      builder: (_, __) {
+        final s = 1 + 0.18 * sin(pi * _pulse.value);
+        return Transform.scale(
+          scale: s,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
+            decoration: BoxDecoration(
+              color: c.withValues(alpha: 0.18),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: c, width: 1.2),
+              boxShadow: [
+                BoxShadow(
+                    color: c.withValues(alpha: 0.45),
+                    blurRadius: 12,
+                    spreadRadius: -2),
+              ],
+            ),
+            child: Text('🔥 ${widget.combo}x',
+                style: TextStyle(
+                    color: c, fontWeight: FontWeight.w800, fontSize: 13)),
           ),
-          child: Row(
+        );
+      },
+    );
+  }
+}
+
+/// The arcade reward panel on a passing run — animated stars + XP/shard
+/// count-ups in a glowing power-up card.
+class _RewardReveal extends StatelessWidget {
+  final int stars;
+  final int xp;
+  final int shards;
+  final int bestCombo;
+  const _RewardReveal({
+    required this.stars,
+    required this.xp,
+    required this.shards,
+    required this.bestCombo,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+      decoration: BoxDecoration(
+        gradient: const RadialGradient(
+          center: Alignment(0, -0.6),
+          radius: 1.2,
+          colors: [Color(0xFF2A211C), Color(0xFF17130F)],
+        ),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+            color: const Color(0xFFE3A92C).withValues(alpha: 0.35),
+            width: 1.2),
+        boxShadow: [
+          BoxShadow(
+              color: const Color(0xFFE3A92C).withValues(alpha: 0.22),
+              blurRadius: 22,
+              spreadRadius: -6,
+              offset: const Offset(0, 8)),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [for (int i = 0; i < 3; i++) _star(i < stars, i)],
+          ),
+          const SizedBox(height: 14),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
-                child: Text(label,
-                    style: TextStyle(
-                        color: fg, fontWeight: FontWeight.w600, fontSize: 15)),
-              ),
-              if (trailing != null) trailing,
+              _countChip(value: xp, suffix: 'XP', color: const Color(0xFFF4B646)),
+              if (shards > 0) ...[
+                const SizedBox(width: 10),
+                _countChip(
+                    value: shards,
+                    glyph: const KenteShard(size: 15),
+                    color: const Color(0xFFE3A92C)),
+              ],
             ],
           ),
+          if (bestCombo >= 3) ...[
+            const SizedBox(height: 10),
+            Text('Best combo  🔥 ${bestCombo}x',
+                style: const TextStyle(
+                    color: kVelvetMuted,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 12.5)),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _star(bool filled, int i) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: Duration(milliseconds: 380 + i * 160),
+      curve: Curves.elasticOut,
+      builder: (_, v, __) => Transform.scale(
+        scale: filled ? v : 1.0,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Icon(
+              filled ? Icons.star_rounded : Icons.star_border_rounded,
+              color: filled ? const Color(0xFFF4B646) : Colors.white24,
+              size: 46),
         ),
+      ),
+    );
+  }
+
+  Widget _countChip(
+      {required int value, String? suffix, Widget? glyph, required Color color}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: color.withValues(alpha: 0.6), width: 1.2),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0.0, end: value.toDouble()),
+            duration: const Duration(milliseconds: 750),
+            curve: Curves.easeOut,
+            builder: (_, v, __) => Text('+${v.round()}',
+                style: TextStyle(
+                    color: color, fontWeight: FontWeight.w800, fontSize: 16)),
+          ),
+          const SizedBox(width: 5),
+          if (glyph != null)
+            glyph
+          else
+            Text(suffix ?? '',
+                style: TextStyle(
+                    color: color, fontWeight: FontWeight.w800, fontSize: 13)),
+        ],
       ),
     );
   }
