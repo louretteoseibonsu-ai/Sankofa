@@ -45,19 +45,26 @@ const List<ShopItem> kCosmetics = [
       costShards: 8),
   ShopItem(
       id: 'rim_charcoal', category: 'rim', name: 'Charcoal', costShards: 6),
-  // Kente trim
+  // Kente Cloth — authentic strip designs shown as the Compound header band.
   ShopItem(
       id: 'kente_classic', category: 'kente', name: 'None', costShards: 0),
   ShopItem(
-      id: 'kente_goldgreen',
+      id: 'kente_adweneasa',
       category: 'kente',
-      name: 'Gold & green',
-      costShards: 12),
+      name: 'Adweneasa',
+      costShards: 15),
   ShopItem(
-      id: 'kente_redblack',
+      id: 'kente_babadua', category: 'kente', name: 'Babadua', costShards: 15),
+  ShopItem(
+      id: 'kente_sikafuturo',
       category: 'kente',
-      name: 'Red & black',
-      costShards: 12),
+      name: 'Sika Futuro',
+      costShards: 20),
+  ShopItem(
+      id: 'kente_oyokoman',
+      category: 'kente',
+      name: 'Oyokoman',
+      costShards: 25),
   // Roof rack
   ShopItem(id: 'roof_none', category: 'roof', name: 'None', costShards: 0),
   ShopItem(

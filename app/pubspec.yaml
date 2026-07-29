@@ -46,6 +46,7 @@ flutter:
     # - assets/mascot/trotro_gameplay/rim/
     # - assets/mascot/trotro_gameplay/roof/
     - assets/avatars/       # Super Family avatar portraits
+    - assets/kente/         # authentic kente strip textures (Compound cosmetic)
     - assets/celebrations/  # per-character celebration video loops
     - assets/landmarks/     # cultural landmark icons
     - assets/hero/          # campaign hero / banner art

@@ -16,70 +16,21 @@ import '../widgets/velvet.dart';
 import '../widgets/tappable_scale.dart';
 import '../widgets/tintable_trotro.dart';
 
-/// A woven-Kente cloth backdrop for the Compound hero, coloured by the equipped
-/// `kente` cosmetic. 'None' (kente_classic) paints nothing.
-class _KenteBackdrop extends CustomPainter {
-  final String kenteId;
-  const _KenteBackdrop(this.kenteId);
-
-  static const _cream = Color(0xFFEFDCA6);
-
-  List<Color>? _bands() {
-    switch (kenteId) {
-      case 'kente_goldgreen':
-        return const [
-          Color(0xFFE3A92C),
-          _cream,
-          Color(0xFF2E6B3B),
-          Color(0xFF1A1512),
-        ];
-      case 'kente_redblack':
-        return const [
-          Color(0xFF9B2D2A),
-          Color(0xFFE3A92C),
-          Color(0xFF1A1512),
-          _cream,
-        ];
-      default:
-        return null; // 'None' → keep the plain velvet panel
-    }
+/// Maps the equipped `kente` cosmetic to its authentic strip texture, shown as
+/// the Compound header band. 'None' (kente_classic) → null (plain velvet).
+String? _kenteStripAsset(String id) {
+  switch (id) {
+    case 'kente_adweneasa':
+      return 'assets/kente/kente_adweneasa.png';
+    case 'kente_babadua':
+      return 'assets/kente/kente_babadua.png';
+    case 'kente_sikafuturo':
+      return 'assets/kente/kente_sikafuturo.png';
+    case 'kente_oyokoman':
+      return 'assets/kente/kente_oyokoman.png';
+    default:
+      return null;
   }
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final bands = _bands();
-    if (bands == null) return;
-    // A woven kente STRIP across the top (a header band), clear of the character
-    // below. Interlocking coloured squares offset every other row, fine weave.
-    const stripH = 38.0;
-    const cell = 17.0;
-    final cols = (size.width / cell).ceil();
-    final rows = (stripH / cell).ceil();
-    for (int r = 0; r < rows; r++) {
-      for (int c = 0; c < cols; c++) {
-        final idx = (c + (r.isOdd ? 2 : 0)) % 4;
-        canvas.drawRect(
-          Rect.fromLTWH(c * cell, r * cell, cell + 0.6, cell + 0.6),
-          Paint()..color = bands[idx].withValues(alpha: 0.92),
-        );
-      }
-    }
-    final weave = Paint()
-      ..color = const Color(0x66000000)
-      ..strokeWidth = 1.0;
-    for (double x = 0; x <= size.width; x += cell) {
-      canvas.drawLine(Offset(x, 0), Offset(x, stripH), weave);
-    }
-    for (double y = 0; y <= stripH; y += cell) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), weave);
-    }
-    // A thin gold thread finishes the bottom edge of the strip.
-    canvas.drawRect(Rect.fromLTWH(0, stripH - 2, size.width, 2),
-        Paint()..color = const Color(0x88E3A92C));
-  }
-
-  @override
-  bool shouldRepaint(covariant _KenteBackdrop old) => old.kenteId != kenteId;
 }
 
 const Color _terra = Color(0xFFBE5235);
@@ -290,13 +241,31 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                       child: Stack(
                         alignment: Alignment.bottomCenter,
                         children: [
-                          // Equipped Kente cloth as a header strip above the
-                          // family member (clear of the character).
-                          Positioned.fill(
-                            child: CustomPaint(
-                              painter: _KenteBackdrop(_cos.equippedIn('kente')),
+                          // Equipped Kente cloth as an authentic strip header
+                          // above the family member (clear of the character).
+                          if (_kenteStripAsset(_cos.equippedIn('kente')) != null)
+                            Positioned(
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(
+                                    height: 40,
+                                    width: double.infinity,
+                                    child: Image.asset(
+                                      _kenteStripAsset(
+                                          _cos.equippedIn('kente'))!,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Container(
+                                      height: 2,
+                                      color: const Color(0x88E3A92C)),
+                                ],
+                              ),
                             ),
-                          ),
                           Image.asset(
                             avatarById(_avatarId).assetReference,
                             height: 210,
