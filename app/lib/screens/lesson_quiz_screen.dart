@@ -19,9 +19,11 @@ import '../widgets/floating_card.dart';
 import '../widgets/floating_reward.dart';
 import '../widgets/family_celebration.dart';
 import '../widgets/tappable_scale.dart';
+import '../widgets/velvet.dart';
+import 'tools_hub_screen.dart' show velvetToolsTheme;
 
-const Color _correctGreen = Color(0xFF2E6B3B);
-const Color _wrongRed = Color(0xFF9B2D2A);
+const Color _correctGreen = Color(0xFF63C583);
+const Color _wrongRed = Color(0xFFE0655A);
 
 class LessonQuizScreen extends StatefulWidget {
   final Lesson lesson;
@@ -269,7 +271,9 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
     final u = _unit;
     final total = _challenges.length;
     final progress = total == 0 ? 0.0 : _selected.length / total;
-    return Scaffold(
+    return Theme(
+      data: velvetToolsTheme(context),
+      child: Scaffold(
       appBar: AppBar(
         title: Text(widget.lesson.title),
         bottom: PreferredSize(
@@ -277,7 +281,7 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
           child: LinearProgressIndicator(
             value: progress,
             minHeight: 4,
-            backgroundColor: silverLight,
+            backgroundColor: const Color(0x1FFFFFFF),
             valueColor: const AlwaysStoppedAnimation(terracotta),
           ),
         ),
@@ -286,8 +290,8 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
           ? null
           : Container(
               decoration: const BoxDecoration(
-                color: canvas,
-                border: Border(top: BorderSide(color: silverLight, width: 1)),
+                color: const Color(0xFF17130F),
+                border: Border(top: BorderSide(color: const Color(0x1FFFFFFF), width: 1)),
               ),
               child: SafeArea(
                 top: false,
@@ -306,11 +310,11 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                   const Padding(
                     padding: EdgeInsets.only(bottom: 10),
                     child: Text('Draft content — pending language review',
-                        style: TextStyle(color: slate, fontSize: 11.5)),
+                        style: TextStyle(color: kVelvetMuted, fontSize: 11.5)),
                   ),
                 Text(u.title,
                     style: const TextStyle(
-                        fontWeight: FontWeight.w800, fontSize: 22, color: ink)),
+                        fontWeight: FontWeight.w800, fontSize: 22, color: kVelvetInk)),
                 const SizedBox(height: 14),
                 // ── Learn section (collapsible to reduce cognitive load) ──
                 Row(
@@ -319,7 +323,7 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                         style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 16,
-                            color: ink)),
+                            color: kVelvetInk)),
                     const Spacer(),
                     TextButton.icon(
                       onPressed: () =>
@@ -350,14 +354,14 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                         style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 16,
-                            color: ink)),
+                            color: kVelvetInk)),
                     const SizedBox(width: 10),
                     if (_combo >= 2)
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 9, vertical: 4),
                         decoration: BoxDecoration(
-                            color: const Color(0xFFFBEEEA),
+                            color: const Color(0x33E2725B),
                             borderRadius: BorderRadius.circular(20)),
                         child: Text('🔥 ${_combo}x',
                             style: const TextStyle(
@@ -368,7 +372,7 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                     const Spacer(),
                     Text('${_done ? total : _i + 1} / ${_challenges.length}',
                         style: const TextStyle(
-                            color: slate,
+                            color: kVelvetMuted,
                             fontWeight: FontWeight.w700,
                             fontSize: 13)),
                   ],
@@ -408,7 +412,7 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                         style: const TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 16,
-                            color: ink)),
+                            color: kVelvetInk)),
                   ),
                   const SizedBox(height: 10),
                   Center(
@@ -427,7 +431,7 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                         Text(m.blurb,
                             textAlign: TextAlign.center,
                             style: const TextStyle(
-                                color: slate, fontSize: 12.5)),
+                                color: kVelvetMuted, fontSize: 12.5)),
                       ]);
                     }),
                   ),
@@ -436,7 +440,7 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                     const Center(
                       child: Text(
                           'Score $kPassScore+ to unlock the next lesson.',
-                          style: TextStyle(color: slate, fontSize: 12.5)),
+                          style: TextStyle(color: kVelvetMuted, fontSize: 12.5)),
                     ),
                   ],
                   const SizedBox(height: 8),
@@ -444,6 +448,7 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                 const SizedBox(height: 8),
               ],
             ),
+      ),
     );
   }
 }
@@ -462,7 +467,7 @@ class _VocabCard extends StatelessWidget {
         children: [
           const Text('VOCABULARY SPOTLIGHT',
               style: TextStyle(
-                  color: slate,
+                  color: kVelvetMuted,
                   fontWeight: FontWeight.w700,
                   fontSize: 11,
                   letterSpacing: 0.6)),
@@ -475,7 +480,7 @@ class _VocabCard extends StatelessWidget {
                     style: const TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 24,
-                        color: ink)),
+                        color: kVelvetInk)),
               ),
               _SpeakButton(text: u.headwordAudio ?? u.headword, size: 26),
             ],
@@ -485,20 +490,20 @@ class _VocabCard extends StatelessWidget {
               if (u.pronunciation.isNotEmpty &&
                   u.pronunciation != u.headword) ...[
                 Text('/${u.pronunciation}/',
-                    style: const TextStyle(color: slate, fontSize: 14)),
+                    style: const TextStyle(color: kVelvetMuted, fontSize: 14)),
                 const SizedBox(width: 10),
               ],
               Flexible(
                 child: Text('sounds like “${twiApproximate(u.headword)}”',
                     style: const TextStyle(
-                        color: slate,
+                        color: kVelvetMuted,
                         fontSize: 13,
                         fontStyle: FontStyle.italic)),
               ),
             ],
           ),
           const SizedBox(height: 8),
-          Text(u.gloss, style: const TextStyle(height: 1.5, color: ink)),
+          Text(u.gloss, style: const TextStyle(height: 1.5, color: kVelvetInk)),
           if (u.cultureNote != null && u.cultureNote!.isNotEmpty) ...[
             const SizedBox(height: 10),
             _ChaleTip(text: u.cultureNote!),
@@ -507,7 +512,7 @@ class _VocabCard extends StatelessWidget {
             const SizedBox(height: 12),
             const Text('Key Twi sounds',
                 style: TextStyle(
-                    color: slate, fontWeight: FontWeight.w700, fontSize: 12)),
+                    color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 12)),
             const SizedBox(height: 6),
             Wrap(
               spacing: 8,
@@ -518,11 +523,11 @@ class _VocabCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
-                      color: glyphTile,
+                      color: const Color(0xFF2A211C),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text('${k.key}  →  ${k.value}',
-                        style: const TextStyle(fontSize: 12.5, color: ink)),
+                        style: const TextStyle(fontSize: 12.5, color: kVelvetInk)),
                   ),
               ],
             ),
@@ -531,7 +536,7 @@ class _VocabCard extends StatelessWidget {
             const SizedBox(height: 12),
             const Text('In a sentence',
                 style: TextStyle(
-                    color: slate, fontWeight: FontWeight.w700, fontSize: 12)),
+                    color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 12)),
             const SizedBox(height: 4),
             for (final s in u.examples)
               Padding(
@@ -543,7 +548,7 @@ class _VocabCard extends StatelessWidget {
                           style: const TextStyle(
                               fontStyle: FontStyle.italic,
                               height: 1.4,
-                              color: ink)),
+                              color: kVelvetInk)),
                     ),
                     _SpeakButton(text: s, size: 18),
                   ],
@@ -616,17 +621,17 @@ class _GrammarCard extends StatelessWidget {
         children: [
           const Text('BASIC GRAMMAR',
               style: TextStyle(
-                  color: slate,
+                  color: kVelvetMuted,
                   fontWeight: FontWeight.w700,
                   fontSize: 11,
                   letterSpacing: 0.6)),
           const SizedBox(height: 8),
           Text(grammar['focus'] as String,
               style: const TextStyle(
-                  fontWeight: FontWeight.w800, fontSize: 16, color: ink)),
+                  fontWeight: FontWeight.w800, fontSize: 16, color: kVelvetInk)),
           const SizedBox(height: 6),
           Text(grammar['explanation'] as String,
-              style: const TextStyle(height: 1.5, color: ink)),
+              style: const TextStyle(height: 1.5, color: kVelvetInk)),
           if (grammar['patterns'] is List) ...[
             const SizedBox(height: 10),
             Wrap(
@@ -638,12 +643,12 @@ class _GrammarCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 7),
                         decoration: BoxDecoration(
-                          color: glyphTile,
+                          color: const Color(0xFF2A211C),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(p,
                             style:
-                                const TextStyle(fontSize: 13, color: ink)),
+                                const TextStyle(fontSize: 13, color: kVelvetInk)),
                       ))
                   .toList(),
             ),
@@ -666,7 +671,7 @@ class _GlossaryCard extends StatelessWidget {
         children: [
           const Text('WORDS & PRONUNCIATION',
               style: TextStyle(
-                  color: slate,
+                  color: kVelvetMuted,
                   fontWeight: FontWeight.w700,
                   fontSize: 11,
                   letterSpacing: 0.6)),
@@ -683,10 +688,10 @@ class _GlossaryCard extends StatelessWidget {
                           style: const TextStyle(
                               fontWeight: FontWeight.w800,
                               fontSize: 16,
-                              color: ink)),
+                              color: kVelvetInk)),
                       Text(
                           '${glossary[i].en}  ·  “${twiApproximate(glossary[i].twi)}”',
-                          style: const TextStyle(color: slate, fontSize: 12.5)),
+                          style: const TextStyle(color: kVelvetMuted, fontSize: 12.5)),
                     ],
                   ),
                 ),
@@ -730,7 +735,7 @@ class _ChallengeCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 13,
-                  backgroundColor: charcoal,
+                  backgroundColor: terracotta,
                   child: Text('${index + 1}',
                       style: const TextStyle(
                           color: Colors.white,
@@ -743,7 +748,7 @@ class _ChallengeCard extends StatelessWidget {
                       style: const TextStyle(
                           height: 1.35,
                           fontWeight: FontWeight.w600,
-                          color: ink)),
+                          color: kVelvetInk)),
                 ),
               ],
             ),
@@ -792,7 +797,7 @@ class _ChaleTip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
       decoration: BoxDecoration(
-        color: const Color(0xFFFBEEEA),
+        color: const Color(0xFF2C1D18),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -804,7 +809,7 @@ class _ChaleTip extends StatelessWidget {
             child: RichText(
               text: TextSpan(
                 style: const TextStyle(
-                    color: ink, fontSize: 12.5, height: 1.4),
+                    color: kVelvetInk, fontSize: 12.5, height: 1.4),
                 children: [
                   const TextSpan(
                       text: 'Chale tip:  ',
@@ -831,29 +836,29 @@ class _OptionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color border = silver;
-    Color bg = Colors.white;
-    Color fg = ink;
+    Color border = const Color(0x3DFFFFFF);
+    Color bg = const Color(0xFF211B17);
+    Color fg = kVelvetInk;
     Widget? trailing;
     switch (state) {
       case _OptState.idle:
         break;
       case _OptState.correct:
         border = _correctGreen;
-        bg = const Color(0xFFEAF3EC);
+        bg = const Color(0xFF17281C);
         fg = _correctGreen;
         trailing =
             const Icon(Icons.check_circle, color: _correctGreen, size: 20);
         break;
       case _OptState.wrong:
         border = _wrongRed;
-        bg = const Color(0xFFF7EAE9);
+        bg = const Color(0xFF2C1D18);
         fg = _wrongRed;
         trailing = const Icon(Icons.cancel, color: _wrongRed, size: 20);
         break;
       case _OptState.dimmed:
-        border = silverLight;
-        fg = slate;
+        border = const Color(0x1FFFFFFF);
+        fg = kVelvetMuted;
         break;
     }
     return Padding(
