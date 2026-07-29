@@ -5,7 +5,7 @@ import 'tintable_trotro.dart';
 /// Which visual register the mascot is in.
 enum MascotMode {
   /// The canonical, recolourable layered bus — used for ALL continuous motion
-  /// (map drive, rally lanes, garage preview, Ananse pull-up). Reflects the
+  /// (map drive, rally lanes, Compound preview, Ananse pull-up). Reflects the
   /// player's body colour + equipped cosmetics.
   driving,
 

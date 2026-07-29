@@ -325,7 +325,28 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                   shards: _shards,
                   onUnlock: _unlockAvatar,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
+                // ── The Makola market stall: where shards are spent ──
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(2, 0, 0, 2),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.storefront_rounded,
+                          size: 18, color: Color(0xFFE3A92C)),
+                      const SizedBox(width: 8),
+                      Text('Makola Market Stall',
+                          style: displayFont(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: kVelvetInk)),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(2, 0, 0, 10),
+                  child: Text('Spend your kente shards — cloth, glow, and charms',
+                      style: microLabel()),
+                ),
                 _BlindBoxCard(shards: _shards, onOpen: _openBlindBox),
                 const SizedBox(height: 10),
                 // ── Utility: spend shards on a streak freeze ──
@@ -375,7 +396,7 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                     child: StateMessage(
                       dark: true,
                       icon: Icons.wifi_off_rounded,
-                      title: 'Couldn’t load the Garage',
+                      title: 'Couldn’t load the Compound',
                       subtitle: 'Check your connection and try again.',
                       actionLabel: 'Retry',
                       onAction: () {

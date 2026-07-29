@@ -2,7 +2,7 @@
 
 Tracks which day's card was last nudged/posted so the daily reminder knows where to pick up. Update the "Last day" line each time you post (or let the automated nudge infer it from date).
 
-**Last day nudged: 11 (Wo ho te sɛn?) — 2026-07-24**
+**Last day nudged: 12 (Yɛbɛhyia bio) — 2026-07-29**
 
 | Date | Day | Word |
 |------|-----|------|
@@ -17,3 +17,4 @@ Tracks which day's card was last nudged/posted so the daily reminder knows where
 | 2026-07-22 | 9 | Aduane |
 | 2026-07-23 | 10 | Nsuo |
 | 2026-07-24 | 11 | Wo ho te sɛn? |
+| 2026-07-29 | 12 | Yɛbɛhyia bio |

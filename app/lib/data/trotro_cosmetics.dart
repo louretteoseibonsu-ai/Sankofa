@@ -33,7 +33,7 @@ const Map<String, String> kCategoryLabel = {
   'horn': 'Celebration Sound',
 };
 
-/// The Garage catalog.
+/// The Compound market-stall catalog.
 const List<ShopItem> kCosmetics = [
   // Rims
   ShopItem(id: 'rim_silver', category: 'rim', name: 'Silver', costShards: 0),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// The Garage body-paint palette. Index 0 is the default terracotta. Stored as
+/// The Compound body-paint palette. Index 0 is the default terracotta. Stored as
 /// an index (not a raw ARGB) so persistence stays SDK-agnostic.
 const List<Color> kTroTroBodyColors = [
   Color(0xFFE8551F), // terracotta (default)
@@ -35,7 +35,7 @@ int troTroBodyIndexFor(Map<String, String> equipped) {
 ///
 /// Any accessory whose PNG isn't bundled yet is silently skipped, so the app
 /// runs on the plain painted bus until the art lands. One set of assets drives
-/// the Garage preview, the world-map avatar and each Tro Tro Rally racer.
+/// the Compound preview, the world-map avatar and each Tro Tro Rally racer.
 class TintableTroTro extends StatefulWidget {
   final Color bodyColor;
 

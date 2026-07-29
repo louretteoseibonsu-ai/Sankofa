@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 /// then clean itself up. Not tied to the tro tro — pass any [builder].
 ///
 /// Uses:
-///  • bus flying into the Garage,
+///  • the family avatar flying home into the Compound,
 ///  • the tro tro "driving" to a newly unlocked map stop,
 ///  • a reward icon flying into a counter, etc.
 class OverlayFlight {

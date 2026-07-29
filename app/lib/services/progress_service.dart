@@ -341,7 +341,7 @@ class ProgressService {
     return true;
   }
 
-  // ── Tro tro cosmetics (the Garage) ──────────────────────────────────────
+  // ── Family cosmetics (the Compound market stall) ────────────────────────
 
   /// Loads the user's owned + equipped cosmetics (defaults always owned).
   Future<CosmeticState> loadCosmetics() async {

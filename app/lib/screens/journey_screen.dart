@@ -67,7 +67,7 @@ class _JourneyScreenState extends State<JourneyScreen>
     with TickerProviderStateMixin {
   final _service = ProgressService();
   final GlobalKey _troKey = GlobalKey(); // the parked map bus
-  final GlobalKey _garageKey = GlobalKey(); // the garage button (flight target)
+  final GlobalKey _compoundKey = GlobalKey(); // the Compound button (flight target)
   final GlobalKey _anansesemKey = GlobalKey(); // campfire button (flight target)
   final GlobalKey _warpNodeKey = GlobalKey(); // the stop we're warping into
   bool _flying = false; // hide the map bus while its clone is in flight
@@ -322,30 +322,31 @@ class _JourneyScreenState extends State<JourneyScreen>
     });
   }
 
-  /// Bus-fly into the Garage — powered by the reusable [OverlayFlight] helper.
-  Future<void> _openGarage() async {
+  /// Fly the family avatar home into the Compound — powered by the reusable
+  /// [OverlayFlight] helper.
+  Future<void> _openCompound() async {
     if (_flying || _troKey.currentContext == null) {
-      _pushGarage();
+      _pushCompound();
       return;
     }
     await OverlayFlight.run(
       context: context,
       vsync: this,
       fromKey: _troKey,
-      toKey: _garageKey,
-      endScale: 0.28, // shrink into the garage button
+      toKey: _compoundKey,
+      endScale: 0.28, // shrink into the Compound button
       arcHeight: 90,
       builder: (w) => _avatarFigure(w),
       onStart: () {
         HapticFeedback.selectionClick();
-        setState(() => _flying = true); // hide the real bus during the flight
+        setState(() => _flying = true); // hide the avatar during the flight
       },
     );
     if (!mounted) return;
-    _pushGarage();
+    _pushCompound();
   }
 
-  void _pushGarage() {
+  void _pushCompound() {
     Navigator.of(context)
         .push(MaterialPageRoute(
             builder: (_) => CustomizationShopScreen(initialSkin: _skin)))
@@ -365,7 +366,7 @@ class _JourneyScreenState extends State<JourneyScreen>
   int get _currentIndex => _currentIndexFor(_p);
 
   /// The equipped family avatar rendered as a matte figure at [width] — used for
-  /// the map player marker and the region-warp / garage / campfire flight clones
+  /// the map player marker and the region-warp / Compound / campfire flight clones
   /// (the tro tro bus art is retired).
   Widget _avatarFigure(double width) {
     final avatar = avatarById(_equipped['avatar']);
@@ -537,12 +538,12 @@ class _JourneyScreenState extends State<JourneyScreen>
                       tooltip: 'Anansesɛm',
                     ),
                     IconButton(
-                      key: _garageKey,
+                      key: _compoundKey,
                       visualDensity: VisualDensity.compact,
                       padding: const EdgeInsets.all(6),
                       constraints: const BoxConstraints(),
-                      onPressed: _openGarage,
-                      icon: const Icon(Icons.garage_rounded),
+                      onPressed: _openCompound,
+                      icon: const Icon(Icons.holiday_village_rounded),
                       color: kVelvetInk,
                       tooltip: 'The Compound',
                     ),
