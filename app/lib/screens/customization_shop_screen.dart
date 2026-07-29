@@ -14,74 +14,6 @@ import '../widgets/surface.dart';
 import '../widgets/velvet.dart';
 import '../widgets/tappable_scale.dart';
 
-/// A woven-Kente cloth backdrop for the Compound hero, coloured by the equipped
-/// `kente` cosmetic. 'None' (kente_classic) paints nothing.
-class _KenteBackdrop extends CustomPainter {
-  final String kenteId;
-  const _KenteBackdrop(this.kenteId);
-
-  static const _cream = Color(0xFFEFDCA6);
-
-  List<Color>? _bands() {
-    switch (kenteId) {
-      case 'kente_goldgreen':
-        return const [
-          Color(0xFFE3A92C),
-          _cream,
-          Color(0xFF2E6B3B),
-          Color(0xFF1A1512),
-        ];
-      case 'kente_redblack':
-        return const [
-          Color(0xFF9B2D2A),
-          Color(0xFFE3A92C),
-          Color(0xFF1A1512),
-          _cream,
-        ];
-      default:
-        return null; // 'None' → keep the plain velvet panel
-    }
-  }
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final bands = _bands();
-    if (bands == null) return;
-    // A woven kente STRIP across the top (a header band), clear of the character
-    // below. Interlocking coloured squares offset every other row, fine weave.
-    const stripH = 38.0;
-    const cell = 17.0;
-    final cols = (size.width / cell).ceil();
-    final rows = (stripH / cell).ceil();
-    for (int r = 0; r < rows; r++) {
-      for (int c = 0; c < cols; c++) {
-        final idx = (c + (r.isOdd ? 2 : 0)) % 4;
-        canvas.drawRect(
-          Rect.fromLTWH(c * cell, r * cell, cell + 0.6, cell + 0.6),
-          Paint()..color = bands[idx].withValues(alpha: 0.92),
-        );
-      }
-    }
-    final weave = Paint()
-      ..color = const Color(0x66000000)
-      ..strokeWidth = 1.0;
-    for (double x = 0; x <= size.width; x += cell) {
-      canvas.drawLine(Offset(x, 0), Offset(x, stripH), weave);
-    }
-    for (double y = 0; y <= stripH; y += cell) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), weave);
-    }
-    // A thin gold thread finishes the bottom edge of the strip.
-    canvas.drawRect(Rect.fromLTWH(0, stripH - 2, size.width, 2),
-        Paint()..color = const Color(0x88E3A92C));
-  }
-
-  @override
-  bool shouldRepaint(covariant _KenteBackdrop old) => old.kenteId != kenteId;
-}
-
-const Color _terra = Color(0xFFBE5235);
-
 /// "The Compound" — your family home: choose and unlock the Super Family
 /// characters, and spend Golden Kente shards on the Ananse blind box + collection.
 class CustomizationShopScreen extends StatefulWidget {
@@ -275,24 +207,16 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                     borderRadius: BorderRadius.circular(22),
                     child: SizedBox(
                       height: 262,
-                      child: Stack(
+                      width: double.infinity,
+                      child: Align(
                         alignment: Alignment.bottomCenter,
-                        children: [
-                          // Equipped Kente cloth as a header strip above the
-                          // family member (clear of the character).
-                          const Positioned.fill(
-                            child: CustomPaint(
-                              painter: _KenteBackdrop('kente_goldgreen'),
-                            ),
-                          ),
-                          Image.asset(
-                            avatarById(_avatarId).assetReference,
-                            height: 210,
-                            fit: BoxFit.contain,
-                            errorBuilder: (_, __, ___) =>
-                                const SizedBox(height: 210),
-                          ),
-                        ],
+                        child: Image.asset(
+                          avatarById(_avatarId).assetReference,
+                          height: 224,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, __, ___) =>
+                              const SizedBox(height: 224),
+                        ),
                       ),
                     ),
                   ),
