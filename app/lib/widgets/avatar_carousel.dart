@@ -93,14 +93,38 @@ class _AvatarCarouselState extends State<AvatarCarousel> {
                   opacity: 1.0 - 0.5 * dist,
                   child: Transform.scale(
                     scale: 1.0 - 0.28 * dist,
-                    child: TappableScale(
-                      onTap: () => _tapItem(i, locked),
-                      child: AvatarBadge(
-                        avatar: a,
-                        size: 112,
-                        selected: a.id == widget.selectedId && !locked,
-                        locked: locked,
-                      ),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // Per-character colour bloom behind the focused avatar.
+                        IgnorePointer(
+                          child: Container(
+                            width: 132,
+                            height: 132,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: RadialGradient(
+                                colors: [
+                                  a.accent.withValues(
+                                      alpha: (locked ? 0.14 : 0.45) *
+                                          (1 - dist)),
+                                  Colors.transparent,
+                                ],
+                                stops: const [0.15, 1.0],
+                              ),
+                            ),
+                          ),
+                        ),
+                        TappableScale(
+                          onTap: () => _tapItem(i, locked),
+                          child: AvatarBadge(
+                            avatar: a,
+                            size: 112,
+                            selected: a.id == widget.selectedId && !locked,
+                            locked: locked,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -156,24 +180,37 @@ class _UnlockPill extends StatelessWidget {
     return TappableScale(
       onTap: onUnlock,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 11),
         decoration: BoxDecoration(
-          color: affordable ? terracottaDeep : Colors.transparent,
-          borderRadius: BorderRadius.circular(22),
-          border: Border.all(
-              color: affordable ? terracottaDeep : Colors.white24, width: 1.5),
+          gradient: affordable
+              ? const LinearGradient(
+                  colors: [Color(0xFFE07A3E), Color(0xFFE3A92C)])
+              : null,
+          color: affordable ? null : Colors.transparent,
+          borderRadius: BorderRadius.circular(24),
+          border: affordable
+              ? null
+              : Border.all(color: Colors.white24, width: 1.5),
+          boxShadow: affordable
+              ? [
+                  BoxShadow(
+                      color: const Color(0xFFE3A92C).withValues(alpha: 0.45),
+                      blurRadius: 14,
+                      offset: const Offset(0, 5)),
+                ]
+              : null,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(affordable ? 'UNLOCK · $cost' : 'NEED $cost',
                 style: displayFont(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: affordable ? Colors.white : kVelvetMuted,
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w800,
+                    color: affordable ? const Color(0xFF1A1206) : kVelvetMuted,
                     letterSpacing: 1.2)),
             const SizedBox(width: 6),
-            const KenteShard(size: 15),
+            KenteShard(size: 15, muted: !affordable),
           ],
         ),
       ),
@@ -197,6 +234,7 @@ class _StatusPill extends StatelessWidget {
   Widget build(BuildContext context) {
     final String label;
     final Color fg, bg, border;
+    List<BoxShadow>? glow;
     if (locked) {
       label = 'LOCKED';
       fg = kVelvetMuted;
@@ -208,22 +246,30 @@ class _StatusPill extends StatelessWidget {
       bg = Colors.transparent;
       border = kOchre;
     } else {
+      // SELECT — filled in the character's own accent, with a matching glow.
       label = 'SELECT';
-      fg = Colors.white;
-      bg = terracottaDeep;
-      border = terracottaDeep;
+      fg = const Color(0xFF1A1206);
+      bg = accent;
+      border = accent;
+      glow = [
+        BoxShadow(
+            color: accent.withValues(alpha: 0.5),
+            blurRadius: 14,
+            offset: const Offset(0, 5)),
+      ];
     }
     final pill = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 11),
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(color: border, width: 1.5),
+        boxShadow: glow,
       ),
       child: Text(label,
           style: displayFont(
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
+              fontSize: 12.5,
+              fontWeight: FontWeight.w800,
               color: fg,
               letterSpacing: 1.4)),
     );
