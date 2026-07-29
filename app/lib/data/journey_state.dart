@@ -16,7 +16,7 @@ Landmark? landmarkForActBoss(Lesson lesson) {
 
 /// Landmark ids the player has unlocked — a landmark opens once its region's
 /// boss (the last lesson of the matching category) has been passed. Progress-
-/// driven, replacing the old hardcoded [Landmark.isUnlocked] flag.
+/// driven, replacing the old hardcoded unlock flag.
 Set<String> unlockedLandmarkIds(bool Function(String lessonId) passed) {
   final ids = <String>{};
   final n =

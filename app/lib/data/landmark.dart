@@ -10,7 +10,6 @@ class Landmark {
   final Offset coordinates; // normalised 0..1 position on the map canvas
   final String descriptionText;
   final String imageAsset; // art TBD
-  final bool isUnlocked;
   final Color accent;
 
   const Landmark({
@@ -21,7 +20,6 @@ class Landmark {
     required this.descriptionText,
     required this.imageAsset,
     required this.accent,
-    this.isUnlocked = false,
   });
 }
 
@@ -34,7 +32,6 @@ const List<Landmark> kLandmarks = [
     coordinates: Offset(0.50, 0.12),
     imageAsset: 'assets/landmarks/kakum.png',
     accent: Color(0xFF2E9E5B),
-    isUnlocked: true,
     descriptionText:
         'Deep in the Central Region rainforest, Kakum National Park’s canopy '
         'walkway sways some 40 metres above the forest floor — seven rope '
@@ -48,7 +45,6 @@ const List<Landmark> kLandmarks = [
     coordinates: Offset(0.26, 0.28),
     imageAsset: 'assets/landmarks/osu.png',
     accent: Color(0xFFE2725B),
-    isUnlocked: true,
     descriptionText:
         'Accra’s heart after dark. Osu’s Oxford Street hums with jollof and '
         'kelewele stalls, live highlife spilling from bars, boutiques and '
@@ -61,7 +57,6 @@ const List<Landmark> kLandmarks = [
     coordinates: Offset(0.72, 0.52),
     imageAsset: 'assets/landmarks/coco.png',
     accent: Color(0xFFD4A373),
-    isUnlocked: false,
     descriptionText:
         'A golden stretch of Accra coastline where palm shade meets calm '
         'Atlantic waves — a laid-back spot for grilled tilapia, cold '
@@ -74,7 +69,6 @@ const List<Landmark> kLandmarks = [
     coordinates: Offset(0.34, 0.66),
     imageAsset: 'assets/landmarks/labadi.png',
     accent: Color(0xFF2E86C1),
-    isUnlocked: true,
     descriptionText:
         'Accra’s most beloved beach. Weekends bring drumming circles, reggae '
         'and highlife, horse rides along the sand and a warm, festive crowd — '
@@ -87,7 +81,6 @@ const List<Landmark> kLandmarks = [
     coordinates: Offset(0.60, 0.88),
     imageAsset: 'assets/landmarks/elmina.png',
     accent: Color(0xFFB6BAC0),
-    isUnlocked: false,
     descriptionText:
         'Built by the Portuguese in 1482 on the Gulf of Guinea, Elmina Castle '
         'is among the oldest surviving European structures in West Africa. A '
@@ -102,7 +95,6 @@ const List<Landmark> kLandmarks = [
     coordinates: Offset(0.68, 0.76),
     imageAsset: 'assets/landmarks/mole.png',
     accent: Color(0xFFC98B3A),
-    isUnlocked: false,
     descriptionText:
         'Ghana’s largest wildlife refuge, on the northern savanna. Elephants '
         'amble to the waterholes below the escarpment, with antelope, warthogs '
