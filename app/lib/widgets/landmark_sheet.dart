@@ -6,19 +6,21 @@ import 'velvet.dart';
 /// Opens the landmark info panel — a velvet-dark bottom sheet that slides + eases
 /// in on a custom curve, showing the landmark's image, name and description in
 /// the displayFont hierarchy.
-void showLandmarkSheet(BuildContext context, Landmark lm) {
+void showLandmarkSheet(BuildContext context, Landmark lm,
+    {bool unlocked = false}) {
   showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     barrierColor: Colors.black.withValues(alpha: 0.62),
-    builder: (_) => _LandmarkSheet(lm),
+    builder: (_) => _LandmarkSheet(lm, unlocked: unlocked),
   );
 }
 
 class _LandmarkSheet extends StatelessWidget {
   final Landmark lm;
-  const _LandmarkSheet(this.lm);
+  final bool unlocked;
+  const _LandmarkSheet(this.lm, {required this.unlocked});
 
   static Future<bool> _hasArt(BuildContext c, String path) async {
     try {
@@ -116,27 +118,36 @@ class _LandmarkSheet extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                             color: kVelvetInk,
                             height: 1.05)),
-                    if (!lm.isUnlocked) ...[
+                    if (!unlocked) ...[
                       const SizedBox(height: 10),
                       Row(
                         children: [
                           const Icon(Icons.lock_rounded,
                               size: 14, color: kVelvetMuted),
                           const SizedBox(width: 6),
-                          Text('Keep travelling to unlock this stop',
+                          Text('Clear this region’s boss to unlock',
                               style: TextStyle(
                                   color: kVelvetMuted,
                                   fontSize: 12.5,
                                   fontStyle: FontStyle.italic)),
                         ],
                       ),
+                      const SizedBox(height: 14),
+                      const Text(
+                          'Beat the boss at the end of this region to reveal '
+                          'its story and light up the landmark.',
+                          style: TextStyle(
+                              color: Color(0xFF9A9086),
+                              fontSize: 14,
+                              height: 1.55)),
+                    ] else ...[
+                      const SizedBox(height: 14),
+                      Text(lm.descriptionText,
+                          style: const TextStyle(
+                              color: Color(0xFFCFC6BD),
+                              fontSize: 14.5,
+                              height: 1.62)),
                     ],
-                    const SizedBox(height: 14),
-                    Text(lm.descriptionText,
-                        style: const TextStyle(
-                            color: Color(0xFFCFC6BD),
-                            fontSize: 14.5,
-                            height: 1.62)),
                     const SizedBox(height: 22),
                     SizedBox(
                       width: double.infinity,

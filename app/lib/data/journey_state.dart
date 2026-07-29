@@ -14,6 +14,22 @@ Landmark? landmarkForActBoss(Lesson lesson) {
   return null;
 }
 
+/// Landmark ids the player has unlocked — a landmark opens once its region's
+/// boss (the last lesson of the matching category) has been passed. Progress-
+/// driven, replacing the old hardcoded [Landmark.isUnlocked] flag.
+Set<String> unlockedLandmarkIds(bool Function(String lessonId) passed) {
+  final ids = <String>{};
+  final n =
+      kCategories.length < kLandmarks.length ? kCategories.length : kLandmarks.length;
+  for (var i = 0; i < n; i++) {
+    final c = kCategories[i];
+    if (c.lessons.isNotEmpty && passed(c.lessons.last.id)) {
+      ids.add(kLandmarks[i].id);
+    }
+  }
+  return ids;
+}
+
 /// Journey progression state — the Flutter equivalent of the requested
 /// JourneyState / ViewModel flag. Held by the map screen; when
 /// [currentLandmarkIndex] advances, the map plays the checkpoint-travel

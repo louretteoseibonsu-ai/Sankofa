@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../data/avatar.dart';
 import '../data/family_lines.dart';
+import '../data/journey_state.dart';
 import '../data/landmark.dart';
 import '../data/lesson_catalog.dart';
 import '../data/trotro_cosmetics.dart';
@@ -365,6 +366,9 @@ class _JourneyScreenState extends State<JourneyScreen>
 
   int get _currentIndex => _currentIndexFor(_p);
 
+  /// Landmarks unlocked by clearing each region's boss (progress-driven).
+  Set<String> get _unlockedLandmarks => unlockedLandmarkIds(_p.passed);
+
   /// The equipped family avatar rendered as a matte figure at [width] — used for
   /// the map player marker and the region-warp / Compound / campfire flight clones
   /// (the tro tro bus art is retired).
@@ -591,14 +595,17 @@ class _JourneyScreenState extends State<JourneyScreen>
                           child: const Icon(Icons.emoji_events_rounded,
                               color: _roadGold, size: 40),
                         ),
-                      // Cultural landmark points of interest
+                      // Cultural landmark points of interest — unlocked once the
+                      // region's boss is cleared (progress-driven).
                       for (final lm in kLandmarks)
                         Positioned(
                           left: lm.coordinates.dx * w - 26,
                           top: lm.coordinates.dy * height - 26,
                           child: _LandmarkMarker(
                             landmark: lm,
-                            onTap: () => showLandmarkSheet(context, lm),
+                            unlocked: _unlockedLandmarks.contains(lm.id),
+                            onTap: () => showLandmarkSheet(context, lm,
+                                unlocked: _unlockedLandmarks.contains(lm.id)),
                           ),
                         ),
                       // Region name tags at each region's first stop
@@ -1230,8 +1237,10 @@ class _DustPainter extends CustomPainter {
 /// art (or an accent placeholder), locked until earned. Tap opens its info sheet.
 class _LandmarkMarker extends StatelessWidget {
   final Landmark landmark;
+  final bool unlocked;
   final VoidCallback onTap;
-  const _LandmarkMarker({required this.landmark, required this.onTap});
+  const _LandmarkMarker(
+      {required this.landmark, required this.unlocked, required this.onTap});
 
   static Future<bool> _hasArt(BuildContext c, String path) async {
     try {
@@ -1253,8 +1262,7 @@ class _LandmarkMarker extends StatelessWidget {
           color: const Color(0xFF1E1A17),
           borderRadius: BorderRadius.circular(15),
           border: Border.all(
-              color: landmark.isUnlocked ? landmark.accent : Colors.white24,
-              width: 2),
+              color: unlocked ? landmark.accent : Colors.white24, width: 2),
           boxShadow: kSoftShadow,
         ),
         child: ClipRRect(
@@ -1270,7 +1278,7 @@ class _LandmarkMarker extends StatelessWidget {
                         child: Icon(Icons.place_rounded,
                             color: landmark.accent, size: 24)),
               ),
-              if (!landmark.isUnlocked)
+              if (!unlocked)
                 const ColoredBox(
                   color: Color(0x99000000),
                   child: Center(
