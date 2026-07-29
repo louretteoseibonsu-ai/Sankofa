@@ -38,6 +38,21 @@ const Color _doneGreen = Color(0xFF2E6B3B);
 // (The old per-zone/per-Act road palettes were retired when the road moved to a
 // single sculpted terracotta+ochre treatment in _RoadPainter.)
 
+/// The map's ambient glow colour for the equipped Journey Glow map theme
+/// (bought with shards in The Compound).
+Color _trailGlow(String? trailId) {
+  switch (trailId) {
+    case 'trail_gold':
+      return const Color(0xFF2E2410); // Golden Hour
+    case 'trail_emerald':
+      return const Color(0xFF16261A); // Emerald
+    case 'trail_royal':
+      return const Color(0xFF241733); // Royal Kente (violet)
+    default:
+      return const Color(0xFF241C17); // Ember (default)
+  }
+}
+
 /// The Sankofa "world map" — a winding kente road through cultural regions.
 /// The tro tro is the player's avatar: it parks at the current stop and drives
 /// to the next one when a lesson is cleared. Regions unlock boss-by-boss.
@@ -420,13 +435,14 @@ class _JourneyScreenState extends State<JourneyScreen>
     final regionName = _catName[lessons[current].categoryId] ?? 'Journey';
 
     return DecoratedBox(
-      decoration: const BoxDecoration(
-        // Subtle radial ambient — a warm glow toward the top where the campaign
-        // banner + bus live, falling to near-black velvet at the edges.
+      decoration: BoxDecoration(
+        // Subtle radial ambient — its glow colour is the equipped Journey Glow
+        // map theme (Ember / Golden Hour / Emerald / Royal Kente), falling to
+        // near-black velvet at the edges.
         gradient: RadialGradient(
-          center: Alignment(0.0, -0.55),
+          center: const Alignment(0.0, -0.55),
           radius: 1.3,
-          colors: [Color(0xFF241C17), Color(0xFF141110)],
+          colors: [_trailGlow(_equipped['trail']), const Color(0xFF141110)],
         ),
       ),
       child: Column(

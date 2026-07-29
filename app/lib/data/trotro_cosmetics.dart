@@ -24,10 +24,11 @@ const Set<String> kDefaultOwned = {
 
 /// Ordered category keys and their display labels. Rim/roof are retired for the
 /// gameplay bus (its cartoon wheels are baked in), so only trim + horn show.
-const List<String> kCosmeticCategories = ['kente', 'horn'];
+const List<String> kCosmeticCategories = ['kente', 'trail', 'horn'];
 const Map<String, String> kCategoryLabel = {
   'rim': 'Rims',
   'kente': 'Kente Cloth',
+  'trail': 'Journey Glow',
   'roof': 'Roof rack',
   'horn': 'Celebration Sound',
 };
@@ -61,6 +62,14 @@ const List<ShopItem> kCosmetics = [
   ShopItem(id: 'roof_none', category: 'roof', name: 'None', costShards: 0),
   ShopItem(
       id: 'roof_rack', category: 'roof', name: 'Market rack', costShards: 15),
+  // Journey Glow — the ambient lighting theme of your world map.
+  ShopItem(id: 'trail_ember', category: 'trail', name: 'Ember', costShards: 0),
+  ShopItem(
+      id: 'trail_gold', category: 'trail', name: 'Golden Hour', costShards: 40),
+  ShopItem(
+      id: 'trail_emerald', category: 'trail', name: 'Emerald', costShards: 40),
+  ShopItem(
+      id: 'trail_royal', category: 'trail', name: 'Royal Kente', costShards: 60),
   // Horn (sound stored now; audio pack lands with the sprite refactor)
   ShopItem(id: 'horn_vroom', category: 'horn', name: 'Vroom', costShards: 0),
   ShopItem(id: 'horn_honk', category: 'horn', name: 'Honk', costShards: 10),

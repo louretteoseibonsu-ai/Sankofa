@@ -49,24 +49,37 @@ class _KenteBackdrop extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final bands = _bands();
     if (bands == null) return;
-    const widths = [26.0, 5.0, 26.0, 5.0];
-    double x = 0;
-    int i = 0;
-    while (x < size.width) {
-      canvas.drawRect(
-        Rect.fromLTWH(x, 0, widths[i % 4] + 0.5, size.height),
-        Paint()..color = bands[i % 4].withValues(alpha: 0.5),
-      );
-      x += widths[i % 4];
-      i++;
+    // Woven kente block grid: interlocking coloured squares offset every other
+    // row (the warp/weft "float"), separated by fine black weave lines.
+    const cell = 22.0;
+    final cols = (size.width / cell).ceil();
+    final rows = (size.height / cell).ceil();
+    for (int r = 0; r < rows; r++) {
+      for (int c = 0; c < cols; c++) {
+        final idx = (c + (r.isOdd ? 2 : 0)) % 4;
+        canvas.drawRect(
+          Rect.fromLTWH(c * cell, r * cell, cell + 0.6, cell + 0.6),
+          Paint()..color = bands[idx].withValues(alpha: 0.72),
+        );
+      }
     }
-    // Centre vignette so the family member reads clearly on top of the cloth.
+    final weave = Paint()
+      ..color = const Color(0x59000000)
+      ..strokeWidth = 1.1;
+    for (double x = 0; x <= size.width; x += cell) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), weave);
+    }
+    for (double y = 0; y <= size.height; y += cell) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), weave);
+    }
+    // A dark pool in the centre so the family member always reads clearly on
+    // top of the cloth, which stays vivid toward the edges.
     canvas.drawRect(
       Offset.zero & size,
       Paint()
         ..shader = const RadialGradient(
-          radius: 0.95,
-          colors: [Color(0x00141110), Color(0xB3141110)],
+          radius: 0.85,
+          colors: [Color(0xCC141110), Color(0x22141110)],
         ).createShader(Offset.zero & size),
     );
   }
@@ -150,6 +163,26 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Couldn’t unlock — check your connection.')));
+    }
+  }
+
+  Future<void> _buyFreezeShards() async {
+    if (_shards < ProgressService.kFreezeShardCost) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('You need ${ProgressService.kFreezeShardCost} shards for '
+              'a streak freeze — earn more with 3-star lessons.')));
+      return;
+    }
+    final ok = await _service.buyFreezeWithShards();
+    if (!mounted) return;
+    if (ok) {
+      SoundService.instance.tap();
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Streak freeze added ❄')));
+      await _reload();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Couldn’t buy — check your connection.')));
     }
   }
 
@@ -299,6 +332,47 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                 ),
                 const SizedBox(height: 10),
                 _BlindBoxCard(shards: _shards, onOpen: _openBlindBox),
+                const SizedBox(height: 10),
+                // ── Utility: spend shards on a streak freeze ──
+                Material(
+                  color: const Color(0xFF211B17),
+                  borderRadius: BorderRadius.circular(18),
+                  clipBehavior: Clip.antiAlias,
+                  child: InkWell(
+                    onTap: _buyFreezeShards,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.ac_unit,
+                              color: Color(0xFF6FA8DC), size: 22),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Streak Freeze',
+                                    style: displayFont(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700,
+                                        color: kVelvetInk)),
+                                const Text(
+                                    'Protects your streak on a day you miss',
+                                    style: TextStyle(
+                                        color: kVelvetMuted, fontSize: 12)),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text('${ProgressService.kFreezeShardCost}',
+                              style: editorialNumber(fontSize: 15)),
+                          const SizedBox(width: 5),
+                          const KenteShard(size: 14),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 4),
                 if (_error)
                   Padding(

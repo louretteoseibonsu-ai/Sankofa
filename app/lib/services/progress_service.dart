@@ -299,6 +299,23 @@ class ProgressService {
     return true;
   }
 
+  /// Golden Kente shards to buy a streak freeze in The Compound.
+  static const int kFreezeShardCost = 30;
+
+  /// Spends shards to buy a streak freeze. Returns true on success.
+  Future<bool> buyFreezeWithShards() async {
+    final uid = _uid;
+    if (uid == null) return false;
+    final doc = await _db.collection('users').doc(uid).get();
+    final shards = (doc.data()?['shards'] as num?)?.toInt() ?? 0;
+    if (shards < kFreezeShardCost) return false;
+    await _db.collection('users').doc(uid).set({
+      'shards': FieldValue.increment(-kFreezeShardCost),
+      'freezes': FieldValue.increment(1),
+    }, SetOptions(merge: true));
+    return true;
+  }
+
   /// Passages the learner has passed comprehension on (unlocks the next).
   Future<Set<String>> loadReadingPassed() async {
     final uid = _uid;
