@@ -49,19 +49,17 @@ class _KenteBackdrop extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final bands = _bands();
     if (bands == null) return;
-    // A woven kente STRIP along the bottom (a band the family member stands on),
-    // so the character stays fully visible above the velvet panel. Interlocking
-    // coloured squares offset every other row, with fine black weave lines.
-    const stripH = 54.0;
+    // A woven kente STRIP across the top (a header band), clear of the character
+    // below. Interlocking coloured squares offset every other row, fine weave.
+    const stripH = 38.0;
     const cell = 17.0;
-    final top = size.height - stripH;
     final cols = (size.width / cell).ceil();
     final rows = (stripH / cell).ceil();
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
         final idx = (c + (r.isOdd ? 2 : 0)) % 4;
         canvas.drawRect(
-          Rect.fromLTWH(c * cell, top + r * cell, cell + 0.6, cell + 0.6),
+          Rect.fromLTWH(c * cell, r * cell, cell + 0.6, cell + 0.6),
           Paint()..color = bands[idx].withValues(alpha: 0.92),
         );
       }
@@ -70,13 +68,13 @@ class _KenteBackdrop extends CustomPainter {
       ..color = const Color(0x66000000)
       ..strokeWidth = 1.0;
     for (double x = 0; x <= size.width; x += cell) {
-      canvas.drawLine(Offset(x, top), Offset(x, size.height), weave);
+      canvas.drawLine(Offset(x, 0), Offset(x, stripH), weave);
     }
-    for (double y = top; y <= size.height; y += cell) {
+    for (double y = 0; y <= stripH; y += cell) {
       canvas.drawLine(Offset(0, y), Offset(size.width, y), weave);
     }
-    // A thin gold thread finishes the top edge of the strip.
-    canvas.drawRect(Rect.fromLTWH(0, top, size.width, 2),
+    // A thin gold thread finishes the bottom edge of the strip.
+    canvas.drawRect(Rect.fromLTWH(0, stripH - 2, size.width, 2),
         Paint()..color = const Color(0x88E3A92C));
   }
 
@@ -288,11 +286,12 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(22),
                     child: SizedBox(
-                      height: 248,
+                      height: 262,
                       child: Stack(
-                        alignment: Alignment.center,
+                        alignment: Alignment.bottomCenter,
                         children: [
-                          // Equipped Kente cloth draped behind your family member.
+                          // Equipped Kente cloth as a header strip above the
+                          // family member (clear of the character).
                           Positioned.fill(
                             child: CustomPaint(
                               painter: _KenteBackdrop(_cos.equippedIn('kente')),
@@ -300,10 +299,10 @@ class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
                           ),
                           Image.asset(
                             avatarById(_avatarId).assetReference,
-                            height: 208,
+                            height: 210,
                             fit: BoxFit.contain,
                             errorBuilder: (_, __, ___) =>
-                                const SizedBox(height: 208),
+                                const SizedBox(height: 210),
                           ),
                         ],
                       ),
