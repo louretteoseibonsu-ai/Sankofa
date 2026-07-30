@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../services/auth_service.dart';
 import '../theme.dart';
+import '../widgets/velvet.dart';
 import 'legal_screen.dart';
+import 'tools_hub_screen.dart' show velvetToolsTheme;
 
 /// Official multi-color Google "G" logo.
 const String _googleGLogo = r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
@@ -187,7 +189,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Theme(
+      data: velvetToolsTheme(context),
+      child: Scaffold(
+      backgroundColor: const Color(0xFF17130F),
       appBar: AppBar(
         toolbarHeight: 60,
         automaticallyImplyLeading: false,
@@ -225,7 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text(
                     _isRegister ? 'Create your account' : 'Welcome back',
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.black54),
+                    style: const TextStyle(color: kVelvetMuted),
                   ),
                   const SizedBox(height: 18),
                   SizedBox(
@@ -307,7 +312,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Text.rich(
                               TextSpan(
                                 style: const TextStyle(
-                                    color: Colors.black87, fontSize: 13, height: 1.4),
+                                    color: kVelvetInk, fontSize: 13, height: 1.4),
                                 children: [
                                   const TextSpan(text: 'I have read and agree to the '),
                                   TextSpan(
@@ -379,7 +384,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Expanded(child: Divider()),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 12),
-                        child: Text('or', style: TextStyle(color: Colors.black45)),
+                        child: Text('or', style: TextStyle(color: kVelvetMuted)),
                       ),
                       Expanded(child: Divider()),
                     ],
@@ -425,6 +430,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ),
+      ),
       ),
     );
   }

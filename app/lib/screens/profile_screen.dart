@@ -12,7 +12,9 @@ import '../services/auth_service.dart';
 import '../theme.dart';
 import '../widgets/floating_card.dart';
 import '../widgets/pedis_store.dart';
+import '../widgets/velvet.dart';
 import 'admin_screen.dart';
+import 'tools_hub_screen.dart' show velvetToolsTheme;
 import 'help_screen.dart';
 import 'invite_friends_screen.dart';
 import 'legal_screen.dart';
@@ -132,9 +134,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       margin: const EdgeInsets.only(top: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFFF7F3EC),
+        color: const Color(0xFF211B17),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: silverLight),
+        border: Border.all(color: Colors.white10),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,12 +147,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Text('Your Akan day name',
                 style: TextStyle(
                     fontWeight: FontWeight.w800,
-                    color: charcoal,
+                    color: kVelvetInk,
                     fontSize: 13)),
           ]),
           const SizedBox(height: 4),
           Text('Born on ${day.dayTwi} · ${day.attribute}',
-              style: const TextStyle(color: slate, fontSize: 12.5)),
+              style: const TextStyle(color: kVelvetMuted, fontSize: 12.5)),
           const SizedBox(height: 10),
           Wrap(
             spacing: 8,
@@ -325,7 +327,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               if (isPw) ...[
                 const SizedBox(height: 14),
                 const Text('Enter your password to confirm:',
-                    style: TextStyle(fontSize: 12.5, color: slate)),
+                    style: TextStyle(fontSize: 12.5, color: kVelvetMuted)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: pwCtrl,
@@ -336,7 +338,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ] else ...[
                 const SizedBox(height: 10),
                 const Text("You'll be asked to confirm with Google.",
-                    style: TextStyle(fontSize: 12.5, color: slate)),
+                    style: TextStyle(fontSize: 12.5, color: kVelvetMuted)),
               ],
             ],
           ),
@@ -417,7 +419,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Theme(
+      data: velvetToolsTheme(context),
+      child: Scaffold(
       appBar: AppBar(title: const Text('Profile')),
       body: ListView(
         padding: const EdgeInsets.all(20),
@@ -437,9 +441,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Text('Verify your email',
                             style: TextStyle(
-                                fontWeight: FontWeight.w700, color: ink)),
+                                fontWeight: FontWeight.w700, color: kVelvetInk)),
                         Text('We sent you a confirmation link.',
-                            style: TextStyle(color: slate, fontSize: 12)),
+                            style: TextStyle(color: kVelvetMuted, fontSize: 12)),
                       ],
                     ),
                   ),
@@ -452,7 +456,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
           const Text('Display name',
               style: TextStyle(
-                  color: slate, fontWeight: FontWeight.w700, fontSize: 12)),
+                  color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 12)),
           const SizedBox(height: 6),
           TextField(
             controller: _name,
@@ -461,7 +465,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 22),
           const Text('Date of birth',
               style: TextStyle(
-                  color: slate, fontWeight: FontWeight.w700, fontSize: 12)),
+                  color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 12)),
           const SizedBox(height: 6),
           InkWell(
             onTap: _pickDob,
@@ -475,7 +479,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _dob == null ? 'Select your date of birth' : _formatDob(_dob!),
                 style: TextStyle(
                   fontSize: 16,
-                  color: _dob == null ? Colors.black45 : charcoal,
+                  color: _dob == null ? kVelvetMuted : kVelvetInk,
                 ),
               ),
             ),
@@ -484,7 +488,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 22),
           const Text('Gender',
               style: TextStyle(
-                  color: slate, fontWeight: FontWeight.w700, fontSize: 12)),
+                  color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 12)),
           const SizedBox(height: 6),
           DropdownButtonFormField<String>(
             initialValue: _gender.isEmpty ? null : _gender,
@@ -511,7 +515,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 22),
           const Text('Pick an Adinkra avatar',
               style: TextStyle(
-                  color: slate, fontWeight: FontWeight.w700, fontSize: 12)),
+                  color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 12)),
           const SizedBox(height: 10),
           SizedBox(
             height: 64,
@@ -536,7 +540,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     height: 60,
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: glyphTile,
+                      color: const Color(0xFF2A211C),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
                         color: selected ? terracotta : Colors.transparent,
@@ -574,7 +578,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 18),
           const Text('Accent color',
               style: TextStyle(
-                  color: slate, fontWeight: FontWeight.w700, fontSize: 12)),
+                  color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 12)),
           const SizedBox(height: 10),
           Row(
             children: _colors.map((h) {
@@ -594,7 +598,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       color: Color(v),
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: selected ? charcoal : Colors.transparent,
+                        color: selected ? kVelvetInk : Colors.transparent,
                         width: 2.5,
                       ),
                     ),
@@ -606,7 +610,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 22),
           const Text('…or use a photo',
               style: TextStyle(
-                  color: slate, fontWeight: FontWeight.w700, fontSize: 12)),
+                  color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 12)),
           const SizedBox(height: 10),
           Row(
             children: [
@@ -643,7 +647,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // ── Subscription ──
               const Text('Subscription',
               style: TextStyle(
-                  color: slate, fontWeight: FontWeight.w700, fontSize: 12)),
+                  color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 12)),
           const SizedBox(height: 8),
           if (_premium)
             FloatingCard(
@@ -657,7 +661,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       SizedBox(width: 10),
                       Text('Premium active',
                           style: TextStyle(
-                              fontWeight: FontWeight.w800, color: ink)),
+                              fontWeight: FontWeight.w800, color: kVelvetInk)),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -696,13 +700,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Text('Upgrade to Premium',
                             style: TextStyle(
-                                fontWeight: FontWeight.w800, color: ink)),
+                                fontWeight: FontWeight.w800, color: kVelvetInk)),
                         Text('7-day free trial · change plans anytime',
-                            style: TextStyle(color: slate, fontSize: 12)),
+                            style: TextStyle(color: kVelvetMuted, fontSize: 12)),
                       ],
                     ),
                   ),
-                  Icon(Icons.chevron_right, color: Colors.black26),
+                  Icon(Icons.chevron_right, color: Colors.white30),
                 ],
               ),
             ),
@@ -711,7 +715,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           // ── Pedis wallet ──
           const Text('Pedis',
               style: TextStyle(
-                  color: slate, fontWeight: FontWeight.w700, fontSize: 12)),
+                  color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 12)),
           const SizedBox(height: 8),
           FloatingCard(
             onTap: _openPedisStore,
@@ -727,10 +731,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           style: const TextStyle(
                               fontWeight: FontWeight.w800,
                               fontSize: 16,
-                              color: ink)),
+                              color: kVelvetInk)),
                       const Text(
                           'Top up Translate & Lens credits, freezes, avatars',
-                          style: TextStyle(color: slate, fontSize: 12)),
+                          style: TextStyle(color: kVelvetMuted, fontSize: 12)),
                     ],
                   ),
                 ),
@@ -746,7 +750,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           // ── Invite friends ──
           const Text('Invite friends',
               style: TextStyle(
-                  color: slate, fontWeight: FontWeight.w700, fontSize: 12)),
+                  color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 12)),
           const SizedBox(height: 8),
           FloatingCard(
             onTap: () => Navigator.of(context).push(MaterialPageRoute(
@@ -762,15 +766,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       Text('Invite friends & earn pedis',
                           style: TextStyle(
-                              fontWeight: FontWeight.w800, color: ink)),
+                              fontWeight: FontWeight.w800, color: kVelvetInk)),
                       Text(
                           'You both get $kInviteRewardPedis pedis · learn '
                           'together on a friends leaderboard',
-                          style: TextStyle(color: slate, fontSize: 12)),
+                          style: TextStyle(color: kVelvetMuted, fontSize: 12)),
                     ],
                   ),
                 ),
-                Icon(Icons.chevron_right, color: Colors.black26),
+                Icon(Icons.chevron_right, color: Colors.white30),
               ],
             ),
           ),
@@ -780,7 +784,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           if (_isAdmin) ...[
             const Text('Team',
                 style: TextStyle(
-                    color: slate, fontWeight: FontWeight.w700, fontSize: 12)),
+                    color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 12)),
             const SizedBox(height: 8),
             FloatingCard(
               onTap: () => Navigator.of(context).push(
@@ -788,7 +792,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: const Row(
                 children: [
                   Icon(Icons.admin_panel_settings_outlined,
-                      size: 20, color: charcoal),
+                      size: 20, color: kVelvetInk),
                   SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -796,13 +800,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Text('Admin panel',
                             style: TextStyle(
-                                fontWeight: FontWeight.w800, color: ink)),
+                                fontWeight: FontWeight.w800, color: kVelvetInk)),
                         Text('Manage sign-ups, premium & suspensions',
-                            style: TextStyle(color: slate, fontSize: 12)),
+                            style: TextStyle(color: kVelvetMuted, fontSize: 12)),
                       ],
                     ),
                   ),
-                  Icon(Icons.chevron_right, color: Colors.black26),
+                  Icon(Icons.chevron_right, color: Colors.white30),
                 ],
               ),
             ),
@@ -812,14 +816,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           // ── Help & support ──
           const Text('Help & support',
               style: TextStyle(
-                  color: slate, fontWeight: FontWeight.w700, fontSize: 12)),
+                  color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 12)),
           const SizedBox(height: 8),
           FloatingCard(
             onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const HelpScreen())),
             child: const Row(
               children: [
-                Icon(Icons.help_outline, size: 20, color: charcoal),
+                Icon(Icons.help_outline, size: 20, color: kVelvetInk),
                 SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -827,13 +831,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       Text('Help center & support chat',
                           style: TextStyle(
-                              fontWeight: FontWeight.w700, color: ink)),
+                              fontWeight: FontWeight.w700, color: kVelvetInk)),
                       Text('FAQs, AI chat, and sankofa@aparato.ai',
-                          style: TextStyle(color: slate, fontSize: 13)),
+                          style: TextStyle(color: kVelvetMuted, fontSize: 13)),
                     ],
                   ),
                 ),
-                Icon(Icons.chevron_right, color: Colors.black26),
+                Icon(Icons.chevron_right, color: Colors.white30),
               ],
             ),
           ),
@@ -842,7 +846,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           // ── Legal ──
           const Text('Legal',
               style: TextStyle(
-                  color: slate, fontWeight: FontWeight.w700, fontSize: 12)),
+                  color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 12)),
           const SizedBox(height: 8),
           FloatingCard(
             onTap: () => Navigator.of(context).push(MaterialPageRoute(
@@ -850,12 +854,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     title: 'Privacy Policy', body: kPrivacyPolicy))),
             child: const Row(
               children: [
-                Icon(Icons.privacy_tip_outlined, size: 20, color: charcoal),
+                Icon(Icons.privacy_tip_outlined, size: 20, color: kVelvetInk),
                 SizedBox(width: 12),
                 Expanded(
                     child: Text('Privacy Policy',
                         style: TextStyle(fontWeight: FontWeight.w600))),
-                Icon(Icons.chevron_right, color: Colors.black26),
+                Icon(Icons.chevron_right, color: Colors.white30),
               ],
             ),
           ),
@@ -866,12 +870,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     title: 'Terms & Conditions', body: kTermsAndConditions))),
             child: const Row(
               children: [
-                Icon(Icons.description_outlined, size: 20, color: charcoal),
+                Icon(Icons.description_outlined, size: 20, color: kVelvetInk),
                 SizedBox(width: 12),
                 Expanded(
                     child: Text('Terms & Conditions',
                         style: TextStyle(fontWeight: FontWeight.w600))),
-                Icon(Icons.chevron_right, color: Colors.black26),
+                Icon(Icons.chevron_right, color: Colors.white30),
               ],
             ),
           ),
@@ -885,7 +889,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             },
             child: const Row(
               children: [
-                Icon(Icons.logout, size: 18, color: charcoal),
+                Icon(Icons.logout, size: 18, color: kVelvetInk),
                 SizedBox(width: 10),
                 Text('Sign out', style: TextStyle(fontWeight: FontWeight.w600)),
               ],
@@ -906,6 +910,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           const SizedBox(height: 24),
         ],
+      ),
       ),
     );
   }
