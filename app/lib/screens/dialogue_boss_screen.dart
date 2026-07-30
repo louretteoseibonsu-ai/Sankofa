@@ -325,7 +325,7 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
                   borderRadius: BorderRadius.circular(16)),
             ),
             child: Text(
-                _i >= _challenges.length - 1 ? 'Finish the battle' : 'Kɔ so',
+                _i >= _challenges.length - 1 ? 'Finish the battle' : 'Kɔ so · Continue',
                 style: const TextStyle(
                     fontWeight: FontWeight.w800, fontSize: 16)),
           ),

@@ -16,10 +16,18 @@ class TwiSpeech {
 
   final AudioPlayer _player = AudioPlayer();
 
+  /// Whole-word pronunciation overrides for TTS — words the engine says wrong.
+  /// The value is a phonetic respelling fed to the synth (audio only; display
+  /// spelling is untouched).
+  static const Map<String, String> _sayAs = {
+    'fie': 'fi-e', // house/home — two syllables (fee-eh), not "fye"
+  };
+
   /// Returns true if audio played, false if it could not be fetched.
   Future<bool> speak(String text) async {
-    final t = text.trim();
-    if (t.isEmpty) return false;
+    final raw = text.trim();
+    if (raw.isEmpty) return false;
+    final t = _sayAs[raw.toLowerCase()] ?? raw;
 
     // 1) Bundled clip (free).
     final asset = await AudioBundle.instance.assetPathFor(t);

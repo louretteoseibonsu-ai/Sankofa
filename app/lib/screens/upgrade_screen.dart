@@ -29,13 +29,12 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
   }
 
   static const _perks = [
-    'Every lesson & category — all 23+ units',
+    'Every lesson & category — the full journey',
     'All 62 Adinkra symbols + detail sheets',
     '400 AI credits / month — translate, Lens scans & audio',
     'Top up anytime with pedis',
-    'Unlimited quizzes & hearts',
-    'League seasons & full leaderboard',
-    'Premium Ananse avatar + rare skins',
+    'Unlimited quizzes & practice',
+    'Weekly Rally — full leaderboard',
     'No ads',
   ];
 
@@ -62,8 +61,9 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
       data: velvetToolsTheme(context),
       child: Scaffold(
       appBar: AppBar(title: const Text('Go Premium')),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
+      body: SafeArea(
+        child: ListView(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
         children: [
           Center(
             child: Container(
@@ -225,6 +225,6 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
           const SizedBox(height: 24),
         ],
       ),
-    ));
+    )));
   }
 }

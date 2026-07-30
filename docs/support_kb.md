@@ -235,7 +235,6 @@ go (great when travelling in Ghana).
 - **Display name, date of birth, gender:** edit in **Profile** and tap
   **Save profile**.
 - **Avatar:** pick an **Adinkra** symbol + accent colour, or upload a **photo**.
-  The premium **Ananse** avatar unlocks with Premium.
 - **Day Name:** the **Day Name** tool (Tools → Day Name) tells you your Akan
   *kra din* (soul name) from your date of birth. You can also set it straight
   from **Profile** — when you pick your **date of birth**, the app offers your
@@ -248,8 +247,9 @@ go (great when travelling in Ghana).
 
 ## 10. Premium & subscriptions
 
-- **Premium** unlocks all lessons, all Adinkra symbols, AI Translate, the full
-  Lens experience, the Ananse avatar, and removes ads.
+- **Premium** unlocks all lessons and categories, all Adinkra symbols, AI
+  Translate + Lens (400 AI credits/month), unlimited quizzes & practice, the full
+  Weekly Rally leaderboard, and removes ads.
 - **Pricing:** €6.99/month or €59.99/year (~28% saving), with a **7-day free
   trial**. Prices localise to your region; you're charged in your app-store
   currency.
