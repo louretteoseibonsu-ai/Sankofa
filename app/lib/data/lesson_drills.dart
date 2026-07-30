@@ -19,11 +19,23 @@ class ListenDrill {
   const ListenDrill(this.answer, this.options);
 }
 
+/// Normalize a Twi token for glossary lookup: lowercase + strip punctuation
+/// (keeps the Twi vowels ɔ/ɛ, which are word characters).
+String normTwi(String w) =>
+    w.toLowerCase().replaceAll(RegExp('''[.,!?;:"'“”‘’()]'''), '').trim();
+
 /// Arrange the scrambled word tiles to match the spoken Twi sentence.
 class BuildDrill {
   final List<String> tokens; // the sentence, in order
   final String audio; // the full sentence, for TTS
-  const BuildDrill(this.tokens, this.audio);
+  final Map<String, String> gloss; // normalized Twi -> English (literal fallback)
+  const BuildDrill(this.tokens, this.audio, {this.gloss = const {}});
+
+  /// A literal word-by-word English gloss assembled from the unit glossary.
+  /// Words not in the glossary (particles, inflections) stay in Twi — a learning
+  /// aid, not a polished translation. Prefer a hand-authored `en` when one lands.
+  String literalGloss() =>
+      tokens.map((t) => gloss[normTwi(t)] ?? t).join(' ');
 }
 
 /// One item in a lesson's interleaved practice sequence.
@@ -80,11 +92,12 @@ List<LessonDrill> buildLessonDrills(UnitContent u, Random r, {int cap = 12}) {
 
   // ── Build the sentence: scramble an example (3–6 words) ──
   final builds = <LessonDrill>[];
+  final glossMap = {for (final g in u.glossary) normTwi(g.twi): g.en};
   for (final s in u.examples) {
     final toks =
         s.split(RegExp(r'\s+')).where((t) => t.trim().isNotEmpty).toList();
     if (toks.length >= 3 && toks.length <= 6) {
-      builds.add(LessonDrill.build(BuildDrill(toks, s)));
+      builds.add(LessonDrill.build(BuildDrill(toks, s, gloss: glossMap)));
     }
   }
 
