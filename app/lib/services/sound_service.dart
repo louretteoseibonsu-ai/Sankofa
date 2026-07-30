@@ -145,7 +145,7 @@ class SoundService {
       _musicFade?.cancel();
       _musicVol = 0.0;
       await _music.stop();
-      await _music.play(AssetSource('sfx/afrobeat_loop.wav'), volume: 0.0);
+      await _music.play(AssetSource('sfx/highlife_loop.wav'), volume: 0.0);
       _rampMusic(volume, const Duration(milliseconds: 650));
     } catch (_) {}
   }
