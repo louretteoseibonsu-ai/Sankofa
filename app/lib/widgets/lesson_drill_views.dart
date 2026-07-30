@@ -362,21 +362,6 @@ class _BuildDrillViewState extends State<BuildDrillView> {
                   _wordChip(_scrambled[i], onTap: () => _place(i)),
             ],
           ),
-          // On completion, reveal the sentence + a literal word-by-word gloss.
-          if (_finished) ...[
-            const SizedBox(height: 12),
-            Text(widget.data.audio,
-                style: const TextStyle(
-                    color: kVelvetInk,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 15)),
-            const SizedBox(height: 3),
-            Text('≈ ${widget.data.literalGloss()}',
-                style: const TextStyle(
-                    color: kVelvetMuted,
-                    fontSize: 13,
-                    fontStyle: FontStyle.italic)),
-          ],
         ],
       ),
     );
