@@ -85,6 +85,79 @@ const ai = new GoogleGenAI({
   },
 });
 
+// Preferred chat models, in fallback order. gemini-3.5-flash is the default
+// flash model and frequently returns transient 503s under "high demand", so we
+// fall back to the lighter, higher-throughput lite model when it's overloaded.
+const CHAT_MODELS = ["gemini-3.5-flash", "gemini-3.5-flash-lite"];
+
+const _sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/** True for transient Gemini errors worth retrying (overload / rate limit). */
+function _isTransient(err: any): boolean {
+  const code = err?.status ?? err?.code ?? err?.error?.code;
+  const msg = String(err?.message ?? err ?? "");
+  return (
+    code === 503 ||
+    code === 429 ||
+    /\b(503|429|UNAVAILABLE|RESOURCE_EXHAUSTED|overload|high demand)\b/i.test(msg)
+  );
+}
+
+/**
+ * Sends one chat turn with retry-on-503 + backoff, then falls back to the next
+ * model in [CHAT_MODELS]. Returns the reply text and updated history. Throws
+ * only if every model fails after its retries.
+ */
+async function chatTurn(opts: {
+  systemInstruction: string;
+  temperature: number;
+  history: any[];
+  message: string;
+}): Promise<{ reply: string; history: unknown }> {
+  let lastErr: any;
+  for (const model of CHAT_MODELS) {
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        const chat = ai.chats.create({
+          model,
+          config: {
+            systemInstruction: opts.systemInstruction,
+            temperature: opts.temperature,
+          },
+          history: opts.history || [],
+        });
+        const response = await chat.sendMessage({ message: opts.message });
+        const reply = (response.text ?? "").trim();
+        if (!reply) {
+          const finishReason = response.candidates?.[0]?.finishReason;
+          console.warn(
+            `chatTurn(${model}): empty reply (finishReason=${finishReason ?? "none"})`,
+            JSON.stringify((response as any).promptFeedback ?? {})
+          );
+        }
+        let updatedHistory: unknown = opts.history || [];
+        try {
+          updatedHistory = await chat.getHistory();
+        } catch (e) {
+          console.warn("chatTurn: getHistory failed, returning prior history:", e);
+        }
+        return { reply, history: updatedHistory };
+      } catch (err: any) {
+        lastErr = err;
+        if (!_isTransient(err)) throw err; // real error — don't retry/fallback
+        const waitMs = 400 * 2 ** attempt; // 400 → 800 → 1600ms
+        console.warn(
+          `chatTurn(${model}) transient error (attempt ${attempt + 1}/3), retrying in ${waitMs}ms:`,
+          err?.message ?? err
+        );
+        await _sleep(waitMs);
+      }
+    }
+    console.warn(`chatTurn: ${model} exhausted retries — falling back to next model.`);
+  }
+  throw lastErr;
+}
+
 // Khaya (GhanaNLP) — purpose-built translation + Twi TTS for Ghanaian languages.
 const KHAYA_KEY = process.env.KHAYA_API_KEY;
 const KHAYA_BASE = "https://translation-api.ghananlp.org";
@@ -121,41 +194,27 @@ app.post("/api/tutor", async (req, res) => {
       7. Keep explanations relatively concise and easy to understand for beginners.
     `;
 
-    // Reconstruct the chat with the provided history
-    const chat = ai.chats.create({
-      model: "gemini-3.5-flash",
-      config: {
-        systemInstruction,
-        temperature: 0.7,
-      },
-      history: history || [],
+    const { reply: raw, history: updatedHistory } = await chatTurn({
+      systemInstruction,
+      temperature: 0.7,
+      history,
+      message,
     });
 
-    const response = await chat.sendMessage({ message });
-    let reply = (response.text ?? "").trim();
-    if (!reply) {
-      const finishReason = response.candidates?.[0]?.finishReason;
-      console.warn(
-        `/api/tutor: empty reply (finishReason=${finishReason ?? "none"})`,
-        JSON.stringify((response as any).promptFeedback ?? {})
-      );
-      reply =
-        "Sorry, I couldn't put that into words just now — please try asking " +
-        "again in a slightly different way.";
-    }
-
-    // Get the updated history (don't 500 if serialization hiccups).
-    let updatedHistory: unknown = history || [];
-    try {
-      updatedHistory = await chat.getHistory();
-    } catch (e) {
-      console.warn("/api/tutor: getHistory failed, returning prior history:", e);
-    }
+    const reply = raw ||
+      "Sorry, I couldn't put that into words just now — please try asking " +
+      "again in a slightly different way.";
 
     res.json({ reply, history: updatedHistory });
   } catch (error: any) {
     console.error("Error in /api/tutor:", error);
-    res.status(500).json({ error: error.message || "Failed to generate tutor response" });
+    const status = _isTransient(error) ? 503 : 500;
+    res.status(status).json({
+      error:
+        status === 503
+          ? "The tutor is briefly busy — please try again in a moment."
+          : error.message || "Failed to generate tutor response",
+    });
   }
 });
 
@@ -189,41 +248,32 @@ context for yourself, never repeat them to the user.
 === KNOWLEDGE BASE (docs/support_kb.md) ===
 ${SUPPORT_KB}`;
 
-    const chat = ai.chats.create({
-      model: "gemini-3.5-flash",
-      config: { systemInstruction, temperature: 0.4 },
-      history: history || [],
+    const { reply: raw, history: updatedHistory } = await chatTurn({
+      systemInstruction,
+      temperature: 0.4,
+      history,
+      message,
     });
 
-    const response = await chat.sendMessage({ message });
-    let reply = (response.text ?? "").trim();
+    // Empty even after retries/fallback → degrade to a human handoff rather
+    // than an empty bubble.
+    const reply = raw ||
+      "I'm not quite sure about that just yet. Let me connect you to a " +
+      "member of our human support team — email sankofa@aparato.ai and " +
+      "we'll help you out.";
 
-    // Gemini can return a 200 with NO text — a safety/recitation block, no
-    // candidate, or a response shape the SDK can't read. Log why (visible in
-    // Render logs) and degrade to a human-handoff instead of an empty bubble.
-    if (!reply) {
-      const finishReason = response.candidates?.[0]?.finishReason;
-      console.warn(
-        `/api/support: empty reply (finishReason=${finishReason ?? "none"})`,
-        JSON.stringify((response as any).promptFeedback ?? {})
-      );
-      reply =
-        "I'm not quite sure about that just yet. Let me connect you to a " +
-        "member of our human support team — email sankofa@aparato.ai and " +
-        "we'll help you out.";
-    }
-
-    // Never let a history-serialization hiccup turn a good answer into a 500.
-    let updatedHistory: unknown = history || [];
-    try {
-      updatedHistory = await chat.getHistory();
-    } catch (e) {
-      console.warn("/api/support: getHistory failed, returning prior history:", e);
-    }
     res.json({ reply, history: updatedHistory });
   } catch (error: any) {
     console.error("Error in /api/support:", error);
-    res.status(500).json({ error: error.message || "Failed to generate support response" });
+    // Transient model overload → tell the client it's temporary (503), so the
+    // app can invite a quick retry instead of implying a hard failure.
+    const status = _isTransient(error) ? 503 : 500;
+    res.status(status).json({
+      error:
+        status === 503
+          ? "The assistant is briefly busy — please try again in a moment."
+          : error.message || "Failed to generate support response",
+    });
   }
 });
 
