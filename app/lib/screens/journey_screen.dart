@@ -6,12 +6,10 @@ import '../data/family_lines.dart';
 import '../data/journey_state.dart';
 import '../data/landmark.dart';
 import '../data/lesson_catalog.dart';
-import '../data/trotro_cosmetics.dart';
+import '../data/cosmetic_state.dart';
 import '../services/progress_service.dart';
-import '../services/sound_service.dart';
 import '../theme.dart';
 import '../widgets/celebration.dart';
-import '../widgets/composable_trotro.dart';
 import '../widgets/avatar_badge.dart';
 import '../widgets/campaign_banner.dart';
 import '../widgets/greeting.dart';
@@ -22,7 +20,6 @@ import '../widgets/skeleton.dart';
 import '../widgets/state_message.dart';
 import '../widgets/tappable_scale.dart';
 import '../widgets/velvet.dart';
-import '../widgets/trotro_mascot.dart';
 import 'customization_shop_screen.dart';
 import 'reading_screen.dart';
 import 'dialogue_boss_screen.dart';
@@ -36,6 +33,9 @@ const Color _roadGold = Color(0xFFE3A92C); // kente centre thread
 const Color _roadMuted = Color(0xFF3A322C); // locked road ahead (velvet)
 const Color _mutedDot = Color(0xFF52463C);
 const Color _doneGreen = Color(0xFF2E6B3B);
+
+/// The player-avatar's travel animation phase along the journey road.
+enum JourneyPhase { idle, drive, arrive }
 
 // (The old per-zone/per-Act road palettes were retired when the road moved to a
 // single sculpted terracotta+ochre treatment in _RoadPainter.)
@@ -79,9 +79,8 @@ class _JourneyScreenState extends State<JourneyScreen>
   bool _loading = true;
 
   int _displayIndex = 0;
-  TroTroState _troState = TroTroState.idle;
-  TroTroSkin _skin = const TroTroSkin(); // kept for the equipped horn sound
-  Map<String, String> _equipped = const {}; // cosmetics for the layered avatar
+  JourneyPhase _troState = JourneyPhase.idle;
+  Map<String, String> _equipped = const {}; // holds the equipped avatar id
   Set<String> _avatarsUnlocked = const {}; // family bought early with shards
   String? _familyLine; // a greeting nudge in the equipped guide's voice
   bool _firstLoad = true;
@@ -136,7 +135,6 @@ class _JourneyScreenState extends State<JourneyScreen>
     setState(() {
       _p = p;
       _stats = stats;
-      _skin = TroTroSkin.fromEquipped(cos.equipped);
       _equipped = cos.equipped;
       _avatarsUnlocked = cos.avatarsUnlocked;
       _familyLine = FamilyLines.greeting(cos.equipped['avatar']);
@@ -162,28 +160,27 @@ class _JourneyScreenState extends State<JourneyScreen>
       }
       // Cleared a stop: drive up the road to the newly unlocked one.
       setState(() {
-        _troState = TroTroState.drive;
+        _troState = JourneyPhase.drive;
         _displayIndex = newCurrent;
       });
       await Future.delayed(const Duration(milliseconds: 950));
       if (!mounted) return;
-      setState(() => _troState = TroTroState.arrive);
-      SoundService.instance.horn(_skin.horn); // equipped horn honks on arrival
+      setState(() => _troState = JourneyPhase.arrive);
       HapticFeedback.mediumImpact();
       await Future.delayed(const Duration(milliseconds: 800));
       if (!mounted) return;
-      setState(() => _troState = TroTroState.idle);
+      setState(() => _troState = JourneyPhase.idle);
     } else {
       setState(() => _displayIndex = newCurrent);
     }
   }
 
-  /// "Warp to the new stop": arcs a clone of the customised bus from its parked
+  /// "Warp to the new stop": arcs a clone of the family avatar from its parked
   /// spot to the freshly unlocked region's stop via [OverlayFlight], then lands.
   Future<void> _warpToStop(int target) async {
     // Attach the flight-target key to the destination node and let it build.
     setState(() {
-      _troState = TroTroState.idle;
+      _troState = JourneyPhase.idle;
       _warpTarget = target;
     });
     await WidgetsBinding.instance.endOfFrame;
@@ -205,13 +202,12 @@ class _JourneyScreenState extends State<JourneyScreen>
     );
     if (!mounted) return;
 
-    // Land: drop the clone, park the real bus at the new stop, honk.
+    // Land: drop the clone, park the avatar at the new stop.
     setState(() {
       _flying = false;
       _warpTarget = null;
       _displayIndex = target;
     });
-    SoundService.instance.horn(_skin.horn);
     HapticFeedback.mediumImpact();
 
     // A new region is a real milestone — celebrate it by name.
@@ -358,7 +354,7 @@ class _JourneyScreenState extends State<JourneyScreen>
   void _pushCompound() {
     Navigator.of(context)
         .push(MaterialPageRoute(
-            builder: (_) => CustomizationShopScreen(initialSkin: _skin)))
+            builder: (_) => const CustomizationShopScreen()))
         .then((_) {
       if (mounted) setState(() => _flying = false);
       _reload();
@@ -694,7 +690,7 @@ class _JourneyScreenState extends State<JourneyScreen>
                                   animation: _driveBob,
                                   builder: (_, __) {
                                     final driving =
-                                        _troState == TroTroState.drive;
+                                        _troState == JourneyPhase.drive;
                                     final wave = Curves.easeInOut
                                         .transform(_driveBob.value);
                                     final bob = (driving ? 6.0 : 2.5) * wave;

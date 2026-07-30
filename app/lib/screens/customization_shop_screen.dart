@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import '../data/avatar.dart';
 import '../data/blind_box_data.dart';
-import '../data/trotro_cosmetics.dart';
+import '../data/cosmetic_state.dart';
 import '../services/progress_service.dart';
 import '../services/sound_service.dart';
 import '../theme.dart';
 import '../widgets/avatar_carousel.dart';
 import '../widgets/blind_box.dart';
-import '../widgets/composable_trotro.dart';
 import '../widgets/kente_shard.dart';
 import '../widgets/state_message.dart';
 import '../widgets/surface.dart';
@@ -16,10 +15,7 @@ import '../widgets/velvet.dart';
 /// "The Compound" — your family home: choose and unlock the Super Family
 /// characters, and spend Golden Kente shards on the Ananse blind box + collection.
 class CustomizationShopScreen extends StatefulWidget {
-  /// The skin to show instantly (from the map) so the Hero flight has a
-  /// destination before the async cosmetics load finishes.
-  final TroTroSkin? initialSkin;
-  const CustomizationShopScreen({super.key, this.initialSkin});
+  const CustomizationShopScreen({super.key});
 
   @override
   State<CustomizationShopScreen> createState() =>

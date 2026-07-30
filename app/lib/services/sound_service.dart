@@ -5,7 +5,7 @@ import 'package:audioplayers/audioplayers.dart';
 /// HapticFeedback for a premium, tactile feel.
 ///
 /// Channels:
-///  • [_ui]    — the single-shot UI player (correct/complete/tap/horn). Each
+///  • [_ui]    — the single-shot UI player (correct/complete/tap). Each
 ///               call stops the previous, so quick UI blips never pile up.
 ///  • [_fxPool] — a small round-robin pool for the unboxing one-shots (tap,
 ///               tick, burst, reveal, collect) so LAYERED cues can ring out at
@@ -70,18 +70,6 @@ class SoundService {
   Future<void> correct() => _play('correct.wav', 0.55);
   Future<void> complete() => _play('complete.wav', 0.6);
   Future<void> tap() => _play('tap.wav', 0.35);
-
-  /// Plays the tro tro's equipped horn (cosmetic). Falls back to the vroom.
-  Future<void> horn(String hornId) {
-    switch (hornId) {
-      case 'horn_honk':
-        return _play('horn_honk.wav', 0.5);
-      case 'horn_afro':
-        return _play('horn_afro.wav', 0.5);
-      default:
-        return _play('horn_vroom.wav', 0.5);
-    }
-  }
 
   // ── Blind-box unboxing cues (synced to the 4-phase timeline) ────────────
   /// Phase 1 — the box is tapped/opened: a crisp pickup pop.

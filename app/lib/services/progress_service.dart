@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../data/avatar.dart';
 import '../data/blind_box_data.dart';
 import '../data/lesson_catalog.dart';
-import '../data/trotro_cosmetics.dart';
+import '../data/cosmetic_state.dart';
 import 'stats_notifier.dart';
 
 /// Score (out of 10) needed to pass a lesson and unlock the next.
@@ -450,25 +450,21 @@ class ProgressService {
     return true;
   }
 
-  // ── Family cosmetics (the Compound market stall) ────────────────────────
+  // ── Family avatar state (the Compound) ──────────────────────────────────
 
-  /// Loads the user's owned + equipped cosmetics (defaults always owned).
+  /// Loads the equipped family avatar + the members unlocked early with shards.
   Future<CosmeticState> loadCosmetics() async {
     final uid = _uid;
-    if (uid == null) return CosmeticState({...kDefaultOwned}, {});
+    if (uid == null) return CosmeticState.empty;
     final doc = await _db.collection('users').doc(uid).get();
     final data = doc.data() ?? {};
-    final owned = {
-      ...kDefaultOwned,
-      ...((data['cosmeticsOwned'] as List?)?.cast<String>() ?? const [])
-    };
     final eqRaw =
         (data['cosmeticEquipped'] as Map?)?.cast<String, dynamic>() ?? {};
     final equipped = eqRaw.map((k, v) => MapEntry(k, v.toString()));
     final unlocked =
         ((data['avatarsUnlocked'] as List?)?.cast<String>() ?? const [])
             .toSet();
-    return CosmeticState(owned, equipped, avatarsUnlocked: unlocked);
+    return CosmeticState(equipped: equipped, avatarsUnlocked: unlocked);
   }
 
   /// Spends shards to unlock a family member early (before its milestone) and
@@ -488,51 +484,12 @@ class ProgressService {
     return true;
   }
 
-  /// Spends shards to buy [item], then auto-equips it. Returns false if the
-  /// user can't afford it. Defaults (cost 0) never need buying.
-  Future<bool> buyCosmetic(ShopItem item) async {
-    final uid = _uid;
-    if (uid == null) return false;
-    if (item.isDefault) {
-      await equipCosmetic(item.category, item.id);
-      return true;
-    }
-    final ref = _db.collection('users').doc(uid);
-    final doc = await ref.get();
-    final shards = (doc.data()?['shards'] as num?)?.toInt() ?? 0;
-    if (shards < item.costShards) return false;
-    await ref.set({
-      'shards': FieldValue.increment(-item.costShards),
-      'cosmeticsOwned': FieldValue.arrayUnion([item.id]),
-      'cosmeticEquipped': {item.category: item.id}, // deep-merged
-    }, SetOptions(merge: true));
-    return true;
-  }
-
-  /// Equips an already-owned cosmetic in its category.
-  Future<void> equipCosmetic(String category, String id) async {
-    final uid = _uid;
-    if (uid == null) return;
-    await _db.collection('users').doc(uid).set({
-      'cosmeticEquipped': {category: id},
-    }, SetOptions(merge: true));
-  }
-
   /// Equips a player avatar (persisted in cosmeticEquipped.avatar).
   Future<void> equipAvatar(String id) async {
     final uid = _uid;
     if (uid == null) return;
     await _db.collection('users').doc(uid).set({
       'cosmeticEquipped': {'avatar': id},
-    }, SetOptions(merge: true));
-  }
-
-  /// Saves the chosen tro tro body-colour palette index (free — swap any time).
-  Future<void> equipBodyColor(int index) async {
-    final uid = _uid;
-    if (uid == null) return;
-    await _db.collection('users').doc(uid).set({
-      'cosmeticEquipped': {'bodyColor': index.toString()},
     }, SetOptions(merge: true));
   }
 
