@@ -27,6 +27,7 @@ import 'customization_shop_screen.dart';
 import 'reading_screen.dart';
 import 'dialogue_boss_screen.dart';
 import 'lesson_quiz_screen.dart';
+import 'upgrade_screen.dart';
 import 'time_attack_screen.dart';
 
 // Road / map palette.
@@ -224,6 +225,13 @@ class _JourneyScreenState extends State<JourneyScreen>
   }
 
   Future<void> _open(Lesson l) async {
+    // Premium-gated course → send free users to upgrade instead of the lesson.
+    if (lessonIsPremium(l.id) && !_stats.premium) {
+      await Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => const UpgradeScreen()));
+      _reload();
+      return;
+    }
     // A cleared, non-boss stop has "evolved" — offer Replay or Mastery.
     if (!_bossIds.contains(l.id) && _p.passed(l.id)) {
       await _openClearedSheet(l);

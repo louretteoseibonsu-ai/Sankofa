@@ -342,12 +342,16 @@ class Course {
   final String blurb;
   final IconData icon;
   final List<String> categoryIds;
+
+  /// Premium-gated: free users can preview but must upgrade to play its lessons.
+  final bool premium;
   const Course({
     required this.id,
     required this.name,
     required this.blurb,
     required this.icon,
     required this.categoryIds,
+    this.premium = false,
   });
 
   List<LessonCategory> get categories => [
@@ -356,6 +360,14 @@ class Course {
       ];
 
   List<Lesson> get lessons => [for (final c in categories) ...c.lessons];
+}
+
+/// True if [lessonId] belongs to a Premium-gated course.
+bool lessonIsPremium(String lessonId) {
+  final l = kLessonsFlat.firstWhere((x) => x.id == lessonId,
+      orElse: () => kLessonsFlat.first);
+  return kCourses
+      .any((c) => c.premium && c.categoryIds.contains(l.categoryId));
 }
 
 const List<Course> kCourses = [
@@ -372,6 +384,7 @@ const List<Course> kCourses = [
     blurb: 'The city adventure — market, transit, kitchen, and more.',
     icon: Icons.wb_sunny_outlined,
     categoryIds: ['shopping', 'travel', 'dining', 'hobbies', 'dailylife'],
+    premium: true,
   ),
   Course(
     id: 'people',
@@ -386,6 +399,7 @@ const List<Course> kCourses = [
       'culture',
       'heritage'
     ],
+    premium: true,
   ),
   Course(
     id: 'arts',
@@ -393,6 +407,7 @@ const List<Course> kCourses = [
     blurb: 'Music, stories, screen, and visual arts in Twi.',
     icon: Icons.palette_outlined,
     categoryIds: ['music', 'books', 'movies', 'visualarts'],
+    premium: true,
   ),
 ];
 

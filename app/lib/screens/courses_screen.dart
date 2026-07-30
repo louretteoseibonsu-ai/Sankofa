@@ -5,6 +5,7 @@ import '../theme.dart';
 import '../widgets/velvet.dart';
 import '../widgets/floating_card.dart';
 import 'lesson_quiz_screen.dart';
+import 'upgrade_screen.dart';
 import 'tools_hub_screen.dart' show velvetToolsTheme;
 
 double _courseMastery(Course c, Progress p) {
@@ -114,11 +115,44 @@ class _CourseCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(course.name,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 17,
-                            color: kVelvetInk)),
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(course.name,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 17,
+                                  color: kVelvetInk)),
+                        ),
+                        if (course.premium) ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 7, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFE3A92C).withValues(alpha: 0.18),
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(color: const Color(0xFFE3A92C)),
+                            ),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.workspace_premium_rounded,
+                                    size: 12, color: Color(0xFFE3A92C)),
+                                SizedBox(width: 3),
+                                Text('PREMIUM',
+                                    style: TextStyle(
+                                        color: Color(0xFFE3A92C),
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 9.5,
+                                        letterSpacing: 0.5)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
                     Text('$passed / ${lessons.length} lessons passed',
                         style: const TextStyle(color: kVelvetMuted, fontSize: 12.5)),
                   ],
@@ -164,6 +198,7 @@ class CourseDetailScreen extends StatefulWidget {
 class _CourseDetailScreenState extends State<CourseDetailScreen> {
   final _service = ProgressService();
   Progress _p = Progress.empty;
+  bool _premium = false;
   bool _loading = true;
 
   @override
@@ -173,15 +208,23 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
   }
 
   Future<void> _reload() async {
-    final p = await _service.load();
+    final stats = await _service.loadStats();
     if (!mounted) return;
     setState(() {
-      _p = p;
+      _p = stats.progress;
+      _premium = stats.premium;
       _loading = false;
     });
   }
 
   Future<void> _openLesson(Lesson l) async {
+    // Premium-gated course → free users go to the upgrade screen.
+    if (lessonIsPremium(l.id) && !_premium) {
+      await Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => const UpgradeScreen()));
+      _reload();
+      return;
+    }
     await Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => LessonQuizScreen(lesson: l)),
     );
