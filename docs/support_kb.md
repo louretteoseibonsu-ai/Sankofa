@@ -216,6 +216,9 @@ go (great when travelling in Ghana).
   credit.
 
 ### Pedis (soft currency)
+- **Pedis** are the app's everyday soft currency (the coin counter labelled
+  "pedis" in your Progress wallet). Distinct from **Golden Kente shards**, the
+  rarer mastery currency.
 - **Earn** pedis by completing lessons, keeping streaks, and saving first finds
   in Lens.
 - **Spend** pedis on: AI credit top-ups and streak freezes (50). *(Family

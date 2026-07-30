@@ -75,7 +75,7 @@ class TroTroDashboard extends StatelessWidget {
                     icon: Icons.monetization_on_rounded,
                     color: _gold,
                     value: tokens,
-                    label: 'tokens'),
+                    label: 'pedis'),
               ),
               const SizedBox(width: 10),
               Expanded(
