@@ -132,10 +132,25 @@ app.post("/api/tutor", async (req, res) => {
     });
 
     const response = await chat.sendMessage({ message });
-    const reply = response.text;
+    let reply = (response.text ?? "").trim();
+    if (!reply) {
+      const finishReason = response.candidates?.[0]?.finishReason;
+      console.warn(
+        `/api/tutor: empty reply (finishReason=${finishReason ?? "none"})`,
+        JSON.stringify((response as any).promptFeedback ?? {})
+      );
+      reply =
+        "Sorry, I couldn't put that into words just now — please try asking " +
+        "again in a slightly different way.";
+    }
 
-    // Get the updated history
-    const updatedHistory = await chat.getHistory();
+    // Get the updated history (don't 500 if serialization hiccups).
+    let updatedHistory: unknown = history || [];
+    try {
+      updatedHistory = await chat.getHistory();
+    } catch (e) {
+      console.warn("/api/tutor: getHistory failed, returning prior history:", e);
+    }
 
     res.json({ reply, history: updatedHistory });
   } catch (error: any) {
@@ -181,8 +196,30 @@ ${SUPPORT_KB}`;
     });
 
     const response = await chat.sendMessage({ message });
-    const reply = response.text;
-    const updatedHistory = await chat.getHistory();
+    let reply = (response.text ?? "").trim();
+
+    // Gemini can return a 200 with NO text — a safety/recitation block, no
+    // candidate, or a response shape the SDK can't read. Log why (visible in
+    // Render logs) and degrade to a human-handoff instead of an empty bubble.
+    if (!reply) {
+      const finishReason = response.candidates?.[0]?.finishReason;
+      console.warn(
+        `/api/support: empty reply (finishReason=${finishReason ?? "none"})`,
+        JSON.stringify((response as any).promptFeedback ?? {})
+      );
+      reply =
+        "I'm not quite sure about that just yet. Let me connect you to a " +
+        "member of our human support team — email sankofa@aparato.ai and " +
+        "we'll help you out.";
+    }
+
+    // Never let a history-serialization hiccup turn a good answer into a 500.
+    let updatedHistory: unknown = history || [];
+    try {
+      updatedHistory = await chat.getHistory();
+    } catch (e) {
+      console.warn("/api/support: getHistory failed, returning prior history:", e);
+    }
     res.json({ reply, history: updatedHistory });
   } catch (error: any) {
     console.error("Error in /api/support:", error);
