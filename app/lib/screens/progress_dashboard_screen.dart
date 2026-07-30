@@ -9,6 +9,8 @@ import '../widgets/velvet.dart';
 import '../widgets/pedis_store.dart';
 import '../widgets/tappable_scale.dart';
 import '../widgets/trotro_dashboard.dart';
+import '../widgets/streak_calendar.dart';
+import '../widgets/streak_goal_card.dart';
 import 'customization_shop_screen.dart';
 import 'lesson_quiz_screen.dart';
 import 'trotro_rally_screen.dart';
@@ -61,6 +63,40 @@ class _ProgressDashboardScreenState extends State<ProgressDashboardScreen> {
       _s = s;
       _loading = false;
     });
+  }
+
+  Future<void> _useFreeze() async {
+    final ok = await _service.repairStreakWithFreeze();
+    if (!mounted) return;
+    if (ok) {
+      await _reload();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        backgroundColor: Color(0xFF14202B),
+        content: Row(children: [
+          Icon(Icons.ac_unit_rounded, color: Color(0xFF6FA8DC), size: 18),
+          SizedBox(width: 8),
+          Text('Freeze used — streak saved!',
+              style: TextStyle(fontWeight: FontWeight.w700)),
+        ]),
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Couldn't repair the streak right now."),
+      ));
+    }
+  }
+
+  Future<void> _setGoal(int days) async {
+    await _service.setStreakGoal(days);
+    if (!mounted) return;
+    await _reload();
+    if (!mounted || days == 0) return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      backgroundColor: const Color(0xFF2A211C),
+      content: Text('Committed to a $days-day streak. You’ve got this!',
+          style: const TextStyle(fontWeight: FontWeight.w700)),
+    ));
   }
 
   Widget _dashPill(IconData icon, String label) => Container(
@@ -131,6 +167,26 @@ class _ProgressDashboardScreenState extends State<ProgressDashboardScreen> {
                       builder: (_) => LessonQuizScreen(lesson: l)))
                   .then((_) => _reload());
             },
+          ),
+          const SizedBox(height: 10),
+
+          // 7-day streak calendar — practised / frozen / missed, with a
+          // freeze-repair CTA when a recent miss can still be plugged.
+          StreakCalendar(
+            activeDays: _s.activeDays,
+            frozenDays: _s.frozenDays,
+            streak: _s.streak,
+            freezes: _s.freezes,
+            repairableStreak: _s.repairableStreak,
+            onUseFreeze: _useFreeze,
+          ),
+          const SizedBox(height: 10),
+
+          // Commit to a 7/14/21/28-day streak goal (or skip).
+          StreakGoalCard(
+            streak: _s.streak,
+            streakGoal: _s.streakGoal,
+            onCommit: _setGoal,
           ),
           const SizedBox(height: 10),
           Row(

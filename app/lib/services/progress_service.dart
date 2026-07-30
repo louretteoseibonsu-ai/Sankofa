@@ -106,6 +106,9 @@ class Stats {
   final int shards; // Golden Kente shards — mastery currency for cosmetics
   final bool practicedToday; // has the user studied today? (fuel topped up)
   final Set<String> mastered; // lesson ids cleared at Mastery (perfect run)
+  final Set<String> activeDays; // day-keys the user practiced on
+  final Set<String> frozenDays; // day-keys covered by a streak freeze
+  final int streakGoal; // committed target (7/14/21/28); 0 = none
   const Stats({
     required this.progress,
     required this.streak,
@@ -120,6 +123,9 @@ class Stats {
     this.shards = 0,
     this.practicedToday = false,
     this.mastered = const {},
+    this.activeDays = const {},
+    this.frozenDays = const {},
+    this.streakGoal = 0,
   });
 
   /// The streak exists but today's fuel hasn't been topped up yet — a gentle
@@ -274,6 +280,21 @@ class ProgressService {
       practicedToday: lastActive == today,
       mastered: ((data['masteredLessons'] as List?)?.cast<String>() ?? const [])
           .toSet(),
+      activeDays:
+          ((data['activeDays'] as List?)?.cast<String>() ?? const []).toSet(),
+      frozenDays:
+          ((data['frozenDays'] as List?)?.cast<String>() ?? const []).toSet(),
+      streakGoal: (data['streakGoal'] as num?)?.toInt() ?? 0,
+    );
+  }
+
+  /// Commit to (or clear, with 0) a streak goal of 7/14/21/28 days.
+  Future<void> setStreakGoal(int days) async {
+    final uid = _uid;
+    if (uid == null) return;
+    await _db.collection('users').doc(uid).set(
+      {'streakGoal': days},
+      SetOptions(merge: true),
     );
   }
 
@@ -343,6 +364,43 @@ class ProgressService {
           'lastActive': yesterday, // streak now continues from today
         }, SetOptions(merge: true));
         streakNotifier.value = storedStreak; // fuel gauge back to full
+        return true;
+      });
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Spends one streak freeze to plug a recently-missed day and keep the streak.
+  /// Marks the missed day(s) as frozen (for the calendar) and re-stamps
+  /// `lastActive` to yesterday so the stored streak continues from today.
+  Future<bool> repairStreakWithFreeze() async {
+    final uid = _uid;
+    if (uid == null) return false;
+    final ref = _db.collection('users').doc(uid);
+    final now = DateTime.now();
+    final yesterday = _dayKey(now.subtract(const Duration(days: 1)));
+    final twoDaysAgo = _dayKey(now.subtract(const Duration(days: 2)));
+    final threeDaysAgo = _dayKey(now.subtract(const Duration(days: 3)));
+    try {
+      return await _db.runTransaction<bool>((tx) async {
+        final snap = await tx.get(ref);
+        final data = snap.data() ?? {};
+        final freezes = (data['freezes'] as num?)?.toInt() ?? 0;
+        final storedStreak = (data['streak'] as num?)?.toInt() ?? 0;
+        final lastActive = data['lastActive'] as String?;
+        final repairable = storedStreak > 0 &&
+            (lastActive == twoDaysAgo || lastActive == threeDaysAgo);
+        if (!repairable || freezes < 1) return false;
+        // Plug the missed day(s) between lastActive and today.
+        final missed = <String>[yesterday];
+        if (lastActive == threeDaysAgo) missed.add(twoDaysAgo);
+        tx.set(ref, {
+          'freezes': FieldValue.increment(-1),
+          'lastActive': yesterday, // streak continues from today
+          'frozenDays': FieldValue.arrayUnion(missed),
+        }, SetOptions(merge: true));
+        streakNotifier.value = storedStreak;
         return true;
       });
     } catch (_) {
@@ -612,6 +670,7 @@ class ProgressService {
       'level': updated.level,
       'streak': streak,
       'lastActive': today,
+      'activeDays': FieldValue.arrayUnion([today]),
       'dailyDate': today,
       'dailyLessons': dailyLessons,
       'dailyXp': dailyXp,
