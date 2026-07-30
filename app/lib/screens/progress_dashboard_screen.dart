@@ -11,7 +11,7 @@ import '../widgets/tappable_scale.dart';
 import '../widgets/trotro_dashboard.dart';
 import '../widgets/streak_calendar.dart';
 import '../widgets/streak_goal_card.dart';
-import 'customization_shop_screen.dart';
+import 'compound_screen.dart';
 import 'lesson_quiz_screen.dart';
 import 'trotro_rally_screen.dart';
 import 'upgrade_screen.dart';
@@ -203,7 +203,7 @@ class _ProgressDashboardScreenState extends State<ProgressDashboardScreen> {
                 child: TappableScale(
                   onTap: () async {
                     await Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => const CustomizationShopScreen()));
+                        builder: (_) => const CompoundScreen()));
                     _reload();
                   },
                   child: _dashPill(Icons.groups_rounded, 'Compound'),

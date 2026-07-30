@@ -14,15 +14,15 @@ import '../widgets/velvet.dart';
 
 /// "The Compound" — your family home: choose and unlock the Super Family
 /// characters, and spend Golden Kente shards on the Ananse blind box + collection.
-class CustomizationShopScreen extends StatefulWidget {
-  const CustomizationShopScreen({super.key});
+class CompoundScreen extends StatefulWidget {
+  const CompoundScreen({super.key});
 
   @override
-  State<CustomizationShopScreen> createState() =>
-      _CustomizationShopScreenState();
+  State<CompoundScreen> createState() =>
+      _CompoundScreenState();
 }
 
-class _CustomizationShopScreenState extends State<CustomizationShopScreen> {
+class _CompoundScreenState extends State<CompoundScreen> {
   final _service = ProgressService();
   CosmeticState _cos = CosmeticState.empty;
   Stats _stats = Stats.empty;

@@ -20,7 +20,7 @@ import '../widgets/skeleton.dart';
 import '../widgets/state_message.dart';
 import '../widgets/tappable_scale.dart';
 import '../widgets/velvet.dart';
-import 'customization_shop_screen.dart';
+import 'compound_screen.dart';
 import 'reading_screen.dart';
 import 'dialogue_boss_screen.dart';
 import 'lesson_quiz_screen.dart';
@@ -354,7 +354,7 @@ class _JourneyScreenState extends State<JourneyScreen>
   void _pushCompound() {
     Navigator.of(context)
         .push(MaterialPageRoute(
-            builder: (_) => const CustomizationShopScreen()))
+            builder: (_) => const CompoundScreen()))
         .then((_) {
       if (mounted) setState(() => _flying = false);
       _reload();

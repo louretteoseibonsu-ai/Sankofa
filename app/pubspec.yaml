@@ -37,14 +37,7 @@ flutter:
     - assets/content/
     - assets/sfx/
     - assets/audio/
-    - assets/mascot/
-    - assets/mascot/stageclear/
-    - assets/mascot/trotro/
-    - assets/mascot/trotro_gameplay/      # gameplay bus (map, garage, rally)
-    - assets/mascot/trotro_gameplay/kente/   # roof-kente trim cosmetics
     # Accessory layers — uncomment each folder once you add its PNGs:
-    # - assets/mascot/trotro_gameplay/rim/
-    # - assets/mascot/trotro_gameplay/roof/
     - assets/avatars/       # Super Family avatar portraits
     - assets/celebrations/  # per-character celebration video loops
     - assets/blindbox/      # Ananse calabash unboxing render beats
