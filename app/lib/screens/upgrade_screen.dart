@@ -3,6 +3,8 @@ import '../config.dart';
 import '../services/auth_service.dart';
 import '../services/currency_service.dart';
 import '../theme.dart';
+import '../widgets/velvet.dart';
+import 'tools_hub_screen.dart' show velvetToolsTheme;
 
 const Color _gold = Color(0xFFE3A92C);
 
@@ -56,7 +58,9 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
         ? 'save ~28%  ·  ${cur.format(59.99 / 12)} / month'
         : 'billed monthly';
 
-    return Scaffold(
+    return Theme(
+      data: velvetToolsTheme(context),
+      child: Scaffold(
       appBar: AppBar(title: const Text('Go Premium')),
       body: ListView(
         padding: const EdgeInsets.all(20),
@@ -78,19 +82,20 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
           const Text('Sankofa Premium',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontWeight: FontWeight.w800, fontSize: 24, color: ink)),
+                  fontWeight: FontWeight.w800, fontSize: 24, color: kVelvetInk)),
           const SizedBox(height: 4),
           const Text('Unlock the full journey to fluency.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: slate, fontSize: 14)),
+              style: TextStyle(color: kVelvetMuted, fontSize: 14)),
           const SizedBox(height: 18),
 
           // 7-day trial banner
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             decoration: BoxDecoration(
-              color: const Color(0xFFFBF1D8),
+              color: const Color(0xFF2A2113),
               borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: _gold.withValues(alpha: 0.4)),
             ),
             child: const Row(
               children: [
@@ -99,7 +104,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
                 Expanded(
                   child: Text('Start with a 7-day free trial — cancel anytime.',
                       style: TextStyle(
-                          color: Color(0xFF8A6A12),
+                          color: _gold,
                           fontWeight: FontWeight.w700,
                           fontSize: 13)),
                 ),
@@ -123,7 +128,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
           Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: const Color(0xFF211B17),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: _gold, width: 2),
             ),
@@ -138,27 +143,27 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
                         style: const TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 30,
-                            color: ink)),
+                            color: kVelvetInk)),
                     const SizedBox(width: 4),
                     Text(per,
-                        style: const TextStyle(color: slate, fontSize: 15)),
+                        style: const TextStyle(color: kVelvetMuted, fontSize: 15)),
                     const Spacer(),
                     if (_annual)
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                            color: const Color(0xFFEAF3EC),
+                            color: const Color(0xFF17281C),
                             borderRadius: BorderRadius.circular(8)),
                         child: const Text('Best value',
                             style: TextStyle(
-                                color: Color(0xFF2E6B3B),
+                                color: Color(0xFF63C583),
                                 fontWeight: FontWeight.w800,
                                 fontSize: 11)),
                       ),
                   ],
                 ),
-                Text(sub, style: const TextStyle(color: slate, fontSize: 12)),
+                Text(sub, style: const TextStyle(color: kVelvetMuted, fontSize: 12)),
                 const SizedBox(height: 14),
                 for (final p in _perks)
                   Padding(
@@ -172,7 +177,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
                         Expanded(
                             child: Text(p,
                                 style: const TextStyle(
-                                    color: ink, fontSize: 13.5, height: 1.35))),
+                                    color: kVelvetInk, fontSize: 13.5, height: 1.35))),
                       ],
                     ),
                   ),
@@ -199,7 +204,7 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
             const SizedBox(height: 8),
             const Center(
               child: Text('Payment plans launch soon — check back shortly.',
-                  style: TextStyle(color: slate, fontSize: 12)),
+                  style: TextStyle(color: kVelvetMuted, fontSize: 12)),
             ),
           ],
           const SizedBox(height: 10),
@@ -216,10 +221,10 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
               '7-day trial, your subscription renews automatically until '
               'cancelled — manage anytime in your app-store account settings.',
               textAlign: TextAlign.center,
-              style: const TextStyle(color: slate, fontSize: 11, height: 1.4)),
+              style: const TextStyle(color: kVelvetMuted, fontSize: 11, height: 1.4)),
           const SizedBox(height: 24),
         ],
       ),
-    );
+    ));
   }
 }
