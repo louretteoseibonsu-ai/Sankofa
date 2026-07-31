@@ -34,24 +34,10 @@ class _DayNameScreenState extends State<DayNameScreen> {
       initialDate: _date ?? DateTime(now.year - 20),
       firstDate: DateTime(1900),
       lastDate: now,
-      builder: _velvetCalendar,
+      builder: velvetPickerBuilder,
     );
     if (picked != null) setState(() => _date = picked);
   }
-
-  /// A coherent velvet-dark calendar so the picker isn't rendered with the
-  /// half-dark Tools colour scheme (which broke it).
-  static Widget _velvetCalendar(BuildContext context, Widget? child) => Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.dark(
-            primary: kOchre,
-            onPrimary: Color(0xFF17130F),
-            surface: Color(0xFF211B17),
-            onSurface: kVelvetInk,
-          ),
-        ),
-        child: child!,
-      );
 
   Future<void> _useAsDisplayName(String name) async {
     if (FirebaseAuth.instance.currentUser == null) {

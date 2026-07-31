@@ -200,25 +200,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       firstDate: DateTime(1900),
       lastDate: now,
       helpText: 'Select your date of birth',
-      // Force the dialog fully dark. A partial theme leaves the M3 date picker
-      // on the light surface roles (pink bg + invisible day numbers), so give
-      // it a complete dark ColorScheme.
-      builder: (ctx, child) => Theme(
-        data: Theme.of(ctx).copyWith(
-          colorScheme: const ColorScheme.dark(
-            primary: kOchre, // selected-day circle + header accent
-            onPrimary: Color(0xFF1F1912),
-            surface: Color(0xFF221C17), // dialog background
-            onSurface: kVelvetInk, // day numbers + labels
-          ),
-          datePickerTheme: const DatePickerThemeData(
-            backgroundColor: Color(0xFF221C17),
-            headerBackgroundColor: Color(0xFF221C17),
-            headerForegroundColor: kVelvetInk,
-          ),
-        ),
-        child: child!,
-      ),
+      // Shared full-dark picker theme (a partial theme leaves the M3 picker on
+      // light surface roles → pale bg + invisible day numbers).
+      builder: velvetPickerBuilder,
     );
     if (picked != null) setState(() => _dob = picked);
   }

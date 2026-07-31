@@ -121,3 +121,26 @@ TextStyle microLabel({Color color = kVelvetMuted}) => displayFont(
       letterSpacing: 2.2,
       height: 1.0,
     );
+
+/// A complete dark theme for Material date/time picker dialogs. Pass as the
+/// `builder:` of `showDatePicker`/`showTimePicker` so the picker never falls
+/// back to the light M3 surface roles (pale background + invisible day numbers).
+Widget velvetPickerBuilder(BuildContext context, Widget? child) => Theme(
+      data: Theme.of(context).copyWith(
+        colorScheme: const ColorScheme.dark(
+          primary: kOchre, // selected-day circle + header accent
+          onPrimary: Color(0xFF17130F),
+          surface: Color(0xFF211B17), // dialog background
+          onSurface: kVelvetInk, // day numbers + labels
+        ),
+        datePickerTheme: const DatePickerThemeData(
+          backgroundColor: Color(0xFF211B17),
+          headerBackgroundColor: Color(0xFF211B17),
+          headerForegroundColor: kVelvetInk,
+        ),
+        timePickerTheme: const TimePickerThemeData(
+          backgroundColor: Color(0xFF211B17),
+        ),
+      ),
+      child: child!,
+    );
