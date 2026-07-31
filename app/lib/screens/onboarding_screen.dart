@@ -5,6 +5,8 @@ import '../services/auth_service.dart';
 import '../theme.dart';
 import '../widgets/greeting.dart';
 import '../widgets/tappable_scale.dart';
+import '../widgets/velvet.dart';
+import 'tools_hub_screen.dart' show velvetToolsTheme;
 
 /// One-time "why are you learning Twi?" onboarding. Captures the learner's
 /// motivation + region so we can tailor the experience (and it's warm, on-brand
@@ -54,7 +56,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     final name = firstNameOf(FirebaseAuth.instance.currentUser);
-    return Scaffold(
+    return Theme(
+      data: velvetToolsTheme(context),
+      child: Scaffold(
+      backgroundColor: const Color(0xFF17130F),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
@@ -68,7 +73,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     width: i == _step ? 22 : 8,
                     height: 8,
                     decoration: BoxDecoration(
-                        color: i <= _step ? terracottaDeep : silverLight,
+                        color: i <= _step ? terracottaDeep : Colors.white24,
                         borderRadius: BorderRadius.circular(4)),
                   ),
                   const SizedBox(width: 6),
@@ -77,10 +82,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               const SizedBox(height: 28),
               if (_step == 0) ...[
                 Text('Akwaaba, $name 🇬🇭',
-                    style: displayFont(fontSize: 26, fontWeight: FontWeight.w800)),
+                    style: displayFont(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w800,
+                        color: kVelvetInk)),
                 const SizedBox(height: 6),
                 const Text('What brings you to Twi?',
-                    style: TextStyle(color: slate, fontSize: 15)),
+                    style: TextStyle(color: kVelvetMuted, fontSize: 15)),
                 const SizedBox(height: 20),
                 Expanded(
                   child: ListView(
@@ -98,10 +106,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ] else ...[
                 Text('Where are you based?',
-                    style: displayFont(fontSize: 26, fontWeight: FontWeight.w800)),
+                    style: displayFont(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w800,
+                        color: kVelvetInk)),
                 const SizedBox(height: 6),
                 const Text('So we can tailor examples and timing.',
-                    style: TextStyle(color: slate, fontSize: 15)),
+                    style: TextStyle(color: kVelvetMuted, fontSize: 15)),
                 const SizedBox(height: 20),
                 Expanded(
                   child: ListView(
@@ -143,6 +154,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
         ),
       ),
+      ),
     );
   }
 }
@@ -170,17 +182,17 @@ class _OptionCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: selected ? const Color(0xFFF7E6DF) : Colors.white,
+            color: selected ? const Color(0xFF2E211B) : const Color(0xFF211B17),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-                color: selected ? terracottaDeep : silverLight,
+                color: selected ? terracotta : Colors.white10,
                 width: selected ? 2 : 1.5),
           ),
           child: Row(
             children: [
               if (icon != null) ...[
                 Icon(icon,
-                    color: selected ? terracottaDeep : charcoal, size: 24),
+                    color: selected ? terracotta : kVelvetInk, size: 24),
                 const SizedBox(width: 14),
               ],
               Expanded(
@@ -191,11 +203,11 @@ class _OptionCard extends StatelessWidget {
                         style: const TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 16,
-                            color: ink)),
+                            color: kVelvetInk)),
                     if (subtitle != null)
                       Text(subtitle!,
-                          style:
-                              const TextStyle(color: slate, fontSize: 12.5)),
+                          style: const TextStyle(
+                              color: kVelvetMuted, fontSize: 12.5)),
                   ],
                 ),
               ),
