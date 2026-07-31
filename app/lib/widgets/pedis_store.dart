@@ -4,6 +4,7 @@ import '../data/pedi_packs.dart';
 import '../services/currency_service.dart';
 import '../services/progress_service.dart';
 import '../theme.dart';
+import 'velvet.dart';
 
 const Color _gold = Color(0xFFE3A92C);
 
@@ -12,7 +13,7 @@ Future<int> showPedisStore(BuildContext context, {int currentPedis = 0}) async {
   return await showModalBottomSheet<int>(
         context: context,
         isScrollControlled: true,
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF1E1A17),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
@@ -58,11 +59,11 @@ class _PedisStoreSheetState extends State<_PedisStoreSheet> {
                 const SizedBox(width: 8),
                 const Text('Get pedis',
                     style: TextStyle(
-                        fontWeight: FontWeight.w800, fontSize: 20, color: ink)),
+                        fontWeight: FontWeight.w800, fontSize: 20, color: kVelvetInk)),
                 const Spacer(),
                 Text('Balance: ${widget.currentPedis}',
                     style: const TextStyle(
-                        color: slate, fontWeight: FontWeight.w700)),
+                        color: kVelvetMuted, fontWeight: FontWeight.w700)),
               ],
             ),
             const SizedBox(height: 12),
@@ -73,10 +74,10 @@ class _PedisStoreSheetState extends State<_PedisStoreSheet> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 16, vertical: 14),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: const Color(0xFF211B17),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                        color: pack.tag == 'Best value' ? _gold : silverLight,
+                        color: pack.tag == 'Best value' ? _gold : Colors.white10,
                         width: pack.tag == 'Best value' ? 2 : 1),
                   ),
                   child: Row(
@@ -90,11 +91,11 @@ class _PedisStoreSheetState extends State<_PedisStoreSheet> {
                               style: const TextStyle(
                                   fontWeight: FontWeight.w800,
                                   fontSize: 16,
-                                  color: ink)),
+                                  color: kVelvetInk)),
                           if (pack.tag != null)
                             Text(pack.tag!,
                                 style: const TextStyle(
-                                    color: Color(0xFF2E6B3B),
+                                    color: Color(0xFF63C583),
                                     fontWeight: FontWeight.w700,
                                     fontSize: 11)),
                         ],
@@ -112,7 +113,7 @@ class _PedisStoreSheetState extends State<_PedisStoreSheet> {
             const SizedBox(height: 8),
             const Text('Spend pedis on:',
                 style: TextStyle(
-                    color: slate, fontWeight: FontWeight.w700, fontSize: 12)),
+                    color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 12)),
             const SizedBox(height: 6),
             for (final use in kPediUses)
               Padding(
@@ -120,11 +121,11 @@ class _PedisStoreSheetState extends State<_PedisStoreSheet> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('· ', style: TextStyle(color: slate)),
+                    const Text('· ', style: TextStyle(color: kVelvetMuted)),
                     Expanded(
                         child: Text(use,
                             style: const TextStyle(
-                                color: slate, fontSize: 12.5, height: 1.3))),
+                                color: kVelvetMuted, fontSize: 12.5, height: 1.3))),
                   ],
                 ),
               ),
@@ -134,13 +135,13 @@ class _PedisStoreSheetState extends State<_PedisStoreSheet> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                    color: const Color(0xFFFBF1D8),
+                    color: const Color(0xFF2A2113),
                     borderRadius: BorderRadius.circular(12)),
                 child: const Text(
                     'Buying pedis launches with paid plans — coming soon. '
                     'For now, earn pedis through lessons, streaks and Lens finds.',
                     style: TextStyle(
-                        color: Color(0xFF8A6A12),
+                        color: Color(0xFFE3C77A),
                         fontSize: 12,
                         height: 1.4,
                         fontWeight: FontWeight.w600)),
@@ -149,7 +150,7 @@ class _PedisStoreSheetState extends State<_PedisStoreSheet> {
             Text(
                 'Prices shown for your region (${cur.code}); charged in your '
                 'app-store currency. Pedis are virtual items with no cash value.',
-                style: const TextStyle(color: slate, fontSize: 11, height: 1.4)),
+                style: const TextStyle(color: kVelvetMuted, fontSize: 11, height: 1.4)),
           ],
         ),
       ),
