@@ -15,6 +15,17 @@ class AkanDayName {
   });
 }
 
+/// English weekday names indexed by [AkanDayName.dayIndex] (0 = Sunday).
+const List<String> kEnglishDays = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+];
+
 const List<AkanDayName> kAkanDayNames = [
   AkanDayName(
     dayIndex: 0,

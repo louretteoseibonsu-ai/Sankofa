@@ -125,11 +125,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (dob == null) return const SizedBox.shrink();
     // Dart weekday Mon=1..Sun=7 → Akan table Sun=0..Sat=6.
     final day = kAkanDayNames[dob.weekday % 7];
-    final names = _gender == 'Man'
-        ? [day.maleName]
-        : _gender == 'Woman'
-            ? [day.femaleName]
-            : [day.maleName, day.femaleName];
+    // (name, isFemale). Show the matching name once a gender is picked,
+    // otherwise offer both — each chip labelled with its gender.
+    final options = <(String, bool)>[];
+    if (_gender == 'Man') {
+      options.add((day.maleName, false));
+    } else if (_gender == 'Woman') {
+      options.add((day.femaleName, true));
+    } else {
+      options.add((day.femaleName, true));
+      options.add((day.maleName, false));
+    }
     return Container(
       margin: const EdgeInsets.only(top: 12),
       padding: const EdgeInsets.all(14),
@@ -151,20 +157,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     fontSize: 13)),
           ]),
           const SizedBox(height: 4),
-          Text('Born on ${day.dayTwi} · ${day.attribute}',
+          Text(
+              'Born on ${kEnglishDays[day.dayIndex]} (${day.dayTwi}) · ${day.attribute}',
               style: const TextStyle(color: kVelvetMuted, fontSize: 12.5)),
           const SizedBox(height: 10),
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: [for (final n in names) _dayNameChip(n)],
+            children: [for (final o in options) _dayNameChip(o.$1, o.$2)],
           ),
         ],
       ),
     );
   }
 
-  Widget _dayNameChip(String name) {
+  Widget _dayNameChip(String name, bool female) {
     final selected = _assignedDayName == name;
     return OutlinedButton.icon(
       onPressed: () {
@@ -176,7 +183,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           SnackBar(content: Text('Day name "$name" set as your display name')),
         );
       },
-      icon: Icon(selected ? Icons.check_circle : Icons.add, size: 16),
+      icon: Icon(
+          selected
+              ? Icons.check_circle
+              : (female ? Icons.female : Icons.male),
+          size: 16),
       label: Text('Use "$name"'),
     );
   }
