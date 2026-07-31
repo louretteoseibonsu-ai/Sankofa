@@ -7,6 +7,10 @@ import '../widgets/velvet.dart';
 import '../widgets/adinkra_glyph.dart';
 import '../data/adinkra_symbols.dart';
 import '../widgets/floating_card.dart';
+import '../widgets/day_name_tour.dart';
+
+/// Shown once per app session so returning users aren't nagged by the tour.
+bool _dayNameTourSeen = false;
 
 class DayNameScreen extends StatefulWidget {
   const DayNameScreen({super.key});
@@ -19,6 +23,18 @@ class _DayNameScreenState extends State<DayNameScreen> {
   final _auth = AuthService();
   DateTime? _date;
   bool _male = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // First-time guide: introduce the day name to new users automatically.
+    if (!_dayNameTourSeen) {
+      _dayNameTourSeen = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) showDayNameTour(context);
+      });
+    }
+  }
 
   AkanDayName? get _day {
     final d = _date;
@@ -79,9 +95,22 @@ class _DayNameScreenState extends State<DayNameScreen> {
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
-        Text('Akan Day Name',
-            style: displayFont(
-                fontSize: 26, fontWeight: FontWeight.w800, color: kVelvetInk)),
+        Row(
+          children: [
+            Expanded(
+              child: Text('Akan Day Name',
+                  style: displayFont(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w800,
+                      color: kVelvetInk)),
+            ),
+            IconButton(
+              onPressed: () => showDayNameTour(context),
+              icon: const Icon(Icons.help_outline_rounded, color: kOchre),
+              tooltip: 'How day names work',
+            ),
+          ],
+        ),
         const SizedBox(height: 4),
         const Text('Your name is given by the day you were born.',
             style: TextStyle(color: kVelvetMuted, fontSize: 14.5)),
