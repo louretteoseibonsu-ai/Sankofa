@@ -163,7 +163,8 @@ class _DayNameScreenState extends State<DayNameScreen> {
                           fontWeight: FontWeight.w800, fontSize: 30, color: kVelvetInk)),
                 ),
                 Center(
-                  child: Text('Born on ${day.dayTwi}',
+                  child: Text(
+                      'Born on ${kEnglishDays[day.dayIndex]} (${day.dayTwi})',
                       style: const TextStyle(color: kVelvetMuted)),
                 ),
                 const SizedBox(height: 10),
