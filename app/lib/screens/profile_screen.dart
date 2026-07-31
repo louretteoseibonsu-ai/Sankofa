@@ -527,7 +527,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 final s = kAdinkraSymbols[i];
                 final locked = !_premium && i >= kFreeSymbols;
                 final selected = _mode == _AvatarMode.adinkra && s.id == _glyph;
-                final glyph = SvgPicture.string(s.svg, fit: BoxFit.contain);
+                // Tint glyphs light so they read on the dark velvet tiles
+                // (selection is shown by the terracotta tile border).
+                final glyph = SvgPicture.string(s.svg,
+                    fit: BoxFit.contain,
+                    colorFilter: const ColorFilter.mode(
+                        kVelvetInk, BlendMode.srcIn));
                 return GestureDetector(
                   onTap: locked
                       ? _openUpgrade

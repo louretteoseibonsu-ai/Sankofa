@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../services/currency_service.dart';
 import '../theme.dart';
+import '../widgets/velvet.dart';
+import 'tools_hub_screen.dart' show velvetToolsTheme;
 import 'upgrade_screen.dart';
 
 const Color _gold = Color(0xFFE3A92C);
@@ -26,7 +28,10 @@ class PlanPickerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Theme(
+      data: velvetToolsTheme(context),
+      child: Scaffold(
+      backgroundColor: const Color(0xFF17130F),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(24),
@@ -34,11 +39,14 @@ class PlanPickerScreen extends StatelessWidget {
             const SizedBox(height: 12),
             Text('Akwaaba! 🎉',
                 textAlign: TextAlign.center,
-                style: displayFont(fontSize: 26, fontWeight: FontWeight.w800)),
+                style: displayFont(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w800,
+                    color: kVelvetInk)),
             const SizedBox(height: 4),
             const Text('Choose how you’d like to begin.',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: slate, fontSize: 14)),
+                style: TextStyle(color: kVelvetMuted, fontSize: 14)),
             const SizedBox(height: 22),
 
             // Premium card
@@ -105,9 +113,9 @@ class PlanPickerScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: const Color(0xFF211B17),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: silverLight, width: 1.5),
+                border: Border.all(color: Colors.white10, width: 1.5),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,12 +124,12 @@ class PlanPickerScreen extends StatelessWidget {
                       style: TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 18,
-                          color: ink)),
+                          color: kVelvetInk)),
                   const SizedBox(height: 6),
                   const Text(
                       'Foundations + Numbers lessons, first 10 Adinkra symbols, '
                       'streaks, and daily quests. Upgrade anytime.',
-                      style: TextStyle(color: slate, height: 1.45)),
+                      style: TextStyle(color: kVelvetMuted, height: 1.45)),
                   const SizedBox(height: 14),
                   SizedBox(
                     width: double.infinity,
@@ -136,10 +144,11 @@ class PlanPickerScreen extends StatelessWidget {
             const SizedBox(height: 16),
             const Center(
               child: Text('You can switch plans anytime in your profile.',
-                  style: TextStyle(color: slate, fontSize: 12)),
+                  style: TextStyle(color: kVelvetMuted, fontSize: 12)),
             ),
           ],
         ),
+      ),
       ),
     );
   }
