@@ -200,6 +200,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       firstDate: DateTime(1900),
       lastDate: now,
       helpText: 'Select your date of birth',
+      // Force the dialog dark — it renders above this screen's theme wrapper.
+      builder: (ctx, child) =>
+          Theme(data: velvetToolsTheme(ctx), child: child!),
     );
     if (picked != null) setState(() => _dob = picked);
   }
@@ -495,7 +498,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
-          _dayNameSuggestion(),
           const SizedBox(height: 22),
           const Text('Gender',
               style: TextStyle(
@@ -523,6 +525,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ],
+          _dayNameSuggestion(),
           const SizedBox(height: 22),
           const Text('Pick an Adinkra avatar',
               style: TextStyle(
