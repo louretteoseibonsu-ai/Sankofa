@@ -4,6 +4,8 @@ import 'package:cloud_functions/cloud_functions.dart';
 import '../config.dart';
 import '../services/friends_service.dart';
 import '../theme.dart';
+import '../widgets/velvet.dart';
+import 'tools_hub_screen.dart' show velvetToolsTheme;
 import '../widgets/floating_card.dart';
 
 /// Invite & Earn + Learn with friends: share your code, redeem a friend's code
@@ -87,7 +89,11 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Theme(
+      data: velvetToolsTheme(context),
+      child: Scaffold(
+      backgroundColor: const Color(0xFF17130F),
+
       appBar: AppBar(title: const Text('Invite friends')),
       body: SafeArea(
         child: ListView(
@@ -124,7 +130,7 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
             // Your code
             const Text('Your invite code',
                 style: TextStyle(
-                    color: slate, fontWeight: FontWeight.w700, fontSize: 12)),
+                    color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 12)),
             const SizedBox(height: 8),
             FloatingCard(
               child: Row(
@@ -136,7 +142,7 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
                           fontWeight: FontWeight.w800,
                           fontSize: 26,
                           letterSpacing: 3,
-                          color: ink),
+                          color: kVelvetInk),
                     ),
                   ),
                   FilledButton.icon(
@@ -152,7 +158,7 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
             // Redeem
             const Text('Have a friend\'s code?',
                 style: TextStyle(
-                    color: slate, fontWeight: FontWeight.w700, fontSize: 12)),
+                    color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 12)),
             const SizedBox(height: 8),
             FloatingCard(
               child: Row(
@@ -184,10 +190,10 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
             // Friends leaderboard
             const Text('Learn with friends',
                 style: TextStyle(
-                    fontWeight: FontWeight.w800, fontSize: 16, color: ink)),
+                    fontWeight: FontWeight.w800, fontSize: 16, color: kVelvetInk)),
             const SizedBox(height: 4),
             const Text('You and the friends you invite, ranked by XP.',
-                style: TextStyle(color: slate, fontSize: 12.5)),
+                style: TextStyle(color: kVelvetMuted, fontSize: 12.5)),
             const SizedBox(height: 12),
             FutureBuilder<List<FriendRank>>(
               future: _board,
@@ -202,7 +208,7 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
                 if (rows.length <= 1) {
                   return const Text(
                       'Invite a friend to start your private leaderboard!',
-                      style: TextStyle(color: slate));
+                      style: TextStyle(color: kVelvetMuted));
                 }
                 return Column(
                   children: [
@@ -217,7 +223,7 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
                                 child: Text('${i + 1}',
                                     style: const TextStyle(
                                         fontWeight: FontWeight.w800,
-                                        color: slate)),
+                                        color: kVelvetMuted)),
                               ),
                               Expanded(
                                 child: Text(
@@ -230,12 +236,12 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
                                         fontWeight: rows[i].isMe
                                             ? FontWeight.w800
                                             : FontWeight.w600,
-                                        color: rows[i].isMe ? terracotta : ink)),
+                                        color: rows[i].isMe ? terracotta : kVelvetInk)),
                               ),
                               Text('${rows[i].xp} XP',
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w800,
-                                      color: charcoal)),
+                                      color: kVelvetInk)),
                             ],
                           ),
                         ),
@@ -248,6 +254,6 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
           ],
         ),
       ),
-    );
+    ));
   }
 }

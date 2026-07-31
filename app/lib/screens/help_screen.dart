@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme.dart';
+import '../widgets/velvet.dart';
+import 'tools_hub_screen.dart' show velvetToolsTheme;
 import '../widgets/floating_card.dart';
 import 'support_chat_screen.dart';
 
@@ -90,7 +92,11 @@ class _HelpScreenState extends State<HelpScreen> {
                 f.q.toLowerCase().contains(q) || f.a.toLowerCase().contains(q))
             .toList();
 
-    return Scaffold(
+    return Theme(
+      data: velvetToolsTheme(context),
+      child: Scaffold(
+      backgroundColor: const Color(0xFF17130F),
+
       appBar: AppBar(title: const Text('Help & support')),
       body: SafeArea(
         child: ListView(
@@ -110,20 +116,20 @@ class _HelpScreenState extends State<HelpScreen> {
                       children: [
                         Text('Chat with support',
                             style: TextStyle(
-                                fontWeight: FontWeight.w800, color: ink)),
+                                fontWeight: FontWeight.w800, color: kVelvetInk)),
                         Text('Ask our assistant anything — instant answers',
-                            style: TextStyle(color: slate, fontSize: 12.5)),
+                            style: TextStyle(color: kVelvetMuted, fontSize: 12.5)),
                       ],
                     ),
                   ),
-                  Icon(Icons.chevron_right, color: Colors.black26),
+                  Icon(Icons.chevron_right, color: Colors.white30),
                 ],
               ),
             ),
             const SizedBox(height: 16),
             const Text('Frequently asked',
                 style: TextStyle(
-                    fontWeight: FontWeight.w800, fontSize: 16, color: ink)),
+                    fontWeight: FontWeight.w800, fontSize: 16, color: kVelvetInk)),
             const SizedBox(height: 10),
             TextField(
               onChanged: (v) => setState(() => _query = v),
@@ -140,15 +146,15 @@ class _HelpScreenState extends State<HelpScreen> {
                 padding: EdgeInsets.symmetric(vertical: 16),
                 child: Text(
                     'No matches. Try the chat above, or email us below.',
-                    style: TextStyle(color: slate)),
+                    style: TextStyle(color: kVelvetMuted)),
               )
             else
               ...faqs.map((f) => Card(
                     elevation: 0,
-                    color: Colors.white,
+                    color: const Color(0xFF211B17),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14),
-                        side: const BorderSide(color: silverLight)),
+                        side: const BorderSide(color: Colors.white10)),
                     margin: const EdgeInsets.only(bottom: 8),
                     child: ExpansionTile(
                       shape: const Border(),
@@ -157,7 +163,7 @@ class _HelpScreenState extends State<HelpScreen> {
                           style: const TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: 14.5,
-                              color: ink)),
+                              color: kVelvetInk)),
                       childrenPadding:
                           const EdgeInsets.fromLTRB(16, 0, 16, 14),
                       children: [
@@ -165,7 +171,7 @@ class _HelpScreenState extends State<HelpScreen> {
                           alignment: Alignment.centerLeft,
                           child: Text(f.a,
                               style: const TextStyle(
-                                  color: slate, height: 1.45, fontSize: 13.5)),
+                                  color: kVelvetMuted, height: 1.45, fontSize: 13.5)),
                         ),
                       ],
                     ),
@@ -175,7 +181,7 @@ class _HelpScreenState extends State<HelpScreen> {
             const FloatingCard(
               child: Row(
                 children: [
-                  Icon(Icons.mail_outline, size: 20, color: charcoal),
+                  Icon(Icons.mail_outline, size: 20, color: kVelvetInk),
                   SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -183,9 +189,9 @@ class _HelpScreenState extends State<HelpScreen> {
                       children: [
                         Text('Still need help? Email us',
                             style: TextStyle(
-                                fontWeight: FontWeight.w700, color: ink)),
+                                fontWeight: FontWeight.w700, color: kVelvetInk)),
                         Text('sankofa@aparato.ai',
-                            style: TextStyle(color: slate, fontSize: 13)),
+                            style: TextStyle(color: kVelvetMuted, fontSize: 13)),
                       ],
                     ),
                   ),
@@ -196,6 +202,6 @@ class _HelpScreenState extends State<HelpScreen> {
           ],
         ),
       ),
-    );
+    ));
   }
 }

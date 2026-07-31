@@ -7,6 +7,8 @@ import '../data/quiz_master.dart';
 import '../services/progress_service.dart';
 import '../services/sound_service.dart';
 import '../theme.dart';
+import '../widgets/velvet.dart';
+import 'tools_hub_screen.dart' show velvetToolsTheme;
 import '../widgets/floating_reward.dart';
 import '../widgets/kente_shard.dart';
 import '../widgets/tappable_scale.dart';
@@ -192,7 +194,11 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
   @override
   Widget build(BuildContext context) {
     final u = _unit;
-    return Scaffold(
+    return Theme(
+      data: velvetToolsTheme(context),
+      child: Scaffold(
+      backgroundColor: const Color(0xFF17130F),
+
       appBar: AppBar(
           title: Text(
               '${widget.mastery ? 'Mastery' : 'Time-Attack'} · ${widget.lesson.title}')),
@@ -204,7 +210,7 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
                 child: _done ? _result() : _battle(),
               ),
             ),
-    );
+    ));
   }
 
   Widget _battle() {
@@ -223,7 +229,7 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
               child: LinearProgressIndicator(
                 value: left,
                 minHeight: 10,
-                backgroundColor: silverLight,
+                backgroundColor: Colors.white10,
                 valueColor:
                     AlwaysStoppedAnimation(Color.lerp(_red, _green, left)!),
               ),
@@ -235,7 +241,7 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
           children: [
             Text('Line ${_i + 1} of ${_challenges.length}',
                 style: const TextStyle(
-                    color: slate, fontWeight: FontWeight.w700, fontSize: 13)),
+                    color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 13)),
             const Spacer(),
             if (_combo >= 2)
               Container(
@@ -253,13 +259,13 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
             const SizedBox(width: 8),
             Text('$_correct pts',
                 style: const TextStyle(
-                    color: ink, fontWeight: FontWeight.w800, fontSize: 13)),
+                    color: kVelvetInk, fontWeight: FontWeight.w800, fontSize: 13)),
           ],
         ),
         const SizedBox(height: 18),
         Text(ch.prompt,
             style: const TextStyle(
-                fontWeight: FontWeight.w800, fontSize: 20, color: ink, height: 1.3)),
+                fontWeight: FontWeight.w800, fontSize: 20, color: kVelvetInk, height: 1.3)),
         const SizedBox(height: 18),
         Expanded(
           child: ListView(
@@ -319,7 +325,7 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
                 style: TextStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: 22,
-                    color: _masteryPerfect ? _green : ink)),
+                    color: _masteryPerfect ? _green : kVelvetInk)),
             const SizedBox(height: 4),
             if (_masteryPerfect && _masteryAward > 0)
               Row(
@@ -328,7 +334,7 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
                   const KenteShard(size: 15),
                   const SizedBox(width: 5),
                   Text('+$_masteryAward kente shards',
-                      style: const TextStyle(color: slate, fontSize: 13)),
+                      style: const TextStyle(color: kVelvetMuted, fontSize: 13)),
                 ],
               )
             else
@@ -337,12 +343,12 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
                       ? 'You already mastered this stop.'
                       : 'A perfect run (${_challenges.length}/${_challenges.length}) masters this stop.',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: slate, fontSize: 13)),
+                  style: const TextStyle(color: kVelvetMuted, fontSize: 13)),
             const SizedBox(height: 12),
           ],
           Text('$_correct / ${_challenges.length}',
               style: const TextStyle(
-                  fontWeight: FontWeight.w800, fontSize: 32, color: ink)),
+                  fontWeight: FontWeight.w800, fontSize: 32, color: kVelvetInk)),
           const SizedBox(height: 6),
           Row(
             mainAxisSize: MainAxisSize.min,
@@ -358,11 +364,11 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
           ),
           const SizedBox(height: 10),
           Text('Best combo: ${_bestCombo}x',
-              style: const TextStyle(color: slate, fontSize: 14)),
+              style: const TextStyle(color: kVelvetMuted, fontSize: 14)),
           const SizedBox(height: 12),
           const Text('MASTERY REPORT',
               style: TextStyle(
-                  color: slate,
+                  color: kVelvetMuted,
                   fontSize: 11,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 1)),
@@ -380,7 +386,7 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
               const SizedBox(height: 2),
               Text(m.blurb,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: slate, fontSize: 13)),
+                  style: const TextStyle(color: kVelvetMuted, fontSize: 13)),
             ]);
           }),
           const SizedBox(height: 24),
@@ -390,8 +396,8 @@ class _TimeAttackScreenState extends State<TimeAttackScreen>
                 child: OutlinedButton(
                   onPressed: () => Navigator.of(context).pop(),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: charcoal,
-                    side: const BorderSide(color: silverLight, width: 1.5),
+                    foregroundColor: kVelvetInk,
+                    side: const BorderSide(color: Colors.white10, width: 1.5),
                     minimumSize: const Size.fromHeight(50),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16)),
@@ -433,28 +439,28 @@ class _Option extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color border = silver;
-    Color bg = Colors.white;
-    Color fg = ink;
+    Color border = Colors.white10;
+    Color bg = const Color(0xFF211B17);
+    Color fg = kVelvetInk;
     Widget? trailing;
     switch (state) {
       case _OState.idle:
         break;
       case _OState.correct:
         border = _green;
-        bg = const Color(0xFFEAF3EC);
+        bg = const Color(0xFF17281C);
         fg = _green;
         trailing = const Icon(Icons.check_circle, color: _green, size: 20);
         break;
       case _OState.wrong:
         border = _red;
-        bg = const Color(0xFFF7EAE9);
+        bg = const Color(0xFF2C1D18);
         fg = _red;
         trailing = const Icon(Icons.cancel, color: _red, size: 20);
         break;
       case _OState.dimmed:
-        border = silverLight;
-        fg = slate;
+        border = Colors.white10;
+        fg = kVelvetMuted;
         break;
     }
     return Padding(

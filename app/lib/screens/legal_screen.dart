@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme.dart';
+import '../widgets/velvet.dart';
+import 'tools_hub_screen.dart' show velvetToolsTheme;
 
 /// Simple in-app reader for the Privacy Policy / Terms.
 class LegalScreen extends StatelessWidget {
@@ -9,19 +11,23 @@ class LegalScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Theme(
+      data: velvetToolsTheme(context),
+      child: Scaffold(
+      backgroundColor: const Color(0xFF17130F),
+
       appBar: AppBar(title: Text(title)),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
           children: [
             Text(body,
-                style: const TextStyle(height: 1.55, color: ink, fontSize: 14)),
+                style: const TextStyle(height: 1.55, color: kVelvetInk, fontSize: 14)),
             const SizedBox(height: 24),
           ],
         ),
       ),
-    );
+    ));
   }
 }
 

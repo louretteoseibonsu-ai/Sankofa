@@ -2,6 +2,8 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import '../services/admin_service.dart';
 import '../theme.dart';
+import '../widgets/velvet.dart';
+import 'tools_hub_screen.dart' show velvetToolsTheme;
 
 /// Team-facing admin panel to manage sign-ups. Reachable from Profile only
 /// when the signed-in user is in admins/{uid}.
@@ -36,7 +38,11 @@ class _AdminScreenState extends State<AdminScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Theme(
+      data: velvetToolsTheme(context),
+      child: Scaffold(
+      backgroundColor: const Color(0xFF17130F),
+
       appBar: AppBar(title: const Text('Admin · Sign-ups')),
       body: Column(
         children: [
@@ -98,7 +104,7 @@ class _AdminScreenState extends State<AdminScreen> {
                           '${snap.data!.length} total · '
                           '${snap.data!.where((u) => u.premium).length} premium · '
                           '${snap.data!.where((u) => u.disabled).length} suspended',
-                          style: const TextStyle(color: slate, fontSize: 12),
+                          style: const TextStyle(color: kVelvetMuted, fontSize: 12),
                         ),
                       );
                     }
@@ -113,7 +119,7 @@ class _AdminScreenState extends State<AdminScreen> {
           ),
         ],
       ),
-    );
+    ));
   }
 }
 
@@ -169,10 +175,10 @@ class _UserTile extends StatelessWidget {
     final messenger = ScaffoldMessenger.of(context);
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF211B17),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: user.disabled ? const Color(0xFF9B2D2A) : silverLight,
+          color: user.disabled ? const Color(0xFF9B2D2A) : Colors.white10,
           width: user.disabled ? 1.5 : 1,
         ),
       ),
@@ -189,15 +195,15 @@ class _UserTile extends StatelessWidget {
                     children: [
                       Text(user.label,
                           style: const TextStyle(
-                              fontWeight: FontWeight.w700, color: ink)),
+                              fontWeight: FontWeight.w700, color: kVelvetInk)),
                       if (user.email != null && user.email != user.label)
                         Text(user.email!,
                             style:
-                                const TextStyle(color: slate, fontSize: 12.5)),
+                                const TextStyle(color: kVelvetMuted, fontSize: 12.5)),
                       Text(
                           'Joined ${_fmt(user.createdAt)} · '
                           '${user.pedis} pedis · ${user.xp} XP',
-                          style: const TextStyle(color: slate, fontSize: 11.5)),
+                          style: const TextStyle(color: kVelvetMuted, fontSize: 11.5)),
                     ],
                   ),
                 ),
@@ -298,15 +304,15 @@ class _Message extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 44, color: slate),
+            Icon(icon, size: 44, color: kVelvetMuted),
             const SizedBox(height: 12),
             Text(title,
                 style: const TextStyle(
-                    fontWeight: FontWeight.w800, fontSize: 18, color: ink)),
+                    fontWeight: FontWeight.w800, fontSize: 18, color: kVelvetInk)),
             const SizedBox(height: 6),
             Text(body,
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: slate, height: 1.4)),
+                style: const TextStyle(color: kVelvetMuted, height: 1.4)),
           ],
         ),
       ),

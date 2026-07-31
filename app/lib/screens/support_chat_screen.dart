@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../config.dart';
 import '../theme.dart';
+import '../widgets/velvet.dart';
+import 'tools_hub_screen.dart' show velvetToolsTheme;
 
 /// AI support chat — answers from the Sankofa Twi knowledge base via the
 /// backend /api/support endpoint (Gemini, grounded + with a human-handoff rule).
@@ -90,7 +92,11 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Theme(
+      data: velvetToolsTheme(context),
+      child: Scaffold(
+      backgroundColor: const Color(0xFF17130F),
+
       appBar: AppBar(title: const Text('Support chat')),
       body: SafeArea(
         child: Column(
@@ -139,7 +145,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
           ],
         ),
       ),
-    );
+    ));
   }
 }
 
@@ -158,7 +164,7 @@ class _Bubble extends StatelessWidget {
         constraints: BoxConstraints(
             maxWidth: MediaQuery.of(context).size.width * 0.78),
         decoration: BoxDecoration(
-          color: user ? terracottaDeep : glyphTile,
+          color: user ? terracottaDeep : Color(0xFF2A211C),
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(16),
             topRight: const Radius.circular(16),
@@ -168,7 +174,7 @@ class _Bubble extends StatelessWidget {
         ),
         child: Text(msg.text,
             style: TextStyle(
-                color: user ? Colors.white : ink, height: 1.4, fontSize: 14.5)),
+                color: user ? Colors.white : kVelvetInk, height: 1.4, fontSize: 14.5)),
       ),
     );
   }
@@ -184,7 +190,7 @@ class _TypingBubble extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-            color: glyphTile, borderRadius: BorderRadius.circular(16)),
+            color: Color(0xFF2A211C), borderRadius: BorderRadius.circular(16)),
         child: const SizedBox(
           width: 18,
           height: 18,
