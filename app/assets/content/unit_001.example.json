@@ -27,14 +27,24 @@
     {
       "prompt": "Through which substance is abusua (matriclan) identity inherited?",
       "type": "recall",
-      "options": ["mogya (blood)", "ntɔrɔ", "honam", "sunsum"],
+      "options": [
+        "mogya (blood)",
+        "ntɔrɔ",
+        "honam",
+        "sunsum"
+      ],
       "correct_index": 0,
       "theological_framework": "mogya"
     },
     {
       "prompt": "Which component of personhood is the life-giving soul received from Onyame?",
       "type": "concept_match",
-      "options": ["ɔkra", "sunsum", "mogya", "honam"],
+      "options": [
+        "ɔkra",
+        "sunsum",
+        "mogya",
+        "honam"
+      ],
       "correct_index": 0,
       "theological_framework": "okra"
     },
@@ -65,21 +75,36 @@
     {
       "prompt": "From whom is ntɔrɔ transmitted to a child?",
       "type": "concept_match",
-      "options": ["the father", "the mother", "the chief", "the ancestors"],
+      "options": [
+        "the father",
+        "the mother",
+        "the chief",
+        "the ancestors"
+      ],
       "correct_index": 0,
       "theological_framework": "ntoro"
     },
     {
       "prompt": "Animuonyam refers to:",
       "type": "recall",
-      "options": ["dignity, honor, and glory", "blood lineage", "a war horn", "a talking drum"],
+      "options": [
+        "dignity, honor, and glory",
+        "blood lineage",
+        "a war horn",
+        "a talking drum"
+      ],
       "correct_index": 0,
       "theological_framework": "animuonyam"
     },
     {
       "prompt": "Who are the nsamanfo?",
       "type": "concept_match",
-      "options": ["the venerated ancestors", "tutelary deities", "the Supreme Being", "the matriclans"],
+      "options": [
+        "the venerated ancestors",
+        "tutelary deities",
+        "the Supreme Being",
+        "the matriclans"
+      ],
       "correct_index": 0,
       "theological_framework": "nsamanfo"
     },
@@ -98,13 +123,26 @@
     {
       "prompt": "Select the word with the retracted (-ATR) vowel ɔ.",
       "type": "phonetic_discrimination",
-      "options": ["bo", "bɔ"],
+      "options": [
+        "bo",
+        "bɔ"
+      ],
       "correct_index": 1,
       "phonetic_target": {
         "pronunciation": "bɔ",
         "segments": [
-          { "orthography": "b", "ipa": "b", "tone": "mid", "atr": "advanced" },
-          { "orthography": "ɔ", "ipa": "ɔ", "tone": "low", "atr": "retracted" }
+          {
+            "orthography": "b",
+            "ipa": "b",
+            "tone": "mid",
+            "atr": "advanced"
+          },
+          {
+            "orthography": "ɔ",
+            "ipa": "ɔ",
+            "tone": "low",
+            "atr": "retracted"
+          }
         ],
         "homophone_set_id": "b-vowel-set",
         "sense_key": "bɔ.to-fashion"
@@ -122,6 +160,52 @@
       ],
       "correct_index": 0,
       "theological_framework": "adinkra"
+    }
+  ],
+  "glossary": [
+    {
+      "twi": "abusua",
+      "en": "the matriclan — kin traced through the mother"
+    },
+    {
+      "twi": "mogya",
+      "en": "blood — carries abusua (matriclan) identity"
+    },
+    {
+      "twi": "ɔkra",
+      "en": "the soul / life-force, received from Onyame"
+    },
+    {
+      "twi": "sunsum",
+      "en": "the spirit that shapes personality and character"
+    },
+    {
+      "twi": "ntɔrɔ",
+      "en": "the spirit-essence passed from the father"
+    },
+    {
+      "twi": "onipa",
+      "en": "a person / human being"
+    },
+    {
+      "twi": "fie",
+      "en": "the household / home"
+    },
+    {
+      "twi": "animuonyam",
+      "en": "dignity, honour, and glory"
+    },
+    {
+      "twi": "nsamanfo",
+      "en": "the venerated ancestors"
+    },
+    {
+      "twi": "ahenfie",
+      "en": "the chief's court / palace"
+    },
+    {
+      "twi": "Adinkra",
+      "en": "symbols that encode proverbs and philosophy"
     }
   ]
 }
