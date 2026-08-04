@@ -5,6 +5,7 @@ import '../data/avatar.dart';
 import '../data/lesson_catalog.dart';
 import '../data/lesson_content.dart';
 import '../data/quiz_master.dart';
+import '../data/twi_phonetics.dart';
 import '../services/progress_service.dart';
 import '../services/sound_service.dart';
 import '../theme.dart';
@@ -264,19 +265,52 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
                       : u.headword,
                   size: 22),
             ]),
-            if (u.pronunciation.isNotEmpty)
+            if (u.pronunciation.isNotEmpty &&
+                u.pronunciation != u.headword)
               Padding(
                 padding: const EdgeInsets.only(top: 2),
-                child: Text(u.pronunciation,
+                child: Text('/${u.pronunciation}/',
                     style: const TextStyle(
                         color: kOchre,
                         fontSize: 13,
                         fontStyle: FontStyle.italic)),
               ),
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Text('sounds like “${twiApproximate(u.headword)}”',
+                  style: const TextStyle(
+                      color: kVelvetMuted, fontSize: 12.5)),
+            ),
             const SizedBox(height: 8),
             Text(u.gloss,
                 style: const TextStyle(
                     color: kVelvetInk, fontSize: 14, height: 1.4)),
+            if (u.cultureNote != null && u.cultureNote!.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(11),
+                decoration: BoxDecoration(
+                  color: _terra.withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: _terra.withValues(alpha: 0.4)),
+                ),
+                child: RichText(
+                  text: TextSpan(children: [
+                    const TextSpan(
+                        text: 'Chale tip:  ',
+                        style: TextStyle(
+                            color: _terra,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 12.5)),
+                    TextSpan(
+                        text: u.cultureNote!,
+                        style: const TextStyle(
+                            color: kVelvetInk, fontSize: 12.5, height: 1.4)),
+                  ]),
+                ),
+              ),
+            ],
             for (final ex in u.examples)
               Padding(
                 padding: const EdgeInsets.only(top: 8),
@@ -315,7 +349,8 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
                                   color: kVelvetInk,
                                   fontWeight: FontWeight.w700,
                                   fontSize: 15)),
-                          Text(u.glossary[i].en,
+                          Text(
+                              '${u.glossary[i].en}  ·  “${twiApproximate(u.glossary[i].twi)}”',
                               style: const TextStyle(
                                   color: kVelvetMuted, fontSize: 12.5)),
                         ],
