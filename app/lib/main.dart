@@ -16,7 +16,7 @@ void _warmBackend() async {
     await http
         .get(Uri.parse(kBackendBaseUrl))
         .timeout(const Duration(seconds: 30));
-  } catch (_) {/* server still waking — that's fine */}
+  } catch (_) {/* server still waking — expected */}
 }
 
 /// If Firebase fails to start, we stash the message here and show it on screen
