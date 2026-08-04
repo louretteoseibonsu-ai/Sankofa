@@ -140,10 +140,22 @@ class _LeaderboardViewState extends State<LeaderboardView> {
                                         color: kVelvetInk)),
                               ),
                               if (e.isBot)
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 5),
-                                  child: Icon(Icons.circle,
-                                      size: 5, color: silver),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 6),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 1),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white10,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: const Text('sample',
+                                        style: TextStyle(
+                                            color: kVelvetMuted,
+                                            fontSize: 9.5,
+                                            fontWeight: FontWeight.w700,
+                                            letterSpacing: 0.3)),
+                                  ),
                                 ),
                             ],
                           ),
