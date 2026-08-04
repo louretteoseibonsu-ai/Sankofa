@@ -200,6 +200,7 @@ class ListenDrillView extends StatefulWidget {
 
 class _ListenDrillViewState extends State<ListenDrillView> {
   String? _picked;
+  bool _reveal = false; // "can't listen" → show the word (read-and-choose)
 
   @override
   void initState() {
@@ -225,19 +226,48 @@ class _ListenDrillViewState extends State<ListenDrillView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _kicker('Listen & choose'),
+          _kicker(_reveal ? 'Read & choose' : 'Listen & choose'),
           Row(
             children: [
               _SpeakChip(
                   text: widget.data.answer.audio ?? widget.data.answer.twi,
                   size: 30),
               const SizedBox(width: 8),
-              const Expanded(
-                child: Text('Tap ▶ to hear it again — what does it mean?',
-                    style: TextStyle(color: kVelvetMuted, fontSize: 12.5)),
+              Expanded(
+                child: _reveal
+                    ? Text(widget.data.answer.twi,
+                        style: const TextStyle(
+                            color: kVelvetInk,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 20))
+                    : const Text('Tap ▶ to hear it again — what does it mean?',
+                        style:
+                            TextStyle(color: kVelvetMuted, fontSize: 12.5)),
               ),
             ],
           ),
+          // Escape hatch: no audio? read the word instead and keep going.
+          if (!answered && !_reveal) ...[
+            const SizedBox(height: 8),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TappableScale(
+                onTap: () => setState(() => _reveal = true),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 4),
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    Icon(Icons.volume_off_rounded, color: kOchre, size: 16),
+                    SizedBox(width: 5),
+                    Text("Can't listen right now — show the word",
+                        style: TextStyle(
+                            color: kOchre,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 12.5)),
+                  ]),
+                ),
+              ),
+            ),
+          ],
           const SizedBox(height: 12),
           for (final e in widget.data.options)
             _OptTile(
