@@ -225,7 +225,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text(
                     'Sankofa Twi',
                     textAlign: TextAlign.center,
-                    style: displayFont(fontSize: 26, fontWeight: FontWeight.w800),
+                    style: displayFont(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w800,
+                        color: kVelvetInk),
                   ),
                   Text(
                     _isRegister ? 'Create your account' : 'Welcome back',
