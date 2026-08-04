@@ -8,7 +8,9 @@ import '../data/quiz_master.dart';
 import '../services/progress_service.dart';
 import '../services/sound_service.dart';
 import '../theme.dart';
+import '../widgets/alphabet_primer.dart';
 import '../widgets/celebration.dart';
+import '../widgets/speak_button.dart';
 import '../widgets/tappable_scale.dart';
 import '../widgets/velvet.dart';
 import 'tools_hub_screen.dart' show velvetToolsTheme;
@@ -48,6 +50,7 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
   int _keysEarned = 0;
   bool _done = false;
   bool _recorded = false;
+  bool _learning = true; // show the Learn phase before the battle starts
   String? _feedback; // punchy per-answer line from the Quiz Master
 
   @override
@@ -160,7 +163,9 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
             : SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.all(20),
-                  child: _done ? _result() : _battle(),
+                  child: _learning
+                      ? _learn()
+                      : (_done ? _result() : _battle()),
                 ),
               ),
       ),
@@ -205,6 +210,177 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
         ),
       );
     });
+  }
+
+  Widget _teachCard(Widget child) => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF211B17),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: Colors.white10),
+        ),
+        child: child,
+      );
+
+  static const _hdr = TextStyle(
+      fontWeight: FontWeight.w800, fontSize: 16, color: kVelvetInk);
+
+  /// The "Learn first" phase — teaches the sounds/words the boss will test,
+  /// then a CTA into the battle. Shown for every boss (they used to skip it).
+  Widget _learn() {
+    final u = _unit!;
+    final gr = u.grammar;
+    return ListView(
+      padding: EdgeInsets.zero,
+      children: [
+        Row(children: const [
+          Icon(Icons.school_rounded, color: _gold, size: 20),
+          SizedBox(width: 8),
+          Text('Learn first', style: _hdr),
+        ]),
+        const SizedBox(height: 4),
+        const Text('Study the sounds and words, then face the boss.',
+            style: TextStyle(color: kVelvetMuted, fontSize: 13)),
+        const SizedBox(height: 14),
+        if (widget.lesson.categoryId == 'alphabet') ...[
+          const AlphabetPrimer(showIntro: true),
+          const SizedBox(height: 14),
+        ],
+        // Spotlight word
+        _teachCard(Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [
+              Expanded(
+                child: Text(u.headword,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 22,
+                        color: kVelvetInk)),
+              ),
+              SpeakButton(
+                  text: (u.headwordAudio?.isNotEmpty ?? false)
+                      ? u.headwordAudio!
+                      : u.headword,
+                  size: 22),
+            ]),
+            if (u.pronunciation.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Text(u.pronunciation,
+                    style: const TextStyle(
+                        color: kOchre,
+                        fontSize: 13,
+                        fontStyle: FontStyle.italic)),
+              ),
+            const SizedBox(height: 8),
+            Text(u.gloss,
+                style: const TextStyle(
+                    color: kVelvetInk, fontSize: 14, height: 1.4)),
+            for (final ex in u.examples)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Row(children: [
+                  Expanded(
+                    child: Text(ex,
+                        style: const TextStyle(
+                            color: kVelvetMuted,
+                            fontSize: 13,
+                            fontStyle: FontStyle.italic)),
+                  ),
+                  SpeakButton(text: ex, size: 18),
+                ]),
+              ),
+          ],
+        )),
+        if (u.glossary.isNotEmpty) ...[
+          const SizedBox(height: 14),
+          _teachCard(Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Key words', style: _hdr),
+              const SizedBox(height: 4),
+              for (int i = 0; i < u.glossary.length; i++) ...[
+                if (i > 0)
+                  const Divider(height: 1, color: Color(0x1FFFFFFF)),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: Row(children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(u.glossary[i].twi,
+                              style: const TextStyle(
+                                  color: kVelvetInk,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 15)),
+                          Text(u.glossary[i].en,
+                              style: const TextStyle(
+                                  color: kVelvetMuted, fontSize: 12.5)),
+                        ],
+                      ),
+                    ),
+                    SpeakButton(
+                        text: (u.glossary[i].audio?.isNotEmpty ?? false)
+                            ? u.glossary[i].audio!
+                            : u.glossary[i].twi,
+                        size: 18),
+                  ]),
+                ),
+              ],
+            ],
+          )),
+        ],
+        if (gr != null) ...[
+          const SizedBox(height: 14),
+          _teachCard(Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text((gr['focus'] as String?) ?? 'Grammar', style: _hdr),
+              const SizedBox(height: 6),
+              if (gr['explanation'] is String)
+                Text(gr['explanation'] as String,
+                    style: const TextStyle(
+                        color: kVelvetInk, fontSize: 13.5, height: 1.45)),
+              if (gr['patterns'] is List) ...[
+                const SizedBox(height: 8),
+                for (final p in (gr['patterns'] as List))
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text('•  $p',
+                        style: const TextStyle(
+                            color: kVelvetMuted, fontSize: 13)),
+                  ),
+              ],
+            ],
+          )),
+        ],
+        const SizedBox(height: 20),
+        TappableScale(
+          onTap: () {
+            SoundService.instance.tap();
+            setState(() => _learning = false);
+          },
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 15),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                  colors: [_gold, Color(0xFFB5792E)]),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Text('Start the battle  →',
+                style: TextStyle(
+                    color: Color(0xFF17130F),
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15)),
+          ),
+        ),
+        const SizedBox(height: 24),
+      ],
+    );
   }
 
   Widget _battle() {
