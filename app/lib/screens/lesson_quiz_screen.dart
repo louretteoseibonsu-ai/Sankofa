@@ -12,6 +12,7 @@ import '../services/progress_service.dart';
 import '../services/sound_service.dart';
 import '../services/twi_speech.dart';
 import '../theme.dart';
+import '../widgets/alphabet_primer.dart';
 import '../widgets/animations.dart';
 import '../widgets/celebration.dart';
 import '../widgets/checkpoint_travel.dart';
@@ -367,8 +368,11 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                 // ── Learn section (collapsible to reduce cognitive load) ──
                 Row(
                   children: [
-                    const Text('Learn the words',
-                        style: TextStyle(
+                    Text(
+                        widget.lesson.categoryId == 'alphabet'
+                            ? 'Learn the alphabet'
+                            : 'Learn the words',
+                        style: const TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 16,
                             color: kVelvetInk)),
@@ -385,6 +389,12 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
                 ),
                 if (_showLearn) ...[
                   const SizedBox(height: 4),
+                  // Alphabet lesson: teach the vowels/consonants/digraphs the
+                  // quiz asks about, before the questions (they aren't vocab).
+                  if (widget.lesson.categoryId == 'alphabet') ...[
+                    const AlphabetPrimer(showIntro: true),
+                    const SizedBox(height: 14),
+                  ],
                   Reveal(child: _VocabCard(u: u)),
                   if (u.glossary.isNotEmpty) ...[
                     const SizedBox(height: 14),
