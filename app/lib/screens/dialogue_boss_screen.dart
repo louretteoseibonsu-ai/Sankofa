@@ -64,6 +64,7 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
     final u = await loadUnit(widget.lesson.asset,
         category: widget.lesson.categoryId);
     final cos = await _progress.loadCosmetics();
+    final prog = await _progress.load();
     if (!mounted) return;
     final r = Random();
     setState(() {
@@ -71,6 +72,9 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
       _challenges = [for (final c in u.challenges) c.shuffledOptions(r)]
         ..shuffle(r);
       _avatar = avatarById(cos.equipped['avatar']);
+      // Auto-skip the Learn phase on a boss they've already cleared (replay).
+      // First-timers still get taught; the "Learn" chip/CTA is only for them.
+      if (prog.passed(widget.lesson.id)) _learning = false;
     });
   }
 
