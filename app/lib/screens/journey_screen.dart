@@ -442,6 +442,10 @@ class _JourneyScreenState extends State<JourneyScreen>
     final n = lessons.length;
     final current = _currentIndex;
     final regionName = _catName[lessons[current].categoryId] ?? 'Journey';
+    // Landscape has little vertical room — drop the tall hero banner + family
+    // nudge so the map, HUD and Play card fit without overflowing.
+    final landscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -457,7 +461,7 @@ class _JourneyScreenState extends State<JourneyScreen>
       child: Column(
         children: [
           // A warm nudge from your equipped family guide.
-          if (_familyLine != null)
+          if (_familyLine != null && !landscape)
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
               child: RichText(
@@ -481,7 +485,7 @@ class _JourneyScreenState extends State<JourneyScreen>
                 ]),
               ),
             ),
-          const CampaignBanner(kicker: ''),
+          if (!landscape) const CampaignBanner(kicker: ''),
         // ── HUD overlay ──────────────────────────────────────────────
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),

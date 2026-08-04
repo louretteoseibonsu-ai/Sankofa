@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
@@ -25,10 +24,6 @@ String? gStartupError;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // The app is designed portrait-first (journey map, banners, HUD). Lock to
-  // portrait so landscape can't overflow layouts (e.g. the campaign banner).
-  await SystemChrome.setPreferredOrientations(
-      const [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   try {
     // On Android, Firebase reads android/app/google-services.json via the
     // google-services Gradle plugin. Timeout so a hung call can't freeze launch.
