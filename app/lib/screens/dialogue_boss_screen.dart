@@ -226,6 +226,20 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
   static const _hdr = TextStyle(
       fontWeight: FontWeight.w800, fontSize: 16, color: kVelvetInk);
 
+  Widget _stepChip(String label, {required bool active}) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 4),
+        decoration: BoxDecoration(
+          color: active ? _terra : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: active ? _terra : Colors.white24),
+        ),
+        child: Text(label,
+            style: TextStyle(
+                color: active ? Colors.white : kVelvetMuted,
+                fontWeight: FontWeight.w700,
+                fontSize: 11.5)),
+      );
+
   /// The "Learn first" phase — teaches the sounds/words the boss will test,
   /// then a CTA into the battle. Shown for every boss (they used to skip it).
   Widget _learn() {
@@ -234,14 +248,34 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
     return ListView(
       padding: EdgeInsets.zero,
       children: [
-        Row(children: const [
-          Icon(Icons.school_rounded, color: _gold, size: 20),
-          SizedBox(width: 8),
-          Text('Learn first', style: _hdr),
+        // Where-you-are stepper + a skip for learners who don't need it.
+        Row(children: [
+          _stepChip('Learn', active: true),
+          const Icon(Icons.chevron_right_rounded,
+              color: Colors.white30, size: 16),
+          _stepChip('Boss battle', active: false),
+          const Spacer(),
+          TappableScale(
+            onTap: () {
+              SoundService.instance.tap();
+              setState(() => _learning = false);
+            },
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+              child: Text('Skip',
+                  style: TextStyle(
+                      color: kVelvetMuted, fontWeight: FontWeight.w700)),
+            ),
+          ),
         ]),
+        const SizedBox(height: 14),
+        Text(u.title, style: _hdr.copyWith(fontSize: 22)),
         const SizedBox(height: 4),
-        const Text('Study the sounds and words, then face the boss.',
-            style: TextStyle(color: kVelvetMuted, fontSize: 13)),
+        Text(
+            widget.lesson.categoryId == 'alphabet'
+                ? 'Learn the sounds first — tap any letter to hear it.'
+                : 'Study the words first, then face the boss.',
+            style: const TextStyle(color: kVelvetMuted, fontSize: 13)),
         const SizedBox(height: 14),
         if (widget.lesson.categoryId == 'alphabet') ...[
           const AlphabetPrimer(showIntro: true),
@@ -406,7 +440,7 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
                   colors: [_gold, Color(0xFFB5792E)]),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Text('Start the battle  →',
+            child: const Text('I\'m ready — start the challenge  →',
                 style: TextStyle(
                     color: Color(0xFF17130F),
                     fontWeight: FontWeight.w800,
