@@ -304,6 +304,7 @@ class _BuildDrillViewState extends State<BuildDrillView> {
   final List<int> _placed = []; // indices into _scrambled, in placed order
   bool _finished = false;
   bool? _correct;
+  bool _reveal = false; // "can't listen" → show the sentence to build
 
   @override
   void initState() {
@@ -346,17 +347,48 @@ class _BuildDrillViewState extends State<BuildDrillView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _kicker('Build the sentence'),
+          _kicker(_reveal ? 'Read & build' : 'Build the sentence'),
           Row(
             children: [
               _SpeakChip(text: widget.data.audio, size: 30),
               const SizedBox(width: 8),
-              const Expanded(
-                child: Text('Tap the words in order to match what you hear.',
-                    style: TextStyle(color: kVelvetMuted, fontSize: 12.5)),
+              Expanded(
+                child: _reveal
+                    ? Text('Build this:  ${widget.data.audio}',
+                        style: const TextStyle(
+                            color: kVelvetInk,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            height: 1.3))
+                    : const Text(
+                        'Tap the words in order to match what you hear.',
+                        style:
+                            TextStyle(color: kVelvetMuted, fontSize: 12.5)),
               ),
             ],
           ),
+          // Escape hatch: no audio? read the sentence and build it anyway.
+          if (!_reveal && !_finished) ...[
+            const SizedBox(height: 8),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TappableScale(
+                onTap: () => setState(() => _reveal = true),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 4),
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    Icon(Icons.volume_off_rounded, color: kOchre, size: 16),
+                    SizedBox(width: 5),
+                    Text("Can't listen right now — show the sentence",
+                        style: TextStyle(
+                            color: kOchre,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 12.5)),
+                  ]),
+                ),
+              ),
+            ),
+          ],
           const SizedBox(height: 12),
           // Answer line
           Container(
