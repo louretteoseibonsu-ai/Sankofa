@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'services/auth_service.dart';
 import 'widgets/app_avatar.dart';
+import 'widgets/app_tour.dart';
 import 'widgets/greeting.dart';
 import 'widgets/kente_pattern.dart';
 import 'screens/profile_screen.dart';
@@ -44,6 +46,21 @@ class _AppShellState extends State<AppShell> {
     ProgressDashboardScreen(),
     ToolsHubScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    // First-run product tour — shows once, right after the new user lands here.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeShowTour());
+  }
+
+  Future<void> _maybeShowTour() async {
+    final auth = AuthService();
+    if (!await auth.needsAppTour()) return;
+    if (!mounted) return;
+    await showAppTour(context);
+    await auth.markAppTourSeen();
+  }
 
   void _select(int i) {
     HapticFeedback.selectionClick();

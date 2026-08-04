@@ -189,6 +189,24 @@ class AuthService {
     }, SetOptions(merge: true));
   }
 
+  /// True until the user has seen the one-time first-run app tour.
+  Future<bool> needsAppTour() async {
+    final uid = _u?.uid;
+    if (uid == null) return false;
+    final doc =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    return !((doc.data()?['appTourSeen'] as bool?) ?? false);
+  }
+
+  Future<void> markAppTourSeen() async {
+    final uid = _u?.uid;
+    if (uid == null) return;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .set({'appTourSeen': true}, SetOptions(merge: true));
+  }
+
   /// True if the account currently has premium entitlement.
   Future<bool> isPremium() async {
     final uid = _u?.uid;

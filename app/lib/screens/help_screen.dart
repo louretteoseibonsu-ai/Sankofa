@@ -3,6 +3,7 @@ import '../theme.dart';
 import '../widgets/velvet.dart';
 import 'tools_hub_screen.dart' show velvetToolsTheme;
 import '../widgets/floating_card.dart';
+import '../widgets/app_tour.dart';
 import 'support_chat_screen.dart';
 
 /// In-app Help Center: a searchable FAQ, a button into the AI support chat,
@@ -118,6 +119,30 @@ class _HelpScreenState extends State<HelpScreen> {
                             style: TextStyle(
                                 fontWeight: FontWeight.w800, color: kVelvetInk)),
                         Text('Ask our assistant anything — instant answers',
+                            style: TextStyle(color: kVelvetMuted, fontSize: 12.5)),
+                      ],
+                    ),
+                  ),
+                  Icon(Icons.chevron_right, color: Colors.white30),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            // Replay the first-run product tour.
+            FloatingCard(
+              onTap: () => showAppTour(context),
+              child: const Row(
+                children: [
+                  Icon(Icons.map_rounded, color: terracotta, size: 24),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Take the app tour',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w800, color: kVelvetInk)),
+                        Text('A quick guide to starting lessons and your profile',
                             style: TextStyle(color: kVelvetMuted, fontSize: 12.5)),
                       ],
                     ),
