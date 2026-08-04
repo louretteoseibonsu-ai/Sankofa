@@ -24,7 +24,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int _step = 0;
   String? _intent;
   String? _region;
+  final _country = TextEditingController();
   bool _saving = false;
+
+  @override
+  void dispose() {
+    _country.dispose();
+    super.dispose();
+  }
 
   static const _intents = [
     ('family', Icons.favorite_rounded, 'Connect with family',
@@ -47,8 +54,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Future<void> _finish() async {
     setState(() => _saving = true);
-    await _auth.saveOnboarding(
-        intent: _intent ?? 'roots', region: _region ?? 'other');
+    // "Somewhere else" → save the typed country instead of the generic 'other'.
+    final typed = _country.text.trim();
+    final region =
+        (_region == 'other' && typed.isNotEmpty) ? typed : (_region ?? 'other');
+    await _auth.saveOnboarding(intent: _intent ?? 'roots', region: region);
     if (!mounted) return;
     widget.onDone();
   }
@@ -123,6 +133,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           selected: _region == r.$1,
                           onTap: () => setState(() => _region = r.$1),
                         ),
+                      // Free-text country entry when "Somewhere else" is picked.
+                      if (_region == 'other') ...[
+                        const SizedBox(height: 2),
+                        TextField(
+                          controller: _country,
+                          textCapitalization: TextCapitalization.words,
+                          autofocus: true,
+                          decoration: const InputDecoration(
+                            hintText: 'Type your country',
+                            prefixIcon: Icon(Icons.public_rounded),
+                          ),
+                          onChanged: (_) => setState(() {}),
+                        ),
+                      ],
                     ],
                   ),
                 ),
