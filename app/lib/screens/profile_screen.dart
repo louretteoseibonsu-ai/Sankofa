@@ -378,7 +378,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
       try {
         await _auth.deleteAccount(password: isPw ? pwCtrl.text : null);
-        // AuthGate will swap to the login screen automatically on success.
+        // Account is gone → AuthGate's root is now the login screen. Profile was
+        // pushed on top of it, so pop back to the root or the user stays here.
+        if (mounted) {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+        }
       } on FirebaseAuthException catch (e) {
         if (!mounted) return;
         String msg;
