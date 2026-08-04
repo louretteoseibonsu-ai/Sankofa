@@ -40,7 +40,8 @@ class GreetingTitle extends StatefulWidget {
 }
 
 class _GreetingTitleState extends State<GreetingTitle> {
-  String? _dayName;
+  String? _dayName; // gendered kra din — only set once the gender is KNOWN
+  Set<String> _dobNames = const {}; // both gendered names for the DOB (lowercased)
 
   @override
   void initState() {
@@ -57,10 +58,21 @@ class _GreetingTitleState extends State<GreetingTitle> {
       final data = doc.data() ?? {};
       final dobStr = data['dob'] as String?;
       final gender = (data['gender'] as String?) ?? '';
-      if (dobStr == null) return;
-      final name =
-          akanDayNameFor(DateTime.tryParse(dobStr), female: gender == 'Woman');
-      if (mounted && name != null) setState(() => _dayName = name);
+      final dob = DateTime.tryParse(dobStr ?? '');
+      if (dob == null) return;
+      final day = kAkanDayNames[dob.weekday % 7];
+      // Only append a day-name when the gender is actually known — never guess
+      // (guessing appended the male name to a female display name → "Akua Kwaku").
+      final gendered = gender == 'Woman'
+          ? day.femaleName
+          : gender == 'Man'
+              ? day.maleName
+              : null;
+      if (!mounted) return;
+      setState(() {
+        _dayName = gendered;
+        _dobNames = {day.maleName.toLowerCase(), day.femaleName.toLowerCase()};
+      });
     } catch (_) {
       // No day-name if the profile isn't reachable — greeting still works.
     }
@@ -73,10 +85,13 @@ class _GreetingTitleState extends State<GreetingTitle> {
       builder: (context, snap) {
         final u = snap.data ?? FirebaseAuth.instance.currentUser;
         final first = firstNameOf(u);
-        // Don't repeat the day-name if the display name already is it
-        // (e.g. someone whose name is "Akua" born on Wednesday → not "Akua Akua").
-        final showDay =
-            _dayName != null && _dayName!.toLowerCase() != first.toLowerCase();
+        final firstL = first.toLowerCase();
+        // Only append the day-name when the gender is known AND the display name
+        // isn't already an Akan day-name for this DOB (avoids "Akua Kwaku" and
+        // "Akua Akua").
+        final showDay = _dayName != null &&
+            _dayName!.toLowerCase() != firstL &&
+            !_dobNames.contains(firstL);
         final label = showDay
             ? '${akanGreeting()}, $first $_dayName'
             : '${akanGreeting()}, $first';
