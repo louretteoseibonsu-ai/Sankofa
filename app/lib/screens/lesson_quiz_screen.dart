@@ -96,13 +96,14 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
         });
       } else {
         HapticFeedback.selectionClick();
-        SoundService.instance.correct();
+        // Pitch climbs with the streak (combo 1 → base note, then up the scale).
+        SoundService.instance.correct(step: _combo - 1);
         SoundService.instance.boxShakeTick(_combo.clamp(1, 6) / 6);
       }
     } else {
       _combo = 0; // broken
       HapticFeedback.heavyImpact();
-      SoundService.instance.tap();
+      SoundService.instance.wrong();
     }
     if (_flash != null) {
       Future.delayed(const Duration(milliseconds: 1400), () {

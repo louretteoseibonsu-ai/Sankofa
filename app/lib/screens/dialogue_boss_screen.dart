@@ -97,13 +97,13 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
           SoundService.instance.boxReveal();
         } else {
           HapticFeedback.selectionClick();
-          SoundService.instance.correct();
+          SoundService.instance.correct(step: _combo - 1);
           SoundService.instance.boxShakeTick(_combo.clamp(1, 6) / 6);
         }
       } else {
         _combo = 0;
         HapticFeedback.heavyImpact();
-        SoundService.instance.tap();
+        SoundService.instance.wrong();
       }
     });
   }

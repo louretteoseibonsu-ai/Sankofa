@@ -67,7 +67,15 @@ class SoundService {
   }
 
   // ── UI sounds ──────────────────────────────────────────────────────────
-  Future<void> correct() => _play('correct.wav', 0.55);
+  /// Correct-answer pluck (kalimba). Climbs the scale with the combo [step] —
+  /// the higher your streak, the higher the note. That rising reward is the
+  /// addictive hook (Mario-coin / Duolingo-combo effect).
+  Future<void> correct({int step = 0}) =>
+      _play('correct_${step.clamp(0, 7)}.wav', 0.6);
+
+  /// A soft, non-punishing descending "aw" for a wrong answer — never a harsh
+  /// buzzer, so a miss nudges rather than demoralises.
+  Future<void> wrong() => _play('wrong.wav', 0.5);
   Future<void> complete() => _play('complete.wav', 0.6);
   Future<void> tap() => _play('tap.wav', 0.35);
 
