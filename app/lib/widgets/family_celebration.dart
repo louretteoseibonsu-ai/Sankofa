@@ -175,7 +175,8 @@ class _FamilyCelebrationViewState extends State<_FamilyCelebrationView>
           ),
           SafeArea(
             child: Center(
-              child: Column(
+              child: SingleChildScrollView(
+                child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // Stars earned.
@@ -302,7 +303,7 @@ class _FamilyCelebrationViewState extends State<_FamilyCelebrationView>
                     ),
                   ),
                 ],
-              ),
+              )),
             ),
           ),
         ],

@@ -459,11 +459,15 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
   Widget _battle() {
     final ch = _challenges[_i];
     final answered = _picked != null;
+    // Landscape has little height — drop the decorative walking-road track so
+    // the question + answers (already an Expanded ListView) don't overflow.
+    final landscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _track(),
-        const SizedBox(height: 8),
+        if (!landscape) _track(),
+        if (!landscape) const SizedBox(height: 8),
         Row(
           children: [
             Text('Line ${_i + 1} of ${_challenges.length}',
@@ -593,6 +597,7 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
                 ? 1
                 : 0;
     return Center(
+      child: SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -671,7 +676,7 @@ class _DialogueBossScreenState extends State<DialogueBossScreen> {
             ),
           ),
         ],
-      ),
+      )),
     );
   }
 }
