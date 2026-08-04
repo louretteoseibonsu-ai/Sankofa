@@ -197,17 +197,20 @@ class _TranslateScreenState extends State<TranslateScreen> {
             reason = 'Translation isn’t switched on yet — we’re on it.';
           }
         } catch (_) {}
+        await _credits.refund(); // failed request shouldn't cost a credit
         setState(() => _error = reason);
         return;
       }
       final data = jsonDecode(res.body) as Map<String, dynamic>;
       final tr = (data['translation'] ?? '').toString().trim();
       if (tr.isEmpty) {
+        await _credits.refund();
         setState(() => _error = 'No translation came back — try rephrasing.');
         return;
       }
       setState(() => _translation = tr);
     } catch (_) {
+      await _credits.refund();
       setState(() =>
           _error = 'Can’t reach the translator — check your connection.');
     } finally {
@@ -251,10 +254,12 @@ class _TranslateScreenState extends State<TranslateScreen> {
       await _player.play(BytesSource(res.bodyBytes));
       _refreshCredits();
     } catch (_) {
+      await _credits.refund(); // audio failed — give the credit back
       if (mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Could not play Twi audio.')));
       }
+      _refreshCredits();
     }
   }
 

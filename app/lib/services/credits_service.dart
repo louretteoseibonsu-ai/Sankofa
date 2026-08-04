@@ -137,6 +137,27 @@ class CreditsService {
     });
   }
 
+  /// Refunds one previously-consumed credit — used when the backend call fails
+  /// after the credit was spent, so a failed request never costs the user.
+  /// No-op if nothing was used this month.
+  Future<void> refund() async {
+    final uid = _uid;
+    if (uid == null) return;
+    final ref = _db.collection('users').doc(uid);
+    await _db.runTransaction<void>((tx) async {
+      final snap = await tx.get(ref);
+      final m = snap.data() ?? {};
+      final sameMonth = (m['${cfg.prefix}Month'] as String?) == _month;
+      final used =
+          sameMonth ? ((m['${cfg.prefix}Used'] as num?)?.toInt() ?? 0) : 0;
+      if (used <= 0) return;
+      tx.set(ref, {
+        '${cfg.prefix}Month': _month,
+        '${cfg.prefix}Used': used - 1,
+      }, SetOptions(merge: true));
+    });
+  }
+
   /// Spends pedis for one overage pack. Returns false if the balance is too low
   /// or the monthly purchase cap is reached.
   Future<bool> buyPack() async {
