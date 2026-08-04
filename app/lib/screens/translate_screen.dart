@@ -185,12 +185,31 @@ class _TranslateScreenState extends State<TranslateScreen> {
         body: jsonEncode({'text': text, 'mode': _enToTw ? 'en-to-twi' : 'twi-to-en'}),
       );
       if (res.statusCode != 200) {
-        throw Exception('Server ${res.statusCode}');
+        // Surface a clearer reason when the server explains itself.
+        var reason =
+            'Translation is temporarily unavailable. Please try again shortly.';
+        try {
+          final err = (jsonDecode(res.body) as Map<String, dynamic>)['error']
+                  ?.toString()
+                  .toLowerCase() ??
+              '';
+          if (err.contains('khaya_api_key')) {
+            reason = 'Translation isn’t switched on yet — we’re on it.';
+          }
+        } catch (_) {}
+        setState(() => _error = reason);
+        return;
       }
       final data = jsonDecode(res.body) as Map<String, dynamic>;
-      setState(() => _translation = (data['translation'] ?? '').toString());
-    } catch (e) {
-      setState(() => _error = 'Translation failed. Check your connection / backend URL.');
+      final tr = (data['translation'] ?? '').toString().trim();
+      if (tr.isEmpty) {
+        setState(() => _error = 'No translation came back — try rephrasing.');
+        return;
+      }
+      setState(() => _translation = tr);
+    } catch (_) {
+      setState(() =>
+          _error = 'Can’t reach the translator — check your connection.');
     } finally {
       if (mounted) setState(() => _loading = false);
       _refreshCredits(); // reflect the spent credit
