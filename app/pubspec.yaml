@@ -1,7 +1,7 @@
 name: sankofa_twi
 description: "Sankofa Twi — Akan heritage learning."
 publish_to: "none"
-version: 1.0.7+2030
+version: 1.0.8+2031
 
 environment:
   sdk: ">=3.4.0 <4.0.0"
