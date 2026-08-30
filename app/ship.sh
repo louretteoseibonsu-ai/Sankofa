@@ -49,11 +49,13 @@ if [[ $RC -ne 0 ]]; then
   # firebase-tools bug). Don't treat that as a failed ship — the APK is live.
   CONSOLE=$(echo "$OUT" | grep -oE 'https://console\.firebase\.google\.com[^ ]*releases/[A-Za-z0-9]+' | head -1)
   echo ""
-  echo "⚠  Build UPLOADED, but auto-assigning testers failed (known firebase-tools 404)."
-  echo "   The release — with all bundled audio — is live. Just add testers here:"
-  if [[ -n "$CONSOLE" ]]; then echo "   → $CONSOLE"
-  else echo "   → https://console.firebase.google.com/project/sankofa-twi/appdistribution"; fi
-  echo "   Fix permanently:  npm install -g firebase-tools"
+  echo "✅ Build UPLOADED successfully — the release (with all bundled audio) is live."
+  echo "   CLI auto-assign 404s on this project, so finish in the console (1 step):"
+  echo "   1) open the release:"
+  if [[ -n "$CONSOLE" ]]; then echo "      → $CONSOLE"
+  else echo "      → https://console.firebase.google.com/project/sankofa-twi/appdistribution"; fi
+  echo "   2) Distribute to testers → pick the 'testers' group → Done."
+  echo "   (Both testers are already in that group, so they all get it.)"
   exit 0
 fi
 echo "✅ shipped ($ABI) — $NOTES"
