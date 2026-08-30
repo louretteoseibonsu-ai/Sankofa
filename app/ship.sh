@@ -15,11 +15,11 @@ TESTERS="${TESTERS:-}"                      # comma-separated tester emails
 ABI="${ABI:-arm64-v8a}"                     # arm64-v8a | armeabi-v7a | x86_64
 NOTES="${1:-$(git log -1 --pretty=%s)}"
 
-if [[ -z "$GROUPS" && -z "$TESTERS" ]]; then
-  echo "✗ Set GROUPS (a group alias) or TESTERS (emails). e.g.:"
-  echo "    TESTERS=\"you@example.com\" ./ship.sh \"notes\""
-  exit 1
-fi
+# Default to the "testers" group so a bare `./ship.sh "notes"` just works.
+# Create the group ONCE in the console (App Distribution → Testers & groups),
+# give it the alias `testers`, add people to it — then you never pass emails
+# on the CLI again. Override anytime with GROUPS="other" or TESTERS="a@b.com".
+if [[ -z "$GROUPS" && -z "$TESTERS" ]]; then GROUPS="testers"; fi
 
 if [[ "${SKIP_BUILD:-0}" != "1" ]]; then
   echo "▶ flutter pub get";            flutter pub get
