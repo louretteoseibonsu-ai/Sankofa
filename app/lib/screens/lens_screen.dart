@@ -491,7 +491,7 @@ class _LensScreenState extends State<LensScreen> {
             child: CircularProgressIndicator(color: Color(0xFFD4A373))),
       );
     }
-    final unlocked = _premium == true || kLensFreeDuringTesting;
+    final unlocked = kEverythingFree || _premium == true || kLensFreeDuringTesting;
     if (!unlocked) {
       return const PremiumLock(
         title: 'Sankofa Lens is a Premium tool',

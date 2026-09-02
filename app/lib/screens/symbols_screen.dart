@@ -1,6 +1,7 @@
 import 'dart:ui' show ImageFilter;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../config.dart';
 import '../data/adinkra_symbols.dart';
 import '../services/auth_service.dart';
 import '../services/progress_service.dart';
@@ -93,7 +94,7 @@ class _SymbolsScreenState extends State<SymbolsScreen> {
             separatorBuilder: (_, __) => const SizedBox(height: 14),
             itemBuilder: (context, i) {
               final s = kAdinkraSymbols[i];
-              final locked = !_premium && i >= kFreeSymbols;
+              final locked = !kEverythingFree && !_premium && i >= kFreeSymbols;
               return FloatingCard(
                 onTap: locked ? _openUpgrade : () => _showDetail(context, s),
                 child: Row(

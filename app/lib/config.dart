@@ -22,6 +22,12 @@ const bool kBillingEnabled = false;
 /// once billing is live to enforce the paywall.
 const bool kLensFreeDuringTesting = false;
 
+/// First-release switch: make the ENTIRE app FREE — every lesson, Sankofa Lens,
+/// and all Adinkra symbols — regardless of premium status. The paid-gating code
+/// is left fully intact; flip this to FALSE (and wire real billing) to bring the
+/// paywall back for a later paid version.
+const bool kEverythingFree = true;
+
 // ── Unified AI credits (Khaya calls) ────────────────────────────────────────
 // AI Translate, Sankofa Lens scans, AND audio (TTS) all draw from ONE monthly
 // pool: 1 credit = 1 Khaya API call. This caps per-user backend cost directly

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../config.dart';
 import '../data/lesson_catalog.dart';
 import '../services/progress_service.dart';
 import '../theme.dart';
@@ -125,7 +126,7 @@ class _CourseCard extends StatelessWidget {
                                   fontSize: 17,
                                   color: kVelvetInk)),
                         ),
-                        if (course.premium) ...[
+                        if (course.premium && !kEverythingFree) ...[
                           const SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(

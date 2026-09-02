@@ -543,7 +543,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               separatorBuilder: (_, __) => const SizedBox(width: 10),
               itemBuilder: (_, i) {
                 final s = kAdinkraSymbols[i];
-                final locked = !_premium && i >= kFreeSymbols;
+                final locked = !kEverythingFree && !_premium && i >= kFreeSymbols;
                 final selected = _mode == _AvatarMode.adinkra && s.id == _glyph;
                 // Tint glyphs light so they read on the dark velvet tiles
                 // (selection is shown by the terracotta tile border).
@@ -667,7 +667,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _ProfileGroup(
             title: 'Account & settings',
             children: [
-              // ── Subscription ──
+              // ── Subscription (hidden while the whole app is free) ──
+              if (!kEverythingFree) ...[
               const Text('Subscription',
               style: TextStyle(
                   color: kVelvetMuted, fontWeight: FontWeight.w700, fontSize: 12)),
@@ -734,6 +735,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           const SizedBox(height: 18),
+          ],
 
           // ── Pedis wallet ──
           const Text('Pedis',

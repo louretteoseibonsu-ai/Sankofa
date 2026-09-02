@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../config.dart';
 
 /// One lesson = one bundled unit JSON.
 class Lesson {
@@ -402,6 +403,7 @@ const Set<String> kFreeCategoryIds = {'num_teens', 'num_twenties', 'num_tens'};
 
 /// True if [lessonId] belongs to a Premium-gated course.
 bool lessonIsPremium(String lessonId) {
+  if (kEverythingFree) return false; // first release: whole app is free
   final l = kLessonsFlat.firstWhere((x) => x.id == lessonId,
       orElse: () => kLessonsFlat.first);
   if (kFreeCategoryIds.contains(l.categoryId)) return false;
