@@ -4,46 +4,69 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Sankofa Twi — Learn Twi &amp; Akan Culture</title>
-<meta name="description" content="Learn Twi (Akan) on Android — bite-sized lessons, AI translation, and Sankofa Lens: point your camera and learn any object in Twi." />
+<meta name="description" content="Authentic Twi (Akan) learning for global families, powered by native voices — bite-sized lessons, AI translation, and Sankofa Lens. Free on Android; iOS coming soon." />
 <link rel="icon" href="/favicon.ico" sizes="any" />
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <style>
   :root{
-    --charcoal:#2B2B2D; --slate:#5A5E63; --terracotta:#E2725B; --terracotta-deep:#BE5235;
-    --gold:#E3A92C; --green:#2E6B3B; --red:#9B2D2A; --silver:#E7E9EC; --tile:#F1F2F4;
+    /* Warm scheme — matched to the raffle page (charcoal · gold · terracotta) */
+    --charcoal:#2B2B2D; --charcoal-2:#2F2F31; --panel:#333336; --line:#45454a;
+    --cream:#EDE4D3; --soft:#c9c3b6; --slate:#8A8478;
+    --gold:#E3A92C; --terracotta:#BE5235; --terracotta-hi:#C96A4F;
+    --red:#9B2D2A; --green:#2E6B3B; --terra2:#E2725B;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:var(--charcoal);background:#fff;line-height:1.55}
-  .kente{height:6px;background:repeating-linear-gradient(90deg,var(--gold) 0 22px,var(--red) 22px 44px,var(--green) 44px 66px,var(--charcoal) 66px 88px,var(--terracotta) 88px 110px)}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    color:var(--cream);background:var(--charcoal);line-height:1.55;min-height:100vh}
+  .kente{height:6px;background:repeating-linear-gradient(90deg,var(--gold) 0 22px,var(--red) 22px 44px,var(--green) 44px 66px,var(--charcoal) 66px 88px,var(--terra2) 88px 110px)}
   header{display:flex;align-items:center;justify-content:space-between;max-width:1040px;margin:0 auto;padding:18px 20px}
   .brand{font-weight:800;font-size:20px;letter-spacing:.2px}
-  .brand span{color:var(--terracotta-deep)}
-  nav a{color:var(--slate);text-decoration:none;font-size:14px;margin-left:18px}
-  nav a:hover{color:var(--charcoal)}
-  .hero{max-width:1040px;margin:0 auto;padding:56px 20px 40px;text-align:center}
-  .hero h1{font-size:44px;font-weight:800;line-height:1.1;letter-spacing:-.5px}
-  .hero h1 .accent{color:var(--terracotta-deep)}
-  .hero p{color:var(--slate);font-size:18px;max-width:640px;margin:16px auto 28px}
-  .cta{display:inline-block;background:var(--terracotta-deep);color:#fff;text-decoration:none;font-weight:700;padding:14px 26px;border-radius:14px;font-size:16px}
-  .cta:hover{filter:brightness(1.05)}
-  .cta.secondary{background:transparent;color:var(--charcoal);border:1.5px solid var(--silver);margin-left:10px}
+  .brand span{color:var(--gold)}
+  nav a{color:var(--soft);text-decoration:none;font-size:14px;margin-left:18px}
+  nav a:hover{color:var(--cream)}
+  .hero{position:relative;max-width:1040px;margin:0 auto;padding:60px 20px 44px;text-align:center}
+  .hero::before{content:"";position:absolute;inset:-10% 0 auto 0;height:320px;z-index:0;
+    background:radial-gradient(60% 100% at 50% 0,rgba(227,169,44,.14),transparent 70%);pointer-events:none}
+  .hero>*{position:relative;z-index:1}
+  .hero .eyebrow{color:var(--gold);font-weight:800;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+  .hero h1{font-size:46px;font-weight:800;line-height:1.12;letter-spacing:-.4px}
+  .hero h1 .accent{color:var(--gold)}
+  .hero p{color:var(--soft);font-size:18px;max-width:660px;margin:18px auto 28px}
+  .cta{display:inline-block;background:var(--terracotta);color:#fff;text-decoration:none;font-weight:800;padding:14px 26px;border-radius:14px;font-size:16px;transition:filter .15s}
+  .cta:hover{filter:brightness(1.08)}
+  .cta.secondary{background:transparent;color:var(--cream);border:1.5px solid var(--line);font-weight:700;margin-left:10px}
+  .cta.secondary:hover{border-color:var(--gold);color:var(--gold);filter:none}
   .note{color:var(--slate);font-size:13px;margin-top:14px}
-  .features{max-width:1040px;margin:0 auto;padding:24px 20px 48px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
-  .card{background:#fff;border:1px solid var(--silver);border-radius:18px;padding:20px}
+  .stores{display:flex;flex-wrap:wrap;justify-content:center;gap:18px;margin:32px auto 0}
+  .store{display:flex;align-items:center;gap:16px;padding:16px 18px;border:1.5px solid var(--line);border-radius:18px;background:var(--panel);text-align:left}
+  .store .qr{width:124px;height:124px;flex:none;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .store .meta{max-width:190px}
+  .store .os{display:flex;align-items:center;gap:7px;font-weight:800;font-size:16px;color:var(--cream)}
+  .store .os svg{height:18px;width:auto;fill:currentColor}
+  .store .sub{color:var(--soft);font-size:13px;margin:4px 0 10px}
+  .store .link{color:var(--gold);font-weight:700;font-size:14px;text-decoration:none}
+  .store .link:hover{color:var(--cream)}
+  .store.soon{border-color:rgba(227,169,44,.5)}
+  .store.soon .qr{background:radial-gradient(circle at 50% 42%,rgba(227,169,44,.22),rgba(227,169,44,.06))}
+  .store.soon .qr .apple{width:46px;height:auto;fill:var(--gold);opacity:.95}
+  .badge{display:inline-block;background:var(--gold);color:var(--charcoal);font-size:11px;font-weight:800;letter-spacing:.5px;padding:4px 10px;border-radius:999px;text-transform:uppercase}
+  .features{max-width:1040px;margin:0 auto;padding:34px 20px 52px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+  .card{background:var(--panel);border:1.5px solid var(--line);border-radius:18px;padding:20px}
   .card .ico{font-size:26px}
-  .card h3{font-size:17px;margin:10px 0 6px}
-  .card p{color:var(--slate);font-size:14px}
-  .band{background:var(--tile);}
-  .band .inner{max-width:1040px;margin:0 auto;padding:40px 20px;text-align:center}
-  .band h2{font-size:26px;font-weight:800}
-  .band p{color:var(--slate);max-width:600px;margin:10px auto 22px}
-  footer{max-width:1040px;margin:0 auto;padding:30px 20px 50px;color:var(--slate);font-size:13px}
+  .card h3{font-size:17px;margin:10px 0 6px;color:var(--cream);font-weight:800}
+  .card p{color:var(--soft);font-size:14px}
+  .band{background:#242426;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .band .inner{max-width:1040px;margin:0 auto;padding:46px 20px;text-align:center}
+  .band h2{font-size:27px;font-weight:800}
+  .band p{color:var(--soft);max-width:600px;margin:12px auto 24px}
+  .band .note{margin-top:12px}
+  footer{max-width:1040px;margin:0 auto;padding:32px 20px 54px;color:var(--slate);font-size:13px}
   footer a{color:var(--slate);text-decoration:none;margin-right:16px}
-  footer a:hover{color:var(--charcoal)}
-  .foot-row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;border-top:1px solid var(--silver);padding-top:18px}
-  @media(max-width:560px){.hero h1{font-size:34px}.cta.secondary{margin-left:0;margin-top:10px;display:inline-block}}
+  footer a:hover{color:var(--cream)}
+  .foot-row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:18px}
+  @media(max-width:560px){.hero h1{font-size:36px}.cta.secondary{margin-left:0;margin-top:10px;display:inline-block}.store{width:100%}}
 </style>
 </head>
 <body>
@@ -60,22 +83,39 @@
 </header>
 
 <section class="hero">
-  <h1>Learn Twi. <span class="accent">Reclaim your roots.</span></h1>
-  <p>Sankofa Twi makes learning Ghana's Akan/Twi language joyful and modern —
-     bite-sized lessons, native audio, AI translation, and a camera that names
-     the world in Twi.</p>
+  <div class="eyebrow">🇬🇭 Learn Twi · Free Android beta</div>
+  <h1>Connecting the Diaspora to <span class="accent">their Roots.</span></h1>
+  <p>Authentic Twi learning for global families, powered by native voices —
+     bite-sized lessons, real Akan audio, AI translation, and a camera that
+     names the world in Twi.</p>
   <!-- Firebase App Distribution invite link (one-tap tester install). To rotate it,
-       replace both occurrences of the appdistribution.firebase.dev URL below. -->
+       replace every occurrence of the appdistribution.firebase.dev URL below. -->
   <a class="cta" href="https://appdistribution.firebase.dev/i/9586b57458a2b3d2" target="_blank" rel="noopener">Get the app — Android</a>
   <a class="cta secondary" href="#features">See features</a>
-  <div class="note">Free Android beta · one tap to install</div>
+  <div class="note">Free Android beta · one tap to install · iOS coming soon</div>
 
-  <div class="install-qr" style="margin:28px auto 0;display:inline-flex;align-items:center;gap:18px;padding:16px 20px;border:1px solid var(--silver);border-radius:18px">
-    <div id="qrcode" aria-hidden="true" style="width:132px;height:132px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center"></div>
-    <div style="text-align:left;max-width:210px">
-      <div style="font-weight:800;color:var(--charcoal);font-size:16px">Scan to install</div>
-      <div style="color:var(--slate);font-size:13px;margin:3px 0 10px">Point your Android camera at the code</div>
-      <a href="https://appdistribution.firebase.dev/i/9586b57458a2b3d2" target="_blank" rel="noopener" style="color:var(--terracotta-deep);font-weight:700;font-size:14px;text-decoration:none">or tap the install link →</a>
+  <div class="stores">
+    <!-- Android: live Firebase App Distribution QR -->
+    <div class="store">
+      <div class="qr" id="qrcode" aria-hidden="true"></div>
+      <div class="meta">
+        <div class="os"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.6 9.48l1.84-3.18a.38.38 0 0 0-.66-.38l-1.87 3.24a11.43 11.43 0 0 0-8.82 0L6.22 5.92a.38.38 0 1 0-.66.38L7.4 9.48A10.7 10.7 0 0 0 2 18h20a10.7 10.7 0 0 0-4.4-8.52zM7 15.25A1.25 1.25 0 1 1 8.25 14 1.25 1.25 0 0 1 7 15.25zm10 0A1.25 1.25 0 1 1 18.25 14 1.25 1.25 0 0 1 17 15.25z"/></svg> Android</div>
+        <div class="sub">Scan to install the free beta.</div>
+        <a class="link" href="https://appdistribution.firebase.dev/i/9586b57458a2b3d2" target="_blank" rel="noopener">or tap the install link →</a>
+      </div>
+    </div>
+
+    <!-- iOS: coming soon — no public install link yet. When TestFlight/App Store
+         is live, swap the .qr placeholder for a real QR and the badge for a link. -->
+    <div class="store soon">
+      <div class="qr" aria-hidden="true">
+        <svg class="apple" viewBox="0 0 384 512"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+      </div>
+      <div class="meta">
+        <div class="os"><svg viewBox="0 0 384 512" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg> iOS</div>
+        <div class="sub">iPhone &amp; iPad — landing soon.</div>
+        <span class="badge">Coming soon</span>
+      </div>
     </div>
   </div>
 </section>
@@ -95,6 +135,7 @@
     <p>Whether you're reconnecting with your heritage or planning a trip to Ghana,
        come reclaim the language. Yɛfrɛ wo!</p>
     <a class="cta" href="https://appdistribution.firebase.dev/i/9586b57458a2b3d2" target="_blank" rel="noopener">Get the app — Android</a>
+    <div class="note">iOS coming soon</div>
   </div>
 </section>
 
@@ -122,7 +163,7 @@
     var el = document.getElementById("qrcode");
     var url = "https://appdistribution.firebase.dev/i/9586b57458a2b3d2";
     if (el && window.QRCode) {
-      new QRCode(el, { text: url, width: 132, height: 132,
+      new QRCode(el, { text: url, width: 116, height: 116,
         colorDark: "#2B2B2D", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
     }
   })();
