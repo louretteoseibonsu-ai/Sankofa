@@ -2,8 +2,31 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<!-- Google Sign-In client id (CLIENT_ID from GoogleService-Info.plist).
+	     The GoogleSignIn SDK requires this key or it aborts with
+	     "No active configuration". -->
+	<key>GIDClientID</key>
+	<string>401880298696-gq1j2afvikji0svv52q13pivevrbegl0.apps.googleusercontent.com</string>
+	<!-- Google Sign-In callback: value is REVERSED_CLIENT_ID from
+	     GoogleService-Info.plist. Lets the OAuth flow return to the app. -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.401880298696-gq1j2afvikji0svv52q13pivevrbegl0</string>
+			</array>
+		</dict>
+	</array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<!-- App uses only standard HTTPS/TLS encryption, which is exempt. Declaring
+	     this here means TestFlight/App Store won't ask about export compliance
+	     on every upload. -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSCameraUsageDescription</key>
 	<string>Sankofa Twi uses the camera for Sankofa Lens — point it at an object to learn and collect its Twi name.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

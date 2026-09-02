@@ -48,7 +48,10 @@ flutter:
 # Run once after `flutter pub get`:  dart run flutter_launcher_icons
 flutter_launcher_icons:
   android: true
-  ios: false
+  ios: true
+  # iOS uses image_path (the full square icon) — same source as Android, so the
+  # two match. Alpha is stripped because Apple rejects transparent app icons.
+  remove_alpha_ios: true
   image_path: "assets/icon/app_icon.png"
   adaptive_icon_background: "assets/icon/app_icon_background.png"
   adaptive_icon_foreground: "assets/icon/app_icon_foreground.png"

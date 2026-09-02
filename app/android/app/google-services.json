@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "401880298696",
+    "firebase_url": "https://sankofa-twi-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "sankofa-twi",
     "storage_bucket": "sankofa-twi.firebasestorage.app"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.sankofatwi.sankofa_twi"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "401880298696-s57e1f3ud1lg05kbn4qk77gm4linp6cs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sankofatwi.sankofa_twi",
+            "certificate_hash": "d2faf4b9a9669dc90def42e94ce3ea6576e08ccb"
+          }
+        },
+        {
+          "client_id": "401880298696-corkk5v665j6ioc56i4mmdg6jrj41d43.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCOxj5aL0dUyXx7EInpswU3ZgLOYpc0_RE"
@@ -20,7 +34,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "401880298696-corkk5v665j6ioc56i4mmdg6jrj41d43.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "401880298696-gq1j2afvikji0svv52q13pivevrbegl0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sankofatwi.sankofaTwi"
+              }
+            }
+          ]
         }
       }
     }

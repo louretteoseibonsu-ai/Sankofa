@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CLIENT_ID</key>
+	<string>401880298696-gq1j2afvikji0svv52q13pivevrbegl0.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.401880298696-gq1j2afvikji0svv52q13pivevrbegl0</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>401880298696-s57e1f3ud1lg05kbn4qk77gm4linp6cs.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBF13LRZ1oorFJotJigtPSWHVlC0SpqK5A</string>
 	<key>GCM_SENDER_ID</key>
@@ -26,5 +32,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:401880298696:ios:f2d8f055cf533add1ee1fd</string>
+	<key>DATABASE_URL</key>
+	<string>https://sankofa-twi-default-rtdb.europe-west1.firebasedatabase.app</string>
 </dict>
 </plist>
