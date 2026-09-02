@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../config.dart';
 import '../data/adinkra_symbols.dart';
 import '../data/lesson_catalog.dart';
 import '../services/progress_service.dart';
@@ -143,7 +144,7 @@ class _ProgressDashboardScreenState extends State<ProgressDashboardScreen> {
       child: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          if (!_s.premium) ...[
+          if (!_s.premium && !kEverythingFree) ...[
             _GoPremiumBanner(),
             const SizedBox(height: 14),
           ],

@@ -9,7 +9,6 @@ import '../services/credits_service.dart';
 import '../theme.dart';
 import '../widgets/credits_bar.dart';
 import '../widgets/velvet.dart';
-import 'upgrade_screen.dart';
 
 /// A velvet surface card for the dark Translate hub. Tappable when [onTap] set.
 Widget _velvetCard({required Widget child, VoidCallback? onTap}) {
@@ -289,22 +288,22 @@ class _TranslateScreenState extends State<TranslateScreen> {
               unit: 'AI credits',
               onBuy: _openBuyFromBar,
               dark: true),
-        // Gentle upgrade nudge — only for free users who are running low.
-        if (_status != null && !_status!.premium && _status!.remaining <= 5) ...[
+        // Gentle top-up nudge when credits run low — points at pedis (soft
+        // currency), never a paywall.
+        if (_status != null && _status!.remaining <= 5) ...[
           const SizedBox(height: 10),
           _velvetCard(
-            onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const UpgradeScreen())),
+            onTap: _openBuyFromBar,
             child: Row(
               children: [
-                const Icon(Icons.workspace_premium_outlined,
-                    color: kOchre, size: 20),
+                const Icon(Icons.spa_outlined,
+                    color: plantainGreen, size: 20),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
                       _status!.remaining == 0
-                          ? 'Out of credits — Premium gives 400 AI credits a month.'
-                          : 'Running low — Premium gives 400 AI credits a month.',
+                          ? 'Out of AI credits — top up with pedis to keep translating.'
+                          : 'Running low on AI credits — top up anytime with pedis.',
                       style: const TextStyle(
                           fontSize: 12.5,
                           color: kVelvetInk,

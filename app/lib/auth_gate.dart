@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'app_shell.dart';
+import 'config.dart';
 import 'screens/login_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/plan_picker_screen.dart';
@@ -56,7 +57,9 @@ class _SignedInRouterState extends State<_SignedInRouter> {
     // Register for push nudges (best-effort; prompts for permission).
     NotificationService.instance.register();
     final disabled = await auth.isDisabled();
-    final needsPlan = disabled ? false : await auth.needsPlanChoice();
+    // No plan choice while the whole app is free — skip the Free/Premium picker.
+    final needsPlan =
+        (disabled || kEverythingFree) ? false : await auth.needsPlanChoice();
     final needsOnboarding = disabled ? false : await auth.needsOnboarding();
     if (!mounted) return;
     setState(() {
