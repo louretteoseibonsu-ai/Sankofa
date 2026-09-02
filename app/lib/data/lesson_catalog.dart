@@ -91,19 +91,52 @@ const List<LessonCategory> kCategories = [
       Lesson(id: 'unit_002', title: 'Greetings', subtitle: 'Nkyea', asset: 'assets/content/unit_002.json', categoryId: 'greetings'),
     ],
   ),
+  // Counting is split into four one-lesson stops that are SPREAD across the
+  // journey (see kCourses) instead of sitting four-in-a-row: 1–10 stays here in
+  // Foundations, while 11–20 / 21–39 / 40–100 are released out in Act 2 right
+  // where bigger numbers get used (money, fares, bills). The higher three live
+  // inside the premium act but stay FREE (see kFreeCategoryIds), and none of the
+  // number stops are bosses — they're light practice between the heavier zones.
   LessonCategory(
-    id: 'numbers',
+    id: 'num_basics',
     emoji: '🔢',
-    name: 'Numbers & Counting',
-    blurb: 'Count from one all the way to one hundred.',
+    name: 'Numbers 1–10',
+    blurb: 'Count from one to ten — the first ten.',
     icon: Icons.tag_outlined,
     lessons: [
-      Lesson(id: 'unit_003', title: 'Numbers 1–10', subtitle: 'Akontaabuo', asset: 'assets/content/unit_003.json', categoryId: 'numbers'),
-      Lesson(id: 'unit_005', title: 'Numbers 11–20', subtitle: 'Dubaako – Aduonu', asset: 'assets/content/unit_005.json', categoryId: 'numbers'),
-      Lesson(id: 'unit_006', title: 'Numbers 21–39', subtitle: 'Aduonu – Aduasa nkron', asset: 'assets/content/unit_006.json', categoryId: 'numbers'),
+      Lesson(id: 'unit_003', title: 'Numbers 1–10', subtitle: 'Akontaabuo', asset: 'assets/content/unit_003.json', categoryId: 'num_basics'),
+    ],
+  ),
+  LessonCategory(
+    id: 'num_teens',
+    emoji: '🔢',
+    name: 'Numbers 11–20',
+    blurb: 'Keep counting: eleven to twenty.',
+    icon: Icons.tag_outlined,
+    lessons: [
+      Lesson(id: 'unit_005', title: 'Numbers 11–20', subtitle: 'Dubaako – Aduonu', asset: 'assets/content/unit_005.json', categoryId: 'num_teens'),
+    ],
+  ),
+  LessonCategory(
+    id: 'num_twenties',
+    emoji: '🔢',
+    name: 'Numbers 21–39',
+    blurb: 'Into the twenties and thirties.',
+    icon: Icons.tag_outlined,
+    lessons: [
+      Lesson(id: 'unit_006', title: 'Numbers 21–39', subtitle: 'Aduonu – Aduasa nkron', asset: 'assets/content/unit_006.json', categoryId: 'num_twenties'),
+    ],
+  ),
+  LessonCategory(
+    id: 'num_tens',
+    emoji: '🔢',
+    name: 'Tens: 40–100',
+    blurb: 'The big tens — forty to one hundred.',
+    icon: Icons.tag_outlined,
+    lessons: [
       // The tens (40–100) + the pattern to build any number — no need to drill
       // every value once 1–30 and the compounding rule are known.
-      Lesson(id: 'unit_007', title: 'Tens: 40–100', subtitle: 'Aduanan – Ɔha', asset: 'assets/content/unit_007.json', categoryId: 'numbers'),
+      Lesson(id: 'unit_007', title: 'Tens: 40–100', subtitle: 'Aduanan – Ɔha', asset: 'assets/content/unit_007.json', categoryId: 'num_tens'),
     ],
   ),
   LessonCategory(
@@ -362,10 +395,16 @@ class Course {
   List<Lesson> get lessons => [for (final c in categories) ...c.lessons];
 }
 
+/// Categories that stay FREE even when positioned inside a premium course.
+/// Counting practice is spread into Act 2 for pacing, but basic numbers must
+/// never sit behind the paywall.
+const Set<String> kFreeCategoryIds = {'num_teens', 'num_twenties', 'num_tens'};
+
 /// True if [lessonId] belongs to a Premium-gated course.
 bool lessonIsPremium(String lessonId) {
   final l = kLessonsFlat.firstWhere((x) => x.id == lessonId,
       orElse: () => kLessonsFlat.first);
+  if (kFreeCategoryIds.contains(l.categoryId)) return false;
   return kCourses
       .any((c) => c.premium && c.categoryIds.contains(l.categoryId));
 }
@@ -376,14 +415,26 @@ const List<Course> kCourses = [
     name: 'Foundations',
     blurb: 'Greetings, numbers and grammar — the bedrock of Twi.',
     icon: Icons.foundation_outlined,
-    categoryIds: ['alphabet', 'greetings', 'numbers', 'grammar'],
+    categoryIds: ['alphabet', 'greetings', 'num_basics', 'grammar'],
   ),
   Course(
     id: 'everyday',
     name: 'Everyday Life',
     blurb: 'The city adventure — market, transit, kitchen, and more.',
     icon: Icons.wb_sunny_outlined,
-    categoryIds: ['shopping', 'travel', 'dining', 'hobbies', 'dailylife'],
+    // Number stops (num_teens/twenties/tens) are woven in between the themed
+    // zones so counting is practised across the whole act, not all at once.
+    // They stay free (kFreeCategoryIds) even though this act is premium.
+    categoryIds: [
+      'shopping',
+      'num_teens',
+      'travel',
+      'num_twenties',
+      'dining',
+      'hobbies',
+      'num_tens',
+      'dailylife'
+    ],
     premium: true,
   ),
   Course(

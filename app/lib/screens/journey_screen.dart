@@ -91,9 +91,10 @@ class _JourneyScreenState extends State<JourneyScreen>
   late final AnimationController _driveBob;
 
   // Boss = last stop of each region; region name keyed by category id.
+  // Number stops (num_*) are light interstitial practice, not boss battles.
   static final Set<String> _bossIds = {
     for (final c in kCategories)
-      if (c.lessons.isNotEmpty) c.lessons.last.id
+      if (c.lessons.isNotEmpty && !c.id.startsWith('num_')) c.lessons.last.id
   };
   static final Map<String, String> _catName = {
     for (final c in kCategories) c.id: c.name
