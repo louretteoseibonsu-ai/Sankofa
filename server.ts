@@ -329,11 +329,16 @@ app.post("/api/tts", async (req, res) => {
       return res.status(500).json({ error: "KHAYA_API_KEY is not configured on the server." });
     }
 
-    // Khaya TTS expects a Ghanaian-voice speaker_id (e.g. twi_speaker_4..9).
+    // GhanaNLP/Khaya retired the old twi_speaker_4..9 IDs. Valid TTS speakers
+    // are now 'male_low', 'male_high', 'female'. Use the requested one only if
+    // it's valid; otherwise fall back to a safe default (fixes INVALID_SPEAKER).
+    const validSpeakers = ["male_low", "male_high", "female"];
+    const speakerId =
+      speaker && validSpeakers.includes(speaker) ? speaker : "female";
     const body = {
       text,
       language: lang || "tw",
-      speaker_id: speaker || "twi_speaker_4",
+      speaker_id: speakerId,
     };
     console.log("Khaya TTS request:", { ...body, text: text.slice(0, 40) });
 
