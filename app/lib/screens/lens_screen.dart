@@ -8,6 +8,7 @@ import '../config.dart';
 import '../data/lens_collections.dart';
 import '../services/audio_bundle.dart';
 import '../services/audio_cache.dart';
+import '../services/audio_playback.dart';
 import '../services/auth_service.dart';
 import '../services/credits_service.dart';
 import '../services/lens_service.dart';
@@ -435,7 +436,7 @@ class _LensScreenState extends State<LensScreen> {
     final cacheKey = TtsCache.instance.key(twi);
     final cached = TtsCache.instance.get(cacheKey);
     if (cached != null) {
-      await _player.play(BytesSource(cached)); // free replay
+      await playBytes(_player, cached); // free replay
       return;
     }
     if (!await _ensureCredit()) {
@@ -445,7 +446,7 @@ class _LensScreenState extends State<LensScreen> {
     try {
       final bytes = await _lens.tts(twi);
       TtsCache.instance.put(cacheKey, bytes);
-      await _player.play(BytesSource(bytes));
+      await playBytes(_player, bytes);
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

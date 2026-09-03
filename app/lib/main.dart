@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'auth_gate.dart';
 import 'config.dart';
+import 'services/audio_playback.dart';
 import 'services/currency_service.dart';
 import 'theme.dart';
 
@@ -47,6 +48,8 @@ Future<void> main() async {
   CurrencyService.instance.ensureLoaded();
   // Start waking the audio/translation backend right away (non-blocking).
   _warmBackend();
+  // iOS needs an explicit "playback" audio session or it stays silent.
+  await setupGlobalAudioContext();
   runApp(const SankofaTwiApp());
 }
 

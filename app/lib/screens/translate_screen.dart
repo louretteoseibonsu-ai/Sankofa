@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import '../config.dart';
 import '../services/audio_cache.dart';
 import '../services/audio_bundle.dart';
+import '../services/audio_playback.dart';
 import '../services/credits_service.dart';
 import '../theme.dart';
 import '../widgets/credits_bar.dart';
@@ -234,7 +235,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
     final cached = TtsCache.instance.get(cacheKey);
     if (cached != null) {
       try {
-        await _player.play(BytesSource(cached));
+        await playBytes(_player, cached);
       } catch (_) {}
       return;
     }
@@ -250,7 +251,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
       );
       if (res.statusCode != 200) throw Exception('tts ${res.statusCode}');
       TtsCache.instance.put(cacheKey, res.bodyBytes);
-      await _player.play(BytesSource(res.bodyBytes));
+      await playBytes(_player, res.bodyBytes);
       _refreshCredits();
     } catch (_) {
       await _credits.refund(); // audio failed — give the credit back

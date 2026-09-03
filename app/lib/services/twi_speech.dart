@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import '../config.dart';
 import 'audio_bundle.dart';
 import 'audio_cache.dart';
+import 'audio_playback.dart';
 
 /// Speaks Twi text aloud. Resolution order (cheapest first):
 ///   1. A pre-generated clip bundled in the app  → zero API calls.
@@ -44,8 +45,7 @@ class TwiSpeech {
     final cached = TtsCache.instance.get(key);
     if (cached != null) {
       try {
-        await _player.stop();
-        await _player.play(BytesSource(cached));
+        await playBytes(_player, cached);
         return true;
       } catch (_) {
         return false;
@@ -60,8 +60,7 @@ class TwiSpeech {
       );
       if (res.statusCode != 200) return false;
       TtsCache.instance.put(key, res.bodyBytes);
-      await _player.stop();
-      await _player.play(BytesSource(res.bodyBytes));
+      await playBytes(_player, res.bodyBytes);
       return true;
     } catch (_) {
       return false;
