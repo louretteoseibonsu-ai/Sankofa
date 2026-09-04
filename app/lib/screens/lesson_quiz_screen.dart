@@ -356,12 +356,6 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
           : ListView(
               padding: const EdgeInsets.all(20),
               children: [
-                if (u.reviewRequired)
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: Text('Draft content — pending language review',
-                        style: TextStyle(color: kVelvetMuted, fontSize: 11.5)),
-                  ),
                 Text(u.title,
                     style: const TextStyle(
                         fontWeight: FontWeight.w800, fontSize: 22, color: kVelvetInk)),
