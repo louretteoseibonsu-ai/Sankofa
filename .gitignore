@@ -32,3 +32,6 @@ dist/
 coverage/
 *.log
 
+
+# Local backups of original Joe clips before studio-audio replacement
+app/assets/audio/_backup_joe/
