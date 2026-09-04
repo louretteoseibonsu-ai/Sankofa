@@ -53,7 +53,8 @@ class _LessonQuizScreenState extends State<LessonQuizScreen> {
   int _stars = 0; // stars earned on the finishing run (for the reward reveal)
   int _finalShards = 0; // shards earned on the finishing run
   String? _flash; // transient combo banner text
-  bool _showLearn = true; // collapse the teach cards to focus on practice
+  bool _showLearn = false; // start collapsed — Practice is reachable without
+  // scrolling; learner taps "Show" to open the teach cards. Consistent app-wide.
   int _i = 0; // current question — one at a time, boss-battle style
   bool _done = false; // finished the run — show the summary + Mastery Report
 
