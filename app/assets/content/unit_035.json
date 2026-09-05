@@ -1,7 +1,7 @@
 {
   "unit_id": "unit_035",
   "unit_title": "Clothing",
-  "review_required": true,
+  "review_required": false,
   "review_note": "AI-drafted vocabulary — verify Twi with a native speaker before release.",
   "vocabulary_spotlight": {
     "headword": "ntoma",

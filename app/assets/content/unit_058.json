@@ -1,7 +1,7 @@
 {
   "unit_id": "unit_058",
   "unit_title": "Television",
-  "review_required": true,
+  "review_required": false,
   "review_note": "AI-drafted vocabulary (some modern loanwords) — verify Twi with a native speaker before release.",
   "vocabulary_spotlight": {
     "headword": "tiivii",

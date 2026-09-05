@@ -1,7 +1,7 @@
 {
   "unit_id": "unit_019",
   "unit_title": "Books",
-  "review_required": true,
+  "review_required": false,
   "vocabulary_spotlight": {
     "headword": "nwoma",
     "gloss": "book — Reading and writing.",

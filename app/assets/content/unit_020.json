@@ -1,7 +1,7 @@
 {
   "unit_id": "unit_020",
   "unit_title": "Music",
-  "review_required": true,
+  "review_required": false,
   "vocabulary_spotlight": {
     "headword": "dwom",
     "gloss": "song / music — Songs, drums, and dancing.",
