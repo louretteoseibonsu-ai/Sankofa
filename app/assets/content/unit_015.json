@@ -11,7 +11,7 @@
     "example_sentences": [
       "di agorɔ, agorɔ, to dwom."
     ],
-    "culture_note": "Chale, asking 'Wopɛ sɛn?' (what do you like?) is how friendships start here. Football — bɔɔlo — is the great icebreaker."
+    "culture_note": "Chale, asking 'Wopɛ sɛn?' (what do you like?) is how friendships start here. Football — bɔɔl — is the great icebreaker."
   },
   "grammar_mechanics": {
     "focus": "Talking about hobbies",
@@ -75,7 +75,7 @@
       "options": [
         "saw",
         "kenkan",
-        "bɔɔlo",
+        "bɔɔl",
         "anigyeɛ"
       ],
       "correct_index": 0,
@@ -104,7 +104,7 @@
       "correct_index": 0
     },
     {
-      "prompt": "What does 'bɔɔlo' mean?",
+      "prompt": "What does 'bɔɔl' mean?",
       "type": "recall",
       "options": [
         "football",
@@ -167,7 +167,7 @@
       "en": "to cook"
     },
     {
-      "twi": "bɔɔlo",
+      "twi": "bɔɔl",
       "en": "football"
     },
     {
