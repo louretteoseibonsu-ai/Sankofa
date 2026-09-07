@@ -220,8 +220,11 @@ class _TranslateScreenState extends State<TranslateScreen> {
   }
 
   Future<void> _listen() async {
-    final t = _translation;
-    if (t == null || t.isEmpty) return;
+    // Always speak the Twi side: it's the OUTPUT when translating to Twi, and
+    // the INPUT (what the user typed) when translating Twi → English. Speaking
+    // the English result with the Twi voice was the bug.
+    final t = (_enToTw ? (_translation ?? '') : _controller.text).trim();
+    if (t.isEmpty) return;
     // Bundled clip → play free, no API call, no credit.
     final asset = await AudioBundle.instance.assetPathFor(t);
     if (asset != null) {
